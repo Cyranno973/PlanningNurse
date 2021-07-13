@@ -6,6 +6,12 @@ import {HomeComponent} from './home/home.component';
 import {TableModule} from "primeng/table";
 import {CarService} from "./home/car.service";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {CalendarModule, DateAdapter} from 'angular-calendar';
+import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {FlatpickrModule} from 'angularx-flatpickr';
+import {NgbModalModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -15,7 +21,10 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
   imports: [
     BrowserModule,
     TableModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
+    FormsModule,
+    FlatpickrModule
   ],
   providers: [CarService],
   bootstrap: [AppComponent]
