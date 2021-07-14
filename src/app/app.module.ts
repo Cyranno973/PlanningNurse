@@ -9,14 +9,20 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FlatpickrModule} from 'angularx-flatpickr';
 import {NgbModalModule} from '@ng-bootstrap/ng-bootstrap';
+import {SigninComponent} from './authentification/signin/signin.component';
+import {AppRoutingModule} from './app-routing.module';
+import {SignUpComponent} from './authentification/sign-up/sign-up.component';
+import {AuthenticationService} from "./services/authentication.service";
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
+    SigninComponent,
+    SignUpComponent,
   ],
   imports: [
     BrowserModule,
@@ -24,9 +30,11 @@ import {NgbModalModule} from '@ng-bootstrap/ng-bootstrap';
     BrowserAnimationsModule,
     CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
     FormsModule,
-    FlatpickrModule
+    FlatpickrModule.forRoot(),
+    AppRoutingModule,
+    ReactiveFormsModule,
   ],
-  providers: [CarService],
+  providers: [CarService, AuthenticationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
