@@ -51,7 +51,6 @@ export class AuthenticationService {
           .then(
             () => {
               this.router.navigate(['home']);
-              firebase.auth().
             })
       }
     )
