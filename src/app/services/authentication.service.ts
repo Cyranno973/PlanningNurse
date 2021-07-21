@@ -55,4 +55,12 @@ export class AuthenticationService {
       }
     )
   }
+
+  resetPassword(email: string) {
+    firebase.auth().sendPasswordResetEmail(email)
+      .then(() => {
+        console.log("Un mail permetant le reset de votre password vous à été envoyer");
+      })
+      .catch(error => console.log(error.message));
+  }
 }
