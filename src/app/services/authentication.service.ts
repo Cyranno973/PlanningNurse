@@ -17,7 +17,8 @@ export class AuthenticationService {
           firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(
               () => {
-                console.log("connecter")
+                console.log("compte creer");
+                this.router.navigate(['login']);
               }
             ).catch(
             (error) => {
@@ -38,19 +39,23 @@ export class AuthenticationService {
           .then((result) => {
               this.router.navigate(['home']);
             }
-          )
+          ).catch(
+          (error) => {
+            reject(error);
+          }
+        )
       }))
     )
   }
 
   signOut() {
-    console.log("yoyoyo");
     return new Promise(
       (resolve, reject) => {
         firebase.auth().signOut()
           .then(
             () => {
-              this.router.navigate(['home']);
+              console.log("vous etes deconnecter");
+              this.router.navigate(['login']);
             })
       }
     )

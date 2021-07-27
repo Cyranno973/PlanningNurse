@@ -9,7 +9,7 @@ import {AuthenticationService} from "../../services/authentication.service";
 })
 export class SigninComponent implements OnInit {
   signinForm: FormGroup;
-
+  errorMessage: string;
   constructor(private formBuilder: FormBuilder, private authentification: AuthenticationService) {
   }
 
@@ -37,6 +37,7 @@ export class SigninComponent implements OnInit {
     ).catch(
       (error) => {
         console.log(error);
+        this.errorMessage = error;
       }
     );
   }

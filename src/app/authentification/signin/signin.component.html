@@ -13,7 +13,7 @@
       <input type="text" id="password" class="fadeIn third" name="login" placeholder="password" formControlName="password">
       <input type="submit" class="fadeIn fourth" value="Log In" [disabled]="signinForm.invalid">
     </form>
-
+    <p class="text-danger">{{ errorMessage }}</p>
     <!-- Remind Passowrd -->
     <div id="formFooter">
       <a class="underlineHover" routerLink="/resetPassword">Forgot Password?</a>
