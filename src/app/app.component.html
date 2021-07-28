@@ -1,21 +1,4 @@
-<div class="all">
-<nav class="menum navbar navbar-light navbar-expand-md justify-content-center fixed-top">
-  <div class="container">
-
-    <div class=" justify-content-between align-items-center w-100" id="">
-      <ul class="navbar-nav mx-auto text-center">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Home</a>
-        </li>
-        <li class="nav-item"><a class="nav-link" routerLink="/login">Se connecter</a></li>
-        <li class="nav-item"><a class="nav-link" routerLink="/signup">S'inscrire</a>
-        <li class="nav-item"><a class="nav-link" (click)="authentificationService.signOut()">Deconnexion</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-  <div id="mainApp">
-    <router-outlet></router-outlet>
-  </div>
+<app-header></app-header>
+<div id="mainApp">
+  <router-outlet></router-outlet>
 </div>

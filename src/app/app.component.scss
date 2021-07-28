@@ -9,30 +9,6 @@
 
 }
 
-a {
-  color: #fff !important;
-}
-
-nav {
-  background-color: maroon;
-  margin-bottom: 10rem;
-}
-
-.nav-item {
-  //  font-family: Century Gothic, serif;
-  margin: 0 auto;
-  //padding: 5em 3em;
-  //text-align: center;
-  //}
-  //.nav-item a {
-  //  color: #FFF;
-  //  text-decoration: none;
-  //  font: 20px Century Gothic;
-  //  margin: 0px 10px;
-  //  padding: 10px 10px;
-  //  position: relative;
-  //  z-index: 0;
-}
 
 
 /* Top & Bottom Borders Out */
@@ -60,5 +36,8 @@ nav {
 //  transform: translateY(0px);
 //}
 #mainApp {
-  margin-top: 56px;
+  position: absolute; /* postulat de départ */
+  top: 50%;
+  left: 50%; /* à 50%/50% du parent référent */
+  transform: translate(-50%, -50%);
 }

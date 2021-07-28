@@ -11,7 +11,7 @@
     <form [formGroup]="signinForm" (ngSubmit)="onSubmitSigninForm()">
       <input type="text" id="login" class="fadeIn second" name="login" placeholder="login" formControlName="email">
       <input type="text" id="password" class="fadeIn third" name="login" placeholder="password" formControlName="password">
-      <input type="submit" class="fadeIn fourth" value="Log In" [disabled]="signinForm.invalid">
+      <input type="submit" class="cursor-pointer fadeIn fourth" value="Log In" [disabled]="signinForm.invalid">
     </form>
     <p class="text-danger">{{ errorMessage }}</p>
     <!-- Remind Passowrd -->

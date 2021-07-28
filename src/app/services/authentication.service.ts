@@ -18,7 +18,6 @@ export class AuthenticationService {
             .then(
               () => {
                 console.log("compte creer");
-                this.router.navigate(['login']);
               }
             ).catch(
             (error) => {

@@ -17,6 +17,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {SignUpComponent} from './authentification/sign-up/sign-up.component';
 import {AuthenticationService} from "./services/authentication.service";
 import {PasswordResetComponent} from './authentification/password-reset/password-reset.component';
+import {HeaderComponent} from './header/header.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import {PasswordResetComponent} from './authentification/password-reset/password
     SigninComponent,
     SignUpComponent,
     PasswordResetComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,
