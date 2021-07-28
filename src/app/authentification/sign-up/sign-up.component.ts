@@ -29,6 +29,7 @@ export class SignUpComponent implements OnInit {
   }
 
   onSubmitSignUpForm() {
+    console.log('lola');
     console.log(this.signUpForm.value);
     const email = this.signUpForm.get('email').value;
     const password = this.signUpForm.get('password').value;

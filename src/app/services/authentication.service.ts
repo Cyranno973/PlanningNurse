@@ -26,6 +26,7 @@ export class AuthenticationService {
             }
           )
         } else {
+          reject("Mot de passe differents");
           console.log('mot de passe differents');
         }
       })
@@ -41,7 +42,7 @@ export class AuthenticationService {
             }
           ).catch(
           (error) => {
-            reject(error);
+            reject("Mot de passe ou identifiant invalide");
           }
         )
       }))
