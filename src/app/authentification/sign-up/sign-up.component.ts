@@ -35,7 +35,7 @@ export class SignUpComponent implements OnInit {
     const email = this.signUpForm.get('email').value;
     const password = this.signUpForm.get('password').value;
     const passwordVerif = this.signUpForm.get('passwordVerif').value;
-
+// TODO if password non identique faire quelque chose
     this.authentification.signUpUser(email, password, passwordVerif).then(
       () => {
         console.log("okay")

@@ -18,6 +18,9 @@ import {SignUpComponent} from './authentification/sign-up/sign-up.component';
 import {AuthenticationService} from "./services/authentication.service";
 import {PasswordResetComponent} from './authentification/password-reset/password-reset.component';
 import {HeaderComponent} from './header/header.component';
+import {PatientComponent} from './patient/patient.component';
+import {TableauPatientsComponent} from './patient/tableau-patients/tableau-patients.component';
+import {PlanningComponent} from './planning/planning.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +30,9 @@ import {HeaderComponent} from './header/header.component';
     SignUpComponent,
     PasswordResetComponent,
     HeaderComponent,
+    PatientComponent,
+    TableauPatientsComponent,
+    PlanningComponent,
   ],
   imports: [
     BrowserModule,
