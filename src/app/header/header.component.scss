@@ -1,11 +1,16 @@
 nav {
   background-color: maroon;
+
+  .nav-item {
+    margin: 0 auto;
+  }
+
+  a {
+    color: #fff !important;
+  }
 }
 
-.nav-item {
-  margin: 0 auto;
-}
 
-a {
-  color: #fff !important;
+.all {
+  //margin-bottom: 8rem;
 }

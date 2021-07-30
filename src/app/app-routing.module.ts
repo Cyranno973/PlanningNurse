@@ -9,8 +9,9 @@ import {AuthGuardService} from "./services/authGuard.service";
 import {PlanningComponent} from "./planning/planning.component";
 
 const routes: Routes = [
-  {path: 'home', canActivate: [AuthGuardService], component: HomeComponent},
-  {path: 'login', canActivate: [AuthGuardService], component: SigninComponent},
+  {path: 'home', component: HomeComponent},
+  {path: 'logina', component: SigninComponent},
+  // {path: 'planinng', canActivate: [AuthGuardService], component: PlanningComponent},
   {path: 'planinng', component: PlanningComponent},
   {path: 'signup', component: SignUpComponent},
   {path: 'resetPassword', component: PasswordResetComponent},
