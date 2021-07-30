@@ -21,6 +21,7 @@ import {HeaderComponent} from './header/header.component';
 import {PatientComponent} from './patient/patient.component';
 import {TableauPatientsComponent} from './patient/tableau-patients/tableau-patients.component';
 import {PlanningComponent} from './planning/planning.component';
+import {UserComponent} from './user/user/user.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import {PlanningComponent} from './planning/planning.component';
     PatientComponent,
     TableauPatientsComponent,
     PlanningComponent,
+    UserComponent,
   ],
   imports: [
     BrowserModule,

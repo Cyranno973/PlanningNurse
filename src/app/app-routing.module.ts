@@ -7,12 +7,14 @@ import {SignUpComponent} from "./authentification/sign-up/sign-up.component";
 import {PasswordResetComponent} from "./authentification/password-reset/password-reset.component";
 import {AuthGuardService} from "./services/authGuard.service";
 import {PlanningComponent} from "./planning/planning.component";
+import {PatientComponent} from "./patient/patient.component";
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
   {path: 'logina', component: SigninComponent},
   // {path: 'planinng', canActivate: [AuthGuardService], component: PlanningComponent},
   {path: 'planinng', component: PlanningComponent},
+  {path: 'patient', component: PatientComponent},
   {path: 'signup', component: SignUpComponent},
   {path: 'resetPassword', component: PasswordResetComponent},
   {path: '', redirectTo: '/home', pathMatch: 'full'},

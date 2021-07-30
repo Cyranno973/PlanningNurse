@@ -1,1 +1,25 @@
-<p>patient works!</p>
+<div class="container">
+  <h2 class="text-center">Ajouter un Patient</h2>
+  <form [formGroup]="patientForm" (ngSubmit)="onSubmitPatientForm()">
+    <div class="form-group">
+      <input type="text" class="form-control" id="prenom-input" aria-describedby="prenom Help" placeholder="Prenom" formControlName="prenom">
+      <input type="text" class="form-control" id="nom-input" aria-describedby="nom Help" placeholder="Nom" formControlName="nom">
+      <input type="text" class="form-control" id="email-input" aria-describedby="email Help" placeholder="Email" formControlName="email">
+      <input type="text" class="form-control" id="address-input" aria-describedby="address Help" placeholder="Adresse" formControlName="address">
+      <input type="tel" class="form-control" id="tel-input" aria-describedby="tel Help" placeholder="Tel" formControlName="tel">
+      <input type="text" class="form-control" id="personneContact-input" aria-describedby="personneContact Help" placeholder="Personne à contacter" formControlName="personContact">
+      <textarea class="form-control" id="commentaire-input" rows="3" placeholder="Commentaire" formControlName="commentaire"></textarea>
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown button
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a *ngFor="let soin of soins" class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+  </form>
+</div>
