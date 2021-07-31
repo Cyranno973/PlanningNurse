@@ -22,6 +22,7 @@ import {PatientComponent} from './patient/patient.component';
 import {TableauPatientsComponent} from './patient/tableau-patients/tableau-patients.component';
 import {PlanningComponent} from './planning/planning.component';
 import {UserComponent} from './user/user/user.component';
+import {DropdownModule} from "primeng/dropdown";
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import {UserComponent} from './user/user/user.component';
     FlatpickrModule.forRoot(),
     AppRoutingModule,
     ReactiveFormsModule,
+    DropdownModule,
   ],
   providers: [CarService, AuthenticationService],
   bootstrap: [AppComponent]

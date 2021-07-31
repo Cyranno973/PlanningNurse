@@ -1,8 +1,12 @@
 <h1>debut</h1>
-<div class="test">
-  <mwl-calendar-month-view
+<div class="test container">
+  <mwl-calendar-week-view
     [viewDate]="viewDate"
     [events]="events"
-    [refresh]="refresh">
-  </mwl-calendar-month-view>
+    [refresh]="refresh"
+    [daysInWeek]=""
+    [weekStartsOn]="1"
+  >
+
+  </mwl-calendar-week-view>
 </div>

@@ -14,12 +14,13 @@
           Dropdown button
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a *ngFor="let soin of soins" class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
+          <a *ngFor="let soin of soins" class="dropdown-item" href="#">{{soin}}</a>
         </div>
       </div>
+
+
     </div>
     <button type="submit" class="btn btn-primary">Ajouter</button>
   </form>
+  <p-dropdown [options]="typeSoins" [(ngModel)]="selectedSoins" optionLabel="name"></p-dropdown>
 </div>
