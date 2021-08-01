@@ -1,26 +1,47 @@
 import {ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {CalendarEvent, CalendarView,} from 'angular-calendar';
+import {CalendarDateFormatter, CalendarEvent, CalendarView, DAYS_OF_WEEK,} from 'angular-calendar';
 import {EventService} from "../services/event.service";
+import {CustomDateFormatter} from '../utility/custom-date-formatter.provider';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-planning',
   templateUrl: './planning.component.html',
-  styleUrls: ['./planning.component.scss']
+  styleUrls: ['./planning.component.scss'],
+  providers: [
+    {
+      provide: CalendarDateFormatter,
+      useClass: CustomDateFormatter
+    }
+  ]
 })
 export class PlanningComponent implements OnInit {
 
-  @ViewChild('modalContent', {static: true}) modalContent: TemplateRef<any>;
-
-  view: CalendarView = CalendarView.Week;
-
-  CalendarView = CalendarView;
+  // gestion date fr
+  view: string = 'month';
 
   viewDate: Date = new Date();
 
-  events: CalendarEvent[];
+  events: CalendarEvent[] = [];
+
+  locale: string = 'fr';
+
+  weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
+
+  weekendDays: number[] = [DAYS_OF_WEEK.FRIDAY, DAYS_OF_WEEK.SATURDAY];
+  // fin gestion date
+
+  @ViewChild('modalContent', {static: true}) modalContent: TemplateRef<any>;
+
+  // view: CalendarView = CalendarView.Week;
+
+  CalendarView = CalendarView;
+
+  // viewDate: Date = new Date();
+
+  // events: CalendarEvent[];
 
   modalData: {
     action: string;

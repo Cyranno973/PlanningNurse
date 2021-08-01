@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {SelectItem} from "primeng/api";
-import {Soins} from "../enums/soins";
-import {TypeSoins} from "../model/typeSoins";
-import {DropdownModule} from 'primeng/dropdown';
+import {City, TypeSoin} from "../model/typeSoin";
+import {PatientService} from "./patient.service";
+
 
 @Component({
   selector: 'app-patient',
@@ -13,20 +12,34 @@ import {DropdownModule} from 'primeng/dropdown';
 export class PatientComponent implements OnInit {
   patientForm: FormGroup;
   errorMessage: string;
-  typeSoins: TypeSoins[];
-  selectedSoins: TypeSoins;
-  soins = ['Ponctuel', 'Regulier'];
+
+  typeSoins: TypeSoin[];
+  cities: City[];
+
+  selectedSoins: string;
+  selectedCityCode: string;
+
 
   // soinsEnum: SelectItem[] = Object.values(Soins).map(soin => ({labe: soin, value: soin}));
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private patientService: PatientService) {
 
+    this.typeSoins = [
+      {type: "continu"},
+      {type: 'New York'},
+      {type: "ponctuel"}
+    ];
+
+    this.cities = [
+      {name: 'New York'},
+      {name: 'Rome'},
+      {name: 'London'},
+      {name: 'Istanbul'},
+      {name: 'Paris'}
+    ];
   }
 
   ngOnInit(): void {
-    this.typeSoins = [
-      {type: "continu"},
-      {type: "ponctuel"}
-    ];
+
     this.initPatientFOrm();
   }
 
@@ -35,7 +48,8 @@ export class PatientComponent implements OnInit {
       {
         prenom: ['', [Validators.required]],
         nom: ['', [Validators.required]],
-        email: ['', [Validators.required, Validators.email]],
+        // email: ['', [Validators.required, Validators.email]],
+        email: ['', [Validators.required]],
         address: ['', [Validators.required]],
         tel: ['', [Validators.required]],
         personContact: ['', [Validators.required]],
@@ -45,6 +59,24 @@ export class PatientComponent implements OnInit {
   }
 
   onSubmitPatientForm() {
+    const prenom = this.patientForm.get('prenom').value;
+    const nom = this.patientForm.get('nom').value;
+    const email = this.patientForm.get('email').value;
+    const address = this.patientForm.get('address').value;
+    const tel = this.patientForm.get('tel').value;
+    const personContact = this.patientForm.get('personContact').value;
+    const commentaire = this.patientForm.get('commentaire').value;
+    // console.log('prenom', prenom);
+    // console.log('nom', nom);
+    // console.log('email', email);
+    // console.log('address', address);
+    // console.log('tel', tel);
+    // console.log('personContact', personContact);
+    // console.log('commentaire', commentaire);
+    let patientSAve = {
+      prenom: prenom
+    }
+    this.patientService.savePatients(prenom);
   }
 
 }

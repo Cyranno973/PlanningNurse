@@ -23,6 +23,10 @@ import {TableauPatientsComponent} from './patient/tableau-patients/tableau-patie
 import {PlanningComponent} from './planning/planning.component';
 import {UserComponent} from './user/user/user.component';
 import {DropdownModule} from "primeng/dropdown";
+import {registerLocaleData} from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+
+registerLocaleData(localeFr);
 
 @NgModule({
   declarations: [
