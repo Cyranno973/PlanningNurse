@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {City, TypeSoin} from "../model/typeSoin";
 import {PatientService} from "./patient.service";
+import {AngularFireDatabase} from "@angular/fire/database";
+import firebase from "firebase";
 
 
 @Component({
@@ -12,20 +14,19 @@ import {PatientService} from "./patient.service";
 export class PatientComponent implements OnInit {
   patientForm: FormGroup;
   errorMessage: string;
-
+  value: Date;
   typeSoins: TypeSoin[];
   cities: City[];
-
+  date7: Date;
   selectedSoins: string;
   selectedCityCode: string;
-
+  infotest: any
 
   // soinsEnum: SelectItem[] = Object.values(Soins).map(soin => ({labe: soin, value: soin}));
   constructor(private formBuilder: FormBuilder, private patientService: PatientService) {
 
     this.typeSoins = [
       {type: "continu"},
-      {type: 'New York'},
       {type: "ponctuel"}
     ];
 
@@ -77,6 +78,17 @@ export class PatientComponent implements OnInit {
       prenom: prenom
     }
     this.patientService.savePatients(prenom);
+  }
+
+  onchangeTypeSoin($event) {
+    // console.log('yoyoyoy', $event);
+    console.log($event)
+    console.log($event.value);
+  }
+
+  onChange() {
+    console.log('lalal');
+
   }
 
 }

@@ -25,6 +25,10 @@ import {UserComponent} from './user/user/user.component';
 import {DropdownModule} from "primeng/dropdown";
 import {registerLocaleData} from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
+import {AngularFireModule} from "@angular/fire";
+import {environment} from "../environments/environment";
+import {AngularFireDatabase, AngularFireDatabaseModule} from "@angular/fire/database";
+import {CalendarModule as CalendarModule2} from "primeng/calendar";
 
 registerLocaleData(localeFr);
 
@@ -51,6 +55,7 @@ registerLocaleData(localeFr);
     AppRoutingModule,
     ReactiveFormsModule,
     DropdownModule,
+    CalendarModule2,
   ],
   providers: [CarService, AuthenticationService],
   bootstrap: [AppComponent]

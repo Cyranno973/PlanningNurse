@@ -15,13 +15,14 @@
       <input type="text" class="form-control" id="personneContact-input" aria-describedby="personneContact Help" placeholder="Personne à contacter" formControlName="personContact">
       <p class="text-danger">{{ errorMessage }}</p>
       <textarea class="form-control" id="commentaire-input" rows="3" placeholder="Commentaire" formControlName="commentaire"></textarea>
+      <textarea class="form-control" id="important-input" rows="3" placeholder="Important" formControlName="commentaire"></textarea>
       <p class="text-danger">{{ errorMessage }}</p>
-      <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown button
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <!--          <a *ngFor="let soin of soins" class="dropdown-item" href="#">{{soin}}</a>-->
+      <button type="submit" class="cursor-pointer btn btn-primary" [disabled]="patientForm.invalid">Ajouter un soins</button>
+      <div class="p-field p-col-12 p-md-4">
+        <p-calendar [(ngModel)]="date7" placeholder="Date et heure" inputId="time" [showTime]="true"></p-calendar>
+        <p-calendar [(ngModel)]="date7" selectionMode="range" placeholder="range de la date" inputId="time"></p-calendar>
+        <div class="p-field p-col-12 p-md-4">
+          <p-calendar [(ngModel)]="date7" [timeOnly]="true" inputId="timeonly" placeholder="heure"></p-calendar>
         </div>
       </div>
 
@@ -30,6 +31,6 @@
     <button type="submit" class="cursor-pointer btn btn-primary" [disabled]="patientForm.invalid">Ajouter</button>
     <!--    <input type="submit" class="cursor-pointer fadeIn fourth" value="Log In"">-->
   </form>
-  <p-dropdown [options]="cities" [(ngModel)]="selectedCityCode" optionLabel="name"></p-dropdown>
-  <p-dropdown [options]="typeSoins" [(ngModel)]="selectedSoins" optionLabel="type"></p-dropdown>
+  <!--  <p-dropdown [options]="cities" [(ngModel)]="selectedCityCode" optionLabel="name"></p-dropdown>-->
+  <p-dropdown [options]="typeSoins" [(ngModel)]="selectedSoins" optionLabel="type" (onChange)="onchangeTypeSoin($event)"></p-dropdown>
 </div>
