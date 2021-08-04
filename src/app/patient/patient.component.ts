@@ -2,8 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {City, TypeSoin} from "../model/typeSoin";
 import {PatientService} from "./patient.service";
-import {AngularFireDatabase} from "@angular/fire/database";
-import firebase from "firebase";
 
 
 @Component({
@@ -50,10 +48,10 @@ export class PatientComponent implements OnInit {
         prenom: ['', [Validators.required]],
         nom: ['', [Validators.required]],
         // email: ['', [Validators.required, Validators.email]],
-        email: ['', [Validators.required]],
-        address: ['', [Validators.required]],
-        tel: ['', [Validators.required]],
-        personContact: ['', [Validators.required]],
+        email: [''],
+        address: [''],
+        tel: [''],
+        personContact: [''],
         commentaire: ['']
       }
     )

@@ -19,6 +19,11 @@ export class PatientService {
   }
 
   savePatients(prenom: any) {
-    firebase.database().ref('/patients').set(this.patients).then(() => console.log('yess'));
+    firebase.database().ref('/patients').set(this.patients).then(
+      () => console.log('yess'),
+      (error) => console.log('no', error)
+    ).catch(
+      (error) => console.log('none', error)
+    );
   }
 }

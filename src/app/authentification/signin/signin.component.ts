@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AuthenticationService} from "../../services/authentication.service";
 
 @Component({
   selector: 'app-signin',
@@ -10,7 +9,7 @@ import {AuthenticationService} from "../../services/authentication.service";
 export class SigninComponent implements OnInit {
   signinForm: FormGroup;
   errorMessage: string;
-  constructor(private formBuilder: FormBuilder, private authentification: AuthenticationService) {
+  constructor(private formBuilder: FormBuilder) {
   }
 
   ngOnInit() {
@@ -30,15 +29,5 @@ export class SigninComponent implements OnInit {
     console.log(this.signinForm.value);
     const email = this.signinForm.get('email').value;
     const password = this.signinForm.get('password').value;
-    this.authentification.signInUser(email, password).then(
-      () => {
-        console.log("okay")
-      }
-    ).catch(
-      (error) => {
-        console.log(error);
-        this.errorMessage = error;
-      }
-    );
   }
 }

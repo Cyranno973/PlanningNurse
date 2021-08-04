@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AuthenticationService} from "../../services/authentication.service";
 import {Router} from "@angular/router";
 
 @Component({
@@ -13,7 +12,7 @@ export class SignUpComponent implements OnInit {
   signUpForm: FormGroup;
   errorMessage: string;
 
-  constructor(private authentification: AuthenticationService, private formBuilder: FormBuilder, private router: Router) {
+  constructor(private formBuilder: FormBuilder, private router: Router) {
   }
 
   ngOnInit() {
@@ -35,17 +34,5 @@ export class SignUpComponent implements OnInit {
     const email = this.signUpForm.get('email').value;
     const password = this.signUpForm.get('password').value;
     const passwordVerif = this.signUpForm.get('passwordVerif').value;
-// TODO if password non identique faire quelque chose
-    this.authentification.signUpUser(email, password, passwordVerif).then(
-      () => {
-        console.log("okay")
-        this.router.navigate(['login']);
-      }
-    ).catch(
-      (error) => {
-        console.log(error);
-        this.errorMessage = error;
-      }
-    );
   }
 }

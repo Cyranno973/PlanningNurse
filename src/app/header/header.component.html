@@ -7,7 +7,7 @@
           <li class="nav-item active"><a class="nav-link" routerLink="/planinng">planning</a></li>
           <li *ngIf="!isAuth" class="nav-item"><a class="nav-link" routerLink="/logina">Se connecter</a></li>
           <li *ngIf="!isAuth" class="nav-item"><a class="nav-link" routerLink="/signup">S'inscrire</a></li>
-          <li *ngIf="isAuth" class="cursor-pointer nav-item"><a class="nav-link" (click)="authentificationService.signOut()">Deconnexion</a></li>
+          <li *ngIf="isAuth" class="cursor-pointer nav-item"><a class="nav-link">Deconnexion</a></li>
         </ul>
       </div>
     </div>

@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthenticationService} from "../services/authentication.service";
 import firebase from "firebase";
 
 @Component({
@@ -11,7 +10,7 @@ export class HeaderComponent implements OnInit {
 
   isAuth: boolean;
 
-  constructor(public authentificationService: AuthenticationService) {
+  constructor() {
   }
 
   ngOnInit(): void {
@@ -27,6 +26,6 @@ export class HeaderComponent implements OnInit {
   }
 
   onSignOut() {
-    this.authentificationService.signOut();
+
   }
 }

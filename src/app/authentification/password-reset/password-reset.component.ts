@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AuthenticationService} from "../../services/authentication.service";
 
 @Component({
   selector: 'app-password-reset',
@@ -11,7 +10,7 @@ export class PasswordResetComponent implements OnInit {
 
   passwordResetForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private authentificationService: AuthenticationService) {
+  constructor(private formBuilder: FormBuilder) {
   }
 
   ngOnInit(): void {
@@ -28,6 +27,6 @@ export class PasswordResetComponent implements OnInit {
 
   onSubmitPasswordReset() {
     const email = this.passwordResetForm.get('email').value;
-    this.authentificationService.resetPassword(email);
+
   }
 }
