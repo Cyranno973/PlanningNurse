@@ -1,14 +1,22 @@
 import {Injectable} from '@angular/core';
 import {Patient} from "../model/patient";
-import {Subject} from "rxjs";
-import firebase from "firebase";
+import {Observable, Subject} from "rxjs";
+import {AngularFirestore} from "@angular/fire/firestore";
+import {AngularFireDatabase, AngularFireObject} from "@angular/fire/database";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PatientService {
 
-  constructor() {
+  patientTest: AngularFireObject<any>;
+  items: Observable<Patient[]>;
+
+  constructor(private af: AngularFirestore, private angularDatabase: AngularFireDatabase) {
+    //on defini la table ou le noeud utilisé
+    this.patientTest = angularDatabase.object('/patientss');
+    //on defini le type de flux valueChanges() snapshotChanges() stateChanges() auditTrail()
+    this.items = this.patientTest.valueChanges();
   }
 
   patients: Patient[] = [];
@@ -19,11 +27,28 @@ export class PatientService {
   }
 
   savePatients(prenom: any) {
-    firebase.database().ref('/patients').set(this.patients).then(
-      () => console.log('yess'),
-      (error) => console.log('no', error)
-    ).catch(
+    this.angularDatabase.object('patients').set(prenom)
+      .then(
+        test => console.log('yess', test),
+        (error) => console.log('no', error)
+      ).catch(
       (error) => console.log('none', error)
     );
+    console.log('ici')
+
   }
+
+  create(patient: Patient) {
+    this.patientTest.set(patient)
+      .then(
+        test => console.log('yess', test),
+        (error) => console.log('no', error)
+      ).catch(
+      (error) => console.log('none', error)
+    );
+    console.log('create')
+
+  }
+
+  re
 }

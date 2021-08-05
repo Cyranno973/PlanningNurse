@@ -30,6 +30,19 @@ import {environment} from "../environments/environment";
 registerLocaleData(localeFr);
 
 @NgModule({
+  imports: [
+    AngularFireModule.initializeApp(environment.firebaseConfig, 'NunuserPlaning'),
+    BrowserModule,
+    TableModule,
+    BrowserAnimationsModule,
+    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
+    FormsModule,
+    FlatpickrModule.forRoot(),
+    AppRoutingModule,
+    ReactiveFormsModule,
+    DropdownModule,
+    CalendarModule2
+  ],
   declarations: [
     AppComponent,
     HomeComponent,
@@ -42,19 +55,7 @@ registerLocaleData(localeFr);
     PlanningComponent,
     UserComponent,
   ],
-  imports: [
-    AngularFireModule.initializeApp(environment.firebaseConfig),
-    BrowserModule,
-    TableModule,
-    BrowserAnimationsModule,
-    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
-    FormsModule,
-    FlatpickrModule.forRoot(),
-    AppRoutingModule,
-    ReactiveFormsModule,
-    DropdownModule,
-    CalendarModule2
-  ],
+
   providers: [CarService,
     {provide: AUTH_SETTINGS, useValue: {appVerificationDisabledForTesting: true}},],
   bootstrap: [AppComponent]

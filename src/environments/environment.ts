@@ -7,6 +7,7 @@ export const environment = {
   firebaseConfig: {
     apiKey: "AIzaSyC_br1w39YY1Ojijh0zdCUeKR8U5XZmX0A",
     authDomain: "nunurseplanning.firebaseapp.com",
+    databaseURL: "https://nunurseplanning-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "nunurseplanning",
     storageBucket: "nunurseplanning.appspot.com",
     messagingSenderId: "1091036199432",

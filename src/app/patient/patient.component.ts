@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {City, TypeSoin} from "../model/typeSoin";
 import {PatientService} from "./patient.service";
+import {Patient} from "../model/patient";
 
 
 @Component({
@@ -19,6 +20,7 @@ export class PatientComponent implements OnInit {
   selectedSoins: string;
   selectedCityCode: string;
   infotest: any
+  patientSAve: Patient;
 
   // soinsEnum: SelectItem[] = Object.values(Soins).map(soin => ({labe: soin, value: soin}));
   constructor(private formBuilder: FormBuilder, private patientService: PatientService) {
@@ -39,6 +41,10 @@ export class PatientComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.patientSAve = {
+      prenom: "sarah"
+    }
+    this.patientService.create(this.patientSAve);
     this.initPatientFOrm();
   }
 
@@ -72,10 +78,7 @@ export class PatientComponent implements OnInit {
     // console.log('tel', tel);
     // console.log('personContact', personContact);
     // console.log('commentaire', commentaire);
-    let patientSAve = {
-      prenom: prenom
-    }
-    this.patientService.savePatients(prenom);
+
   }
 
   onchangeTypeSoin($event) {
