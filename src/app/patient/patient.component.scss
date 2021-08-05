@@ -1,10 +1,3 @@
 input {
   margin: 15px 0;
 }
-
-.container {
-  position: absolute; /* postulat de départ */
-  top: 50%;
-  left: 50%; /* à 50%/50% du parent référent */
-  transform: translate(-50%, -50%);
-}

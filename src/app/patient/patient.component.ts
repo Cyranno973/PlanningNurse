@@ -44,7 +44,7 @@ export class PatientComponent implements OnInit {
     this.patientSAve = {
       prenom: "sarah"
     }
-    this.patientService.create(this.patientSAve);
+    // this.patientService.create(this.patientSAve);
     this.initPatientFOrm();
   }
 
