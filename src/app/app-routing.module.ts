@@ -5,9 +5,9 @@ import {HomeComponent} from "./home/home.component";
 import {SigninComponent} from "./authentification/signin/signin.component";
 import {SignUpComponent} from "./authentification/sign-up/sign-up.component";
 import {PasswordResetComponent} from "./authentification/password-reset/password-reset.component";
-import {AuthGuardService} from "./services/authGuard.service";
 import {PlanningComponent} from "./planning/planning.component";
 import {PatientComponent} from "./patient/patient.component";
+import {InfirmieresComponent} from "./infirmieres/infirmieres.component";
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -17,7 +17,8 @@ const routes: Routes = [
   {path: 'patient', component: PatientComponent},
   {path: 'signup', component: SignUpComponent},
   {path: 'resetPassword', component: PasswordResetComponent},
-  {path: '', redirectTo: '/home', pathMatch: 'full'},
+  {path: 'infirmieres', component: InfirmieresComponent},
+  // {path: '', redirectTo: '/home', pathMatch: 'full'},
   {path: '**', redirectTo: '/home'}
 ]
 

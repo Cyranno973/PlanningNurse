@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Patient} from "../model/patient";
 import {Observable, Subject} from "rxjs";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {AngularFireDatabase, AngularFireObject} from "@angular/fire/database";
+import {AngularFireDatabase, AngularFireObject} from "@angular/fire/compat/database";
+import {AngularFirestore} from "@angular/fire/compat/firestore";
+
 
 @Injectable({
   providedIn: 'root'
@@ -49,6 +50,4 @@ export class PatientService {
     console.log('create')
 
   }
-
-  re
 }

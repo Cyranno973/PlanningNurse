@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {AngularFireAuth} from "@angular/fire/auth";
+import {AngularFireAuth} from "@angular/fire/compat/auth";
 
 @Injectable({
   providedIn: 'root'
@@ -36,21 +36,15 @@ export class AuthenticationService {
     return new Promise(
       (((resolve, reject) => {
         this.auth.signInWithEmailAndPassword(email, password)
-          .then((result) => {
-              this.router.navigate(['home']);
-            }
-          ).catch(
-          (error) => {
-            reject("Mot de passe ou identifiant invalide");
-          }
-        )
+          .then(() => this.router.navigate(['home']))
+          .catch(() => reject("Mot de passe ou identifiant invalide"))
       }))
     )
   }
 
   signOut() {
     return new Promise(
-      (resolve, reject) => {
+      () => {
         this.auth.signOut()
           .then(
             () => {
