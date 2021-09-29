@@ -15,8 +15,8 @@ import {AppRoutingModule} from './app-routing.module';
 import {SignUpComponent} from './authentification/sign-up/sign-up.component';
 import {PasswordResetComponent} from './authentification/password-reset/password-reset.component';
 import {HeaderComponent} from './header/header.component';
-import {PatientComponent} from './patient/patient.component';
-import {TableauPatientsComponent} from './patient/tableau-patients/tableau-patients.component';
+import {PatientComponent} from './patients/patient/patient.component';
+import {TableauPatientsComponent} from './patients/patient/tableau-patients/tableau-patients.component';
 import {PlanningComponent} from './planning/planning.component';
 import {UserComponent} from './user/user/user.component';
 import {DropdownModule} from "primeng/dropdown";
@@ -27,6 +27,7 @@ import {AngularFireModule} from "@angular/fire/compat";
 import {AngularFirestoreModule} from "@angular/fire/compat/firestore";
 import {SETTINGS as AUTH_SETTINGS} from '@angular/fire/compat/auth';
 import {InfirmieresModule} from "./infirmieres/infirmieres.module";
+import {PatientsModule} from "./patients/patients.module";
 
 registerLocaleData(localeFr);
 
@@ -45,7 +46,8 @@ registerLocaleData(localeFr);
     ReactiveFormsModule,
     DropdownModule,
     CalendarModule2,
-    InfirmieresModule
+    InfirmieresModule,
+    PatientsModule
   ],
   declarations: [
     AppComponent,

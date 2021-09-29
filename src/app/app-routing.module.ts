@@ -6,19 +6,21 @@ import {SigninComponent} from "./authentification/signin/signin.component";
 import {SignUpComponent} from "./authentification/sign-up/sign-up.component";
 import {PasswordResetComponent} from "./authentification/password-reset/password-reset.component";
 import {PlanningComponent} from "./planning/planning.component";
-import {PatientComponent} from "./patient/patient.component";
+import {PatientComponent} from "./patients/patient/patient.component";
 import {InfirmieresComponent} from "./infirmieres/infirmieres.component";
+import {PatientsComponent} from "./patients/patients.component";
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
   {path: 'logina', component: SigninComponent},
-  // {path: 'planinng', canActivate: [AuthGuardService], component: PlanningComponent},
   {path: 'planinng', component: PlanningComponent},
-  {path: 'patient', component: PatientComponent},
   {path: 'signup', component: SignUpComponent},
   {path: 'resetPassword', component: PasswordResetComponent},
+
+  // Nouvelles routes
+  {path: 'patients', component: PatientsComponent},
+  {path: 'patients/:id', component: PatientComponent},
   {path: 'infirmieres', component: InfirmieresComponent},
-  // {path: '', redirectTo: '/home', pathMatch: 'full'},
   {path: '**', redirectTo: '/home'}
 ]
 

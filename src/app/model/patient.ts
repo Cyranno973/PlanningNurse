@@ -1,4 +1,4 @@
-export interface Patient {
+export default class Patient {
   id?: string;
   prenom?: string;
   nom?: string;

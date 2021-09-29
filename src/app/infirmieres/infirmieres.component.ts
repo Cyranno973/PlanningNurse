@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {InfirmiereService} from "../repository/infirmiere.service";
-import {map} from "rxjs/operators";
 import Infirmiere from "../model/infirmiere";
 
 @Component({
@@ -15,15 +14,8 @@ export class InfirmieresComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.is.getAll().snapshotChanges().pipe(
-      map(changes =>
-        changes.map(c =>
-          ({id: c.payload.doc.id, ...c.payload.doc.data()})
-        )
-      )
-    ).subscribe(data => {
+    this.is.getAll().subscribe(data => {
       this.infirmieres = data;
     });
   }
-
 }
