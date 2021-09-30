@@ -1,2 +1,18 @@
-
-{{infirmieres | json}}
+<p-table [value]="infirmieres" responsiveLayout="scroll">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>id</th>
+      <th>Nom</th>
+      <th>Prenom</th>
+      <th>Trigramme</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-infirmiere>
+    <tr>
+      <td>{{infirmiere.id}}</td>
+      <td>{{infirmiere.nom}}</td>
+      <td>{{infirmiere.prenom}}</td>
+      <td>{{infirmiere.trigramme}}</td>
+    </tr>
+  </ng-template>
+</p-table>

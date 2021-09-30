@@ -3,7 +3,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
 import {HomeComponent} from './home/home.component';
 import {TableModule} from "primeng/table";
-import {CarService} from "./home/car.service";
+import {RepresentativeService} from "./home/representative.service";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
@@ -62,7 +62,7 @@ registerLocaleData(localeFr);
     UserComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [CarService,
+  providers: [RepresentativeService,
     {provide: AUTH_SETTINGS, useValue: {appVerificationDisabledForTesting: true}},],
   bootstrap: [AppComponent]
 })
