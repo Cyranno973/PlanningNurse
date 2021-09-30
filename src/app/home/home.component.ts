@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {CarService} from "./car.service";
+import {RepresentativeService} from "./representative.service";
 import {Representative} from "../model/customer";
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
@@ -12,7 +12,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 export class HomeComponent implements OnInit {
   represent: Representative[];
 
-  constructor(private carService: CarService) {
+  constructor(private carService: RepresentativeService) {
   }
 
   ngOnInit() {

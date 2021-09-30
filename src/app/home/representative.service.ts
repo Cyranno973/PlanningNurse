@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Representative} from "../model/customer";
 
 @Injectable()
-export class CarService {
+export class RepresentativeService {
 
   representatives: Representative[];
 
