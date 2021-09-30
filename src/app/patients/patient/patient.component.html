@@ -2,19 +2,26 @@
   <h2 class="text-center">Ajouter un Patient</h2>
   <form [formGroup]="patientForm" (ngSubmit)="onSubmitPatientForm()">
     <div class="form-group">
-      <input type="text" class="form-control" id="prenom-input" aria-describedby="prenom Help" placeholder="Prenom" formControlName="prenom">
-          <p class="text-danger">{{ errorMessage }}</p>
-      <input type="text" class="form-control" id="nom-input" aria-describedby="nom Help" placeholder="Nom" formControlName="nom">
+      <input type="text" class="form-control" id="prenom-input" aria-describedby="prenom Help" placeholder="Prenom"
+             formControlName="prenom">
       <p class="text-danger">{{ errorMessage }}</p>
-      <input type="text" class="form-control" id="email-input" aria-describedby="email Help" placeholder="Email" formControlName="email">
+      <input type="text" class="form-control" id="nom-input" aria-describedby="nom Help" placeholder="Nom"
+             formControlName="nom">
       <p class="text-danger">{{ errorMessage }}</p>
-      <input type="text" class="form-control" id="address-input" aria-describedby="address Help" placeholder="Adresse" formControlName="address">
+      <input type="text" class="form-control" id="email-input" aria-describedby="email Help" placeholder="Email"
+             formControlName="email">
       <p class="text-danger">{{ errorMessage }}</p>
-      <input type="tel" class="form-control" id="tel-input" aria-describedby="tel Help" placeholder="Tel" formControlName="tel">
+      <input type="text" class="form-control" id="address-input" aria-describedby="address Help" placeholder="Adresse"
+             formControlName="address">
       <p class="text-danger">{{ errorMessage }}</p>
-      <input type="text" class="form-control" id="personneContact-input" aria-describedby="personneContact Help" placeholder="Personne à contacter" formControlName="personContact">
+      <input type="tel" class="form-control" id="tel-input" aria-describedby="tel Help" placeholder="Tel"
+             formControlName="tel">
       <p class="text-danger">{{ errorMessage }}</p>
-      <textarea class="form-control" id="commentaire-input" rows="3" placeholder="Commentaire" formControlName="commentaire"></textarea>
+      <input type="text" class="form-control" id="personneContact-input" aria-describedby="personneContact Help"
+             placeholder="Personne à contacter" formControlName="personContact">
+      <p class="text-danger">{{ errorMessage }}</p>
+      <textarea class="form-control" id="commentaire-input" rows="3" placeholder="Commentaire"
+                formControlName="commentaire"></textarea>
       <!--      <textarea class="form-control" id="important-input" rows="3" placeholder="Important" formControlName="commentaireee"></textarea>-->
       <!--      <p class="text-danger">{{ errorMessage }}</p>-->
       <!--      <button type="submit" class="cursor-pointer btn btn-primary" [disabled]="patientForm.invalid">Ajouter un soins</button>-->
@@ -32,5 +39,7 @@
     <!--    <input type="submit" class="cursor-pointer fadeIn fourth" value="Log In"">-->
   </form>
   <!--  <p-dropdown [options]="cities" [(ngModel)]="selectedCityCode" optionLabel="name"></p-dropdown>-->
-  <p-dropdown [options]="typeSoins" [(ngModel)]="selectedSoins" optionLabel="type" (onChange)="onchangeTypeSoin($event)"></p-dropdown>
+  <p-dropdown [options]="typeSoins" [(ngModel)]="selectedSoins" optionLabel="type"
+              (onChange)="onchangeTypeSoin($event)"></p-dropdown>
 </div>
+{{patientId}}

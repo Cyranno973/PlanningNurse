@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {City, TypeSoin} from "../model/typeSoin";
-import {PatientService} from "./patient.service";
-import {Patient} from "../model/patient";
+import {City, TypeSoin} from "../../model/typeSoin";
+import {ActivatedRoute} from "@angular/router";
 
 
 @Component({
@@ -19,12 +18,19 @@ export class PatientComponent implements OnInit {
   date7: Date;
   selectedSoins: string;
   selectedCityCode: string;
-  infotest: any
-  patientSAve: Patient;
+  infotest: any;
+  patientId: string;
 
-  // soinsEnum: SelectItem[] = Object.values(Soins).map(soin => ({labe: soin, value: soin}));
-  constructor(private formBuilder: FormBuilder, private patientService: PatientService) {
+  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute) {
+  }
 
+  ngOnInit(): void {
+    this.patientId = this.route.snapshot.paramMap.get('id');
+    console.log(this.patientId);
+
+    this.initForm();
+
+    // soinsEnum: SelectItem[] = Object.values(Soins).map(soin => ({labe: soin, value: soin}));
     this.typeSoins = [
       {type: "continu"},
       {type: "ponctuel"}
@@ -39,16 +45,7 @@ export class PatientComponent implements OnInit {
     ];
   }
 
-  ngOnInit(): void {
-
-    this.patientSAve = {
-      prenom: "sarah"
-    }
-    // this.patientService.create(this.patientSAve);
-    this.initPatientFOrm();
-  }
-
-  initPatientFOrm() {
+  initForm() {
     this.patientForm = this.formBuilder.group(
       {
         prenom: ['', [Validators.required]],
@@ -71,14 +68,6 @@ export class PatientComponent implements OnInit {
     const tel = this.patientForm.get('tel').value;
     const personContact = this.patientForm.get('personContact').value;
     const commentaire = this.patientForm.get('commentaire').value;
-    // console.log('prenom', prenom);
-    // console.log('nom', nom);
-    // console.log('email', email);
-    // console.log('address', address);
-    // console.log('tel', tel);
-    // console.log('personContact', personContact);
-    // console.log('commentaire', commentaire);
-
   }
 
   onchangeTypeSoin($event) {
@@ -89,7 +78,6 @@ export class PatientComponent implements OnInit {
 
   onChange() {
     console.log('lalal');
-
   }
 
 }

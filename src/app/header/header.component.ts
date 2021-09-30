@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AngularFireAuth} from "@angular/fire/auth";
+import {AngularFireAuth} from "@angular/fire/compat/auth";
 
 @Component({
   selector: 'app-header',
@@ -16,11 +16,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.fa.onAuthStateChanged(
       (user) => {
-        if (user) {
-          this.isAuth = true;
-        } else {
-          this.isAuth = false;
-        }
+        this.isAuth = !!user;
       }
     )
   }

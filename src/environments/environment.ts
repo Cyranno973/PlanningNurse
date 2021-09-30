@@ -5,14 +5,7 @@
 export const environment = {
   production: false,
   firebaseConfig: {
-    apiKey: "AIzaSyC_br1w39YY1Ojijh0zdCUeKR8U5XZmX0A",
-    authDomain: "nunurseplanning.firebaseapp.com",
-    databaseURL: "https://nunurseplanning-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "nunurseplanning",
-    storageBucket: "nunurseplanning.appspot.com",
-    messagingSenderId: "1091036199432",
-    appId: "1:1091036199432:web:2d4f8d30436187e325afbd",
-    measurementId: "G-35DTL1Y294"
+    // COPY keys from NOTION
   }
 };
 
