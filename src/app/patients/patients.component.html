@@ -1,4 +1,5 @@
-<p>patients works!</p>
-
-
-{{patients | json}}
+<ul>
+  <li *ngFor="let p of patients"
+      class="cursor-pointer"
+      [routerLink]="'/patients/' + p.id">{{p.prenom}} {{p.nom}}</li>
+</ul>

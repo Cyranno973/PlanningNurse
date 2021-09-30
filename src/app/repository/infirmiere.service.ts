@@ -6,7 +6,7 @@ import {AbstractCrudRepository} from "./AbstractCrudRepository";
 @Injectable({
   providedIn: 'root'
 })
-export class InfirmiereService extends AbstractCrudRepository<Infirmiere>{
+export class InfirmiereService extends AbstractCrudRepository<Infirmiere> {
   constructor(db: AngularFirestore) {
     super(db, '/infirmieres');
   }
