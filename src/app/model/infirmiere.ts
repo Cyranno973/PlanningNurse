@@ -1,5 +1,9 @@
 export default class Infirmiere {
   id: string;
-  prenom: string;
   nom: string;
+  prenom: string;
+  password: string;
+  mail: string;
+  tel: number;
+  trg: string;
 }

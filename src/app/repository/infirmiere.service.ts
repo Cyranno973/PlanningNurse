@@ -10,4 +10,5 @@ export class InfirmiereService extends AbstractCrudRepository<Infirmiere>{
   constructor(db: AngularFirestore) {
     super(db, '/infirmieres');
   }
+
 }
