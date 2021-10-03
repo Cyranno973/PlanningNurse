@@ -7,7 +7,7 @@ import {AbstractCrudRepository} from "./AbstractCrudRepository";
   providedIn: 'root'
 })
 export class InfirmiereService extends AbstractCrudRepository<Infirmiere> {
-  constructor(db: AngularFirestore) {
+  constructor(private db: AngularFirestore) {
     super(db, '/infirmieres');
   }
 }

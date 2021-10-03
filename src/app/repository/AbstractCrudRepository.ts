@@ -4,9 +4,9 @@ import {Observable} from "rxjs";
 import {Timestamp} from 'firebase/firestore'
 
 export class AbstractCrudRepository<T> {
-  private ref: AngularFirestoreCollection<T>
+  ref: AngularFirestoreCollection<T>
 
-  constructor(private db: AngularFirestore, private dbPath: string) {
+  constructor(db: AngularFirestore, dbPath: string) {
     this.ref = db.collection<T>(dbPath);
   }
 
