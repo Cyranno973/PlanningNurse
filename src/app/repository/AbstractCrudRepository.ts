@@ -1,10 +1,16 @@
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat/firestore";
 import {map} from "rxjs/operators";
 import {Observable} from "rxjs";
-import {Timestamp} from 'firebase/firestore'
+import firebase from "firebase/compat/app";
 
-export class AbstractCrudRepository<T> {
-  ref: AngularFirestoreCollection<T>
+class Id {
+  id: string;
+  lastUpdate: Date;
+  dateCreation: Date;
+}
+
+export class AbstractCrudRepository<T extends Id> {
+  private ref: AngularFirestoreCollection<T>
 
   constructor(db: AngularFirestore, dbPath: string) {
     this.ref = db.collection<T>(dbPath);
@@ -24,12 +30,22 @@ export class AbstractCrudRepository<T> {
       });
   }
 
-  create(object: T): any {
-    return this.ref.add({...object});
+  create(object: T): Promise<T> {
+    object.dateCreation = new Date();
+    return this.ref.add({...this.cleanObject(object)})
+      .then(createdDocRef => {
+        object.id = createdDocRef.id
+        return object;
+      });
   }
 
-  update(id: string, data: any): Promise<void> {
-    return this.ref.doc(id).update(data);
+  update(id: string, data: T): Promise<T> {
+    data.lastUpdate = new Date();
+    return this.ref.doc(id).set({...this.cleanObject(data)})
+      .then(() => {
+        data.id = id;
+        return this.toDates(data);
+      });
   }
 
   delete(id: string): Promise<void> {
@@ -37,10 +53,20 @@ export class AbstractCrudRepository<T> {
   }
 
   // Convertit les timestamps des objets en Dates
-  private toDates(object: T): T {
+  private toDates(object: any): any {
     Object.keys(object)
-      .filter(key => object[key] instanceof Timestamp)
+      .filter(key => object[key] instanceof firebase.firestore.Timestamp)
       .forEach(key => object[key] = object[key].toDate())
     return object;
+  }
+
+  // Supprime les champs vides ("") / null ou objets vides ({})
+  private cleanObject(obj) {
+    return Object.entries(obj)
+      .map(([k, v]) => [k, v && typeof v === 'object' && Object.prototype.toString.call(v) !== "[object Date]" ? this.cleanObject(v) : v])
+      .reduce((a, [k, v]) => {
+        console.log(v);
+        return (v == null || (!Object.keys(v).length && Object.prototype.toString.call(v) !== "[object Date]") ? a : (a[k] = v, a));
+      }, {});
   }
 }

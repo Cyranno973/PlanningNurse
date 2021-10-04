@@ -1,18 +1,22 @@
-<div class="row col-12">
-  <form class="search row" [formGroup]="searchForm">
-    <div class="col-12">
-      <input type="text" class="text-capitalize" (keyup)="searchString('prenom')" placeholder="Prénom" formControlName="prenom">
-    </div>
-    <div class="col-12">
-      <input type="text" class="text-capitalize" (keyup)="searchString('nom')" placeholder="Nom" formControlName="nom">
-    </div>
-  </form>
+<div class="container">
+
+  <div class="row col-12">
+    <form class="search row" [formGroup]="searchForm">
+      <div class="col-12">
+        <input type="text" class="text-capitalize" (keyup)="searchString('prenom')" placeholder="Prénom" formControlName="prenom">
+      </div>
+      <div class="col-12">
+        <input type="text" class="text-capitalize" (keyup)="searchString('nom')" placeholder="Nom" formControlName="nom">
+      </div>
+    </form>
+  </div>
+
+  <ul *ngIf="!searchFilters.length || searchResults?.length else noResult">
+    <li *ngFor="let p of (!!searchFilters.length ? searchResults : patients)" class="cursor-pointer" [routerLink]="'/patients/' + p.id">{{p.prenom}} {{p.nom}}</li>
+  </ul>
+
+  <ng-template #noResult>
+    Aucun patient trouvé
+  </ng-template>
 </div>
-
-<ul *ngIf="!searchFilters.length || searchResults?.length else noResult">
-  <li *ngFor="let p of (!!searchFilters.length ? searchResults : patients)" class="cursor-pointer" [routerLink]="'/patients/' + p.id">{{p.prenom}} {{p.nom}}</li>
-</ul>
-
-<ng-template #noResult>
-  Aucun patient trouvé
-</ng-template>
+<p-speedDial class="plus-btn" [rotateAnimation]="false" (onClick)="addPatient()"></p-speedDial>

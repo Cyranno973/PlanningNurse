@@ -2,16 +2,20 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {PatientsComponent} from './patients.component';
 import {RouterModule} from "@angular/router";
-import {ReactiveFormsModule} from "@angular/forms";
+import {SharedModule} from "../shared/shared.module";
+import {PatientComponent} from "./patient/patient.component";
+import {FormPatientComponent} from './patient/form-patient/form-patient.component';
 
 @NgModule({
   declarations: [
-    PatientsComponent
+    PatientsComponent,
+    PatientComponent,
+    FormPatientComponent
   ],
   imports: [
     CommonModule,
-    RouterModule,
-    ReactiveFormsModule
+    SharedModule,
+    RouterModule
   ]
 })
 export class PatientsModule {

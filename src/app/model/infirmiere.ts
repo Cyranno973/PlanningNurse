@@ -6,4 +6,6 @@ export default class Infirmiere {
   mail: string;
   tel: number;
   trg: string;
+  lastUpdate: Date;
+  dateCreation: Date;
 }

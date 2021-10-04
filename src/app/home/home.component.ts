@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {RepresentativeService} from "./representative.service";
-import {Representative} from "../model/customer";
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {MenuItem} from "primeng/api";
+import {DialogService} from "primeng/dynamicdialog";
+import {FormPatientComponent} from "../patients/patient/form-patient/form-patient.component";
 
 
 @Component({
@@ -10,13 +10,35 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  represent: Representative[];
+  plusBtnMenuItems: MenuItem[];
 
-  constructor(private carService: RepresentativeService) {
+  constructor(public dialogService: DialogService) {
   }
 
   ngOnInit() {
-    this.represent = this.carService.getCarsSmall();
+    this.plusBtnMenuItems = [
+      {
+        tooltip: 'Créer un patient',
+        icon: 'pi pi-user-plus',
+        command: () => {
+          this.addPatient();
+        }
+      },
+      {
+        tooltip: 'Créer un RDV',
+        icon: 'pi pi-calendar-plus',
+        command: () => {
+          // TODO : Create FormRdvComponent
+          this.addPatient();
+        }
+      }
+    ]
+  }
+
+  private addPatient() {
+    this.dialogService.open(FormPatientComponent, {
+      header: 'Nouveau patient', styleClass: 'custom-modal patient'
+    });
   }
 }
 
