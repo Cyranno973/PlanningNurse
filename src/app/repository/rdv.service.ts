@@ -7,7 +7,7 @@ import Rdv from "../model/rdv";
   providedIn: 'root'
 })
 export class RdvService extends AbstractCrudRepository<Rdv> {
-  constructor(db: AngularFirestore) {
+  constructor(private db: AngularFirestore) {
     super(db, '/rdvs');
   }
 }
