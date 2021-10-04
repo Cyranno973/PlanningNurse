@@ -2,16 +2,19 @@
   <div class="row">
     <div class="col-12 col-md-6" *ngIf="patient">
       [CARTE D'INFORMATIONS PERSONNELLES]
-      <h2>{{patient.prenom}} {{patient.nom | uppercase}}</h2>
+      <h2 class="d-inline-block">{{patient.prenom}} {{patient.nom | uppercase}}</h2>
+      <p-button icon="pi pi-user-edit" (click)="edit()" label="Modifier"></p-button>
       <div class="form-group">
         <ul>
           <li>Date de naissance : {{patient.dateNaissance | date : 'dd/MM/yyyy'}}</li>
           <li>Email : {{patient.email}}</li>
-          <li>Téléphone :
+          <li>Adresse : {{patient.address}}</li>
+          <li>
+            <h3>Téléphone</h3>
             <ul>
               <li>Mobile : {{patient.telephone?.mobile}}</li>
               <li>Fixe : {{patient.telephone?.fixe}}</li>
-              <li>Autre : {{patient.telephone?.autre}}</li>
+              <li *ngIf="patient.telephone?.autre">Autre : {{patient.telephone?.autre}}</li>
             </ul>
           </li>
         </ul>

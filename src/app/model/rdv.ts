@@ -7,4 +7,6 @@ export default class Rdv {
   infirmiereId: string;
   infirmiere: Infirmiere;
   date: Date;
+  lastUpdate: Date;
+  dateCreation: Date;
 }

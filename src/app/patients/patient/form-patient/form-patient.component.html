@@ -1,0 +1,51 @@
+<div class="formulaire form-patient">
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="row">
+      <label for="prenom" class="mandatory">Prenom</label>
+      <input id="prenom" type="text" autocomplete="off" formControlName="prenom">
+    </div>
+
+    <div class="row">
+      <label for="nom" class="mandatory">Nom</label>
+      <input id="nom" type="text" autocomplete="off" formControlName="nom">
+    </div>
+
+    <div class="row">
+      <label for="date-naissance">Date de naissance</label>
+      <input id="date-naissance" type="text" autocomplete="off" formControlName="dateNaissance">
+    </div>
+
+    <div class="row">
+      <label for="email">Email</label>
+      <input id="email" type="text" autocomplete="off" formControlName="email">
+    </div>
+
+    <div class="row">
+      <label for="adresse">Adresse</label>
+      <input id="adresse" type="text" autocomplete="off" formControlName="address">
+    </div>
+
+    <h3>Téléphones</h3>
+    <div formGroupName="telephone">
+      <div class="row">
+        <label for="phone-mobile">Mobile</label>
+        <input id="phone-mobile" type="text" autocomplete="off" formControlName="mobile">
+      </div>
+
+      <div class="row">
+        <label for="phone-fixe">Fixe</label>
+        <input id="phone-fixe" type="text" autocomplete="off" formControlName="fixe">
+      </div>
+
+      <div class="row">
+        <label for="phone-autre">Autre</label>
+        <input id="phone-autre" type="text" autocomplete="off" formControlName="autre">
+      </div>
+    </div>
+  </form>
+
+  <div class="footer">
+    <p-button icon="pi pi-times" (click)="ref.close()" label="Annuler" styleClass="p-button-text"></p-button>
+    <button type="submit" pButton icon="pi pi-check" (click)="save()" class="p-button-text" [disabled]="form.invalid" [label]="patient ? 'Enregistrer':'Créer'"></button>
+  </div>
+</div>

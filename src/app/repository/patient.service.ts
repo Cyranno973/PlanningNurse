@@ -7,7 +7,7 @@ import {AngularFirestore} from "@angular/fire/compat/firestore";
   providedIn: 'root'
 })
 export class PatientService extends AbstractCrudRepository<Patient> {
-  constructor(private db: AngularFirestore) {
+  constructor(db: AngularFirestore) {
     super(db, '/patients');
   }
 }

@@ -78,9 +78,13 @@ pre {
   -moz-animation-fill-mode: forwards;
   animation-fill-mode: forwards;
 
-  -webkit-animation-duration: 1s;
-  -moz-animation-duration: 1s;
-  animation-duration: 1s;
+  -webkit-animation-duration: 0.5s;
+  -moz-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+}
+
+input {
+  @extend .fadeIn;
 }
 
 .fadeIn.first {
@@ -121,4 +125,41 @@ pre {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.custom-modal {
+  &.patient {
+    width: 420px;
+  }
+
+  .p-dialog-content {
+    padding-bottom: 0.5rem !important;
+
+    .footer {
+      border-top: 0 none;
+      background: #ffffff;
+      color: #495057;
+      padding: 1.5rem 1rem 0 1.5rem;
+      text-align: right;
+      border-bottom-right-radius: 3px;
+      border-bottom-left-radius: 3px;
+      flex-shrink: 0;
+    }
+  }
+}
+
+.mandatory:after {
+  content: '*';
+  color: red;
+  display: inline-block;
+}
+
+.plus-btn {
+  position: fixed !important;
+  right: 7rem;
+  bottom: 7rem;
+
+  &.options {
+    bottom: 14.25rem;
+  }
 }
