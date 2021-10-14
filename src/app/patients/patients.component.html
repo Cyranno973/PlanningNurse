@@ -3,10 +3,10 @@
   <div class="row col-12">
     <form class="search row" [formGroup]="searchForm">
       <div class="col-12">
-        <input type="text" class="text-capitalize" (keyup)="searchString('prenom')" placeholder="Prénom" formControlName="prenom">
+        <input type="text" class="text-capitalize" (input)="searchString('prenom')" placeholder="Prénom" formControlName="prenom">
       </div>
       <div class="col-12">
-        <input type="text" class="text-capitalize" (keyup)="searchString('nom')" placeholder="Nom" formControlName="nom">
+        <input type="text" class="text-capitalize" (input)="searchString('nom')" placeholder="Nom" formControlName="nom">
       </div>
     </form>
   </div>

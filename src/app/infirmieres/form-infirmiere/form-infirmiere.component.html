@@ -1,0 +1,8 @@
+<form [formGroup]="nurseForm">
+  <input type="text" class="form-control" id="prenom-input" aria-describedby="prenom Help" placeholder="Prenom" formControlName="prenom">
+  <input type="text" class="form-control" id="nom-input" aria-describedby="nom Help" placeholder="Nom" formControlName="nom">
+  <input type="password" name="pwd" placeholder="Password" formControlName="pwd"/><br/>
+  <input type="email" name="email" placeholder="Email" formControlName="mail"/><br/>
+  <input type="tel" class="form-control" id="tel-input" aria-describedby="tel Help" placeholder="Tel" formControlName="tel">
+  <button (click)="onSubmitNurseForm()" [disabled]="nurseForm.invalid">Submit</button>
+</form>

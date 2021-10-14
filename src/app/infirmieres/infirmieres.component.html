@@ -1,49 +1,16 @@
-<div class="container-fluid">
-<p-table [value]="infirmieres" dataKey="id" editMode="row" responsiveLayout="scroll">
-  <ng-template pTemplate="header">
-    <tr>
-      <th>Nom</th>
-      <th>Prenom</th>
-      <th>Mail</th>
-      <th>Tel</th>
-      <th>Trigramme</th>
-      <th>Actions</th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-editing="editing" let-ri="rowIndex" let-infirmiere>
-    <tr [pEditableRow]="infirmiere">
-      <td pEditableColumn>
-        <p-cellEditor>
-          <ng-template pTemplate="input">
-            <input pInputText type="text" [(ngModel)]="infirmiere.nom">
-          </ng-template>
-          <ng-template pTemplate="output">
-            {{infirmiere.nom}}
-          </ng-template>
-        </p-cellEditor>
-      </td>
-      <td>{{infirmiere.prenom}}</td>
-      <td>{{infirmiere.mail}}</td>
-      <td>{{infirmiere.tel}}</td>
-      <td>{{infirmiere.trg}}</td>
-      <td>
-        <i class="pr-3 pi pi-pencil" *ngIf="!editing" (click)="updateNurseForm(infirmiere)"></i>
-        <i class="pi pi-trash" (click)="deleteNurse(infirmiere)"></i>
-      </td>
-    </tr>
-  </ng-template>
-</p-table>
-  <div class="row col-12 justify-content-end">
-    <i class="pi pi-plus morePatient" (click)="showDialog()"></i>
+<div class="container-fluid col-12">
+  <div class="row">
+    <div class="r container-widgets col-6">
+      <app-tableau-infirmieres></app-tableau-infirmieres>
+    </div>
+    <div class="container-widgets col-6">
+      <app-planication></app-planication>
+      <div class="container-widgets col-6 mt-5">
+        <app-search-infirmiere></app-search-infirmiere>
+      </div>
+    </div>
   </div>
-  <p-dialog header="Title" [(visible)]="display">
-    <form [formGroup]="nurseForm">
-      <input type="text" class="form-control" id="prenom-input" aria-describedby="prenom Help" placeholder="Prenom" formControlName="prenom">
-      <input type="text" class="form-control" id="nom-input" aria-describedby="nom Help" placeholder="Nom" formControlName="nom">
-      <input type="password" name="pwd" placeholder="Password"  formControlName="pwd"/><br/>
-      <input type="email" name="email" placeholder="Email"  formControlName="mail"/><br/>
-      <input type="tel" class="form-control" id="tel-input" aria-describedby="tel Help" placeholder="Tel" formControlName="tel">
-      <button (click)="onSubmitNurseForm()">Submit</button>
-    </form>
-  </p-dialog>
+  <div class="row col-6 justify-content-end btn-more">
+    <i class="pi pi-plus bg-primary more-infirmiere" (click)="addInfirmiere()"></i>
+  </div>
 </div>
