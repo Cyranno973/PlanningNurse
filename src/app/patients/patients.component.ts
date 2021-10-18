@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PatientService} from "../repository/patient.service";
-import Patient from "../model/patient";
+import {Patient} from "../model/patient";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {Subscription} from "rxjs";
 import {KeyValue} from "@angular/common";
@@ -43,17 +43,17 @@ export class PatientsComponent implements OnInit, OnDestroy {
 
   private refreshSearch() {
     // Filtre les patients dont la valeur des champs du formulaire correspondent
-    this.searchResults = this.patients.filter(p =>
-      this.searchFilters.every(q => new RegExp(q.value, 'ig').test(p[q.key]))
+    this.searchResults = this.patients.filter(patient =>
+      this.searchFilters.every(filtre => new RegExp(filtre.value, 'ig').test(patient[filtre.key]))
     );
   }
 
 // Met à jour les filtres de recherche par rapport au champ modifié
   private updateSearchFilters(key: string) {
     const value = this.searchForm.get(key).value;
-    const index = this.searchFilters.findIndex(f => f.key === key);
+    const index = this.searchFilters.findIndex(filtre => filtre.key === key);
 
-    if (!!value) { // Ajoute ou remplace le filtre de recherche dans searchFilters
+    if (value) { // Ajoute ou remplace le filtre de recherche dans searchFilters
       index === -1 ? this.searchFilters.push({key, value}) : this.searchFilters[index].value = value;
     } else if (!value && index !== -1) { // Supprime le filtre si vide
       this.searchFilters.splice(index, 1);
@@ -61,7 +61,7 @@ export class PatientsComponent implements OnInit, OnDestroy {
   }
 
   addPatient() {
-    this.modalRef = this.dialogService.open(FormPatientComponent, {header: 'Nouveau patient',closable: false, styleClass: 'custom-modal patient'});
+    this.modalRef = this.dialogService.open(FormPatientComponent, {header: 'Nouveau patient', closable: false, styleClass: 'custom-modal patient'});
   }
 
   ngOnDestroy(): void {

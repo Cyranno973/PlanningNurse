@@ -3,16 +3,26 @@ import {CommonModule} from '@angular/common';
 import {PlanningComponent} from "./planning.component";
 import {CalendarWeekModule} from "angular-calendar";
 import {SharedModule} from "../shared/shared.module";
+import {FormRdvComponent} from './form-rdv/form-rdv.component';
+import {MatStepperModule} from "@angular/material/stepper";
+import {AutoCompleteModule} from "primeng/autocomplete";
+import {CalendarModule} from "primeng/calendar";
+import {DropdownModule} from "primeng/dropdown";
 
 
 @NgModule({
   declarations: [
-    PlanningComponent
+    PlanningComponent,
+    FormRdvComponent
   ],
   imports: [
     CommonModule,
     SharedModule,
-    CalendarWeekModule
+    CalendarWeekModule,
+    MatStepperModule,
+    AutoCompleteModule,
+    CalendarModule,
+    DropdownModule
   ]
 })
 export class PlanningModule {

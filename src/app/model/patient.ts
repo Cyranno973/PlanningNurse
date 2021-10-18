@@ -1,7 +1,6 @@
-import Infirmiere from "./infirmiere";
+import DatabaseModel from "../repository/AbstractCrudRepository";
 
-export default class Patient {
-  id: string;
+export class Patient extends DatabaseModel {
   prenom: string;
   nom: string;
   email: string;
@@ -11,12 +10,10 @@ export default class Patient {
     mobile: string;
     fixe: string;
     autre: string;
-  }
-  lastUpdate: Date;
-  dateCreation: Date;
-  modifiedBy: Infirmiere;
+  };
 
   public constructor(init?: Partial<Patient>) {
+    super();
     const patient = Object.assign(this, init);
     patient.dateNaissance = new Date(init.dateNaissance);
     return patient;

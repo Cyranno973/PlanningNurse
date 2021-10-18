@@ -1,5 +1,5 @@
 import {Component, HostListener, OnInit} from '@angular/core';
-import Patient from "../../../model/patient";
+import {Patient} from "../../../model/patient";
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {PatientService} from "../../../repository/patient.service";
@@ -14,10 +14,8 @@ export class FormPatientComponent implements OnInit {
   patient: Patient = this.config.data?.patient;
   form: FormGroup;
 
-  constructor(public ref: DynamicDialogRef,
-              private fb: FormBuilder,
-              private ps: PatientService,
-              public config: DynamicDialogConfig) {
+  constructor(private fb: FormBuilder, private ps: PatientService,
+              private config: DynamicDialogConfig, public ref: DynamicDialogRef) {
   }
 
   ngOnInit(): void {
@@ -36,8 +34,8 @@ export class FormPatientComponent implements OnInit {
   }
 
   @HostListener('document:keydown.escape', ['$event'])
-  onKeydownHandler(event: KeyboardEvent) {
-    if (['Escape', 'Esc'].includes(event.code)) this.ref?.close()
+  onKeydownHandler() {
+    this.ref?.close();
   }
 
   save() {
@@ -50,7 +48,7 @@ export class FormPatientComponent implements OnInit {
     }
 
     save
-      .then(p => this.ref.close(p))
+      .then(patient => this.ref.close(patient))
       .catch(() => this.ref.close())
   }
 }

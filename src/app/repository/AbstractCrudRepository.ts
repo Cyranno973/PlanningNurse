@@ -3,13 +3,13 @@ import {map} from "rxjs/operators";
 import {Observable} from "rxjs";
 import firebase from "firebase/compat/app";
 
-class Id {
+export default class DatabaseModel {
   id: string;
   lastUpdate: Date;
   dateCreation: Date;
 }
 
-export class AbstractCrudRepository<T extends Id> {
+export class AbstractCrudRepository<T extends DatabaseModel> {
   private ref: AngularFirestoreCollection<T>
 
   constructor(db: AngularFirestore, dbPath: string) {
@@ -64,9 +64,7 @@ export class AbstractCrudRepository<T extends Id> {
   private cleanObject(obj) {
     return Object.entries(obj)
       .map(([k, v]) => [k, v && typeof v === 'object' && Object.prototype.toString.call(v) !== "[object Date]" ? this.cleanObject(v) : v])
-      .reduce((a, [k, v]) => {
-        console.log(v);
-        return (v == null || (!Object.keys(v).length && Object.prototype.toString.call(v) !== "[object Date]") ? a : (a[k] = v, a));
-      }, {});
+      .reduce((a, [k, v]) => (v == null || (!Object.keys(v).length && Object.prototype.toString.call(v) !== "[object Date]") ? a : (a[k] = v, a))
+        , {});
   }
 }
