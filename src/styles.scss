@@ -3,6 +3,11 @@
 
 html, body {
   font-family: 'Raleway', monospace;
+  height: 100%;
+}
+
+body {
+  margin: 0;
 }
 
 h3 {
@@ -78,9 +83,9 @@ pre {
   -moz-animation-fill-mode: forwards;
   animation-fill-mode: forwards;
 
-  -webkit-animation-duration: 0.5s;
-  -moz-animation-duration: 0.5s;
-  animation-duration: 0.5s;
+  -webkit-animation-duration: 0.3s;
+  -moz-animation-duration: 0.3s;
+  animation-duration: 0.3s;
 }
 
 input {
@@ -132,14 +137,22 @@ input {
     width: 420px;
   }
 
+  &.rdv {
+    width: 650px;
+  }
+
   .p-dialog-content {
-    padding-bottom: 0.5rem !important;
+    padding-bottom: 4.5rem !important;
 
     .footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
       border-top: 0 none;
       background: #ffffff;
       color: #495057;
-      padding: 1.5rem 1rem 0 1.5rem;
+      padding: 1.5rem 1rem 0.5rem 1.5rem;
       text-align: right;
       border-bottom-right-radius: 3px;
       border-bottom-left-radius: 3px;
@@ -154,12 +167,13 @@ input {
   display: inline-block;
 }
 
-.plus-btn {
-  position: fixed !important;
-  right: 7rem;
-  bottom: 7rem;
+.plus-btn-wrapper {
+  position: fixed;
+  right: 5rem;
+  bottom: 5rem;
 
-  &.options {
-    bottom: 14.25rem;
+  .p-speeddial {
+    right: 0;
+    bottom: 0;
   }
 }

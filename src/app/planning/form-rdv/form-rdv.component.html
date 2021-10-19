@@ -1,0 +1,93 @@
+<div class="form-rdv-container" [formGroup]="form">
+  <mat-stepper orientation="vertical" #stepper>
+    <mat-step [stepControl]="quiForm" formGroupName="qui" [formGroup]="quiForm">
+      <!-- Label -->
+      <ng-template matStepLabel>
+        <span *ngIf="!selectedPatient && !quiForm.get('infirmiere').value">Qui ?</span>
+        <span *ngIf="selectedPatient">Patient : {{quiForm.get('patientName').value}}</span>
+        <span *ngIf="selectedPatient && quiForm.get('infirmiere').value"> | </span>
+        <span *ngIf="quiForm.get('infirmiere').value">
+        Soignant : {{quiForm.get('infirmiere').value.prenom}} {{quiForm.get('infirmiere').value.nom}}
+      </span>
+      </ng-template>
+
+      <div class="row">
+        <!-- Choix du patient -->
+        <div class="col-12 col-md-7 row">
+          <p-autoComplete placeholder="Patient" appendTo="body" inputStyleClass="text-capitalize"
+                          class="d-inline-block"
+                          (keydown.backspace)="clearPatient()"
+                          [suggestions]="foundPatients"
+                          formControlName="patientName"
+                          (onSelect)="selectPatient($event)"
+                          (onKeyUp)="clearSearchPatient()"
+                          (onFocus)="loadPatients()"
+                          (completeMethod)="searchPatient($event)">
+            <ng-template let-patient pTemplate="item">
+              <span>{{patient.prenom}} {{patient.nom | uppercase}}</span>
+              <span *ngIf="patient.dateNaissance" class="small"> (né le {{patient.dateNaissance | date : 'dd/MM/yyyy'}})</span>
+            </ng-template>
+          </p-autoComplete>
+          <!-- Bouton d'ajout -->
+          <button *ngIf="proposerNouveau" pButton pRipple pTooltip="Patient non trouvé. L'ajouter ?" (click)="newPatient()"
+                  type="button" icon="pi pi-plus" class="ml-1 p-button-rounded p-button-danger p-button-outlined"></button>
+        </div>
+        <!-- Choix de l'infirmière -->
+        <div class="col-12 col-md-5">
+          <p-dropdown [options]="infirmieres" #dropdownInfirmiere
+                      (keydown.escape)="clearDropdownOnEscape($event, dropdownInfirmiere)"
+                      placeholder="Infirmière"
+                      optionLabel="prenom"
+                      formControlName="infirmiere"
+                      [showClear]="true">
+            <!-- Infirmière sélectionée -->
+            <ng-template let-value pTemplate="selectedItem">
+              {{value.prenom}} {{value.nom}} ({{value.trg}})
+            </ng-template>
+            <!-- Suggestions autocomplete -->
+            <ng-template let-infirmiere pTemplate="item">
+              {{infirmiere.prenom}} {{infirmiere.nom}} ({{infirmiere.trg}})
+            </ng-template>
+          </p-dropdown>
+        </div>
+      </div>
+    </mat-step>
+    <mat-step [stepControl]="quandForm" formGroupName="quand" [formGroup]="quandForm">
+      <ng-template matStepLabel>Quand ?</ng-template>
+
+      <ng-template matStepContent>
+        <div class="row justify-content-center quand-form">
+          <!-- Date -->
+          <div #rdvDate class="col-12 row justify-content-center">
+            <h5 class="col-12">Sélectionnner la date</h5>
+            <p-calendar formControlName="date"
+                        class="d-block"
+                        [monthNavigator]="true"
+                        [showButtonBar]="true"
+                        (onClearClick)="resetDate(rdvDate)"
+                        (onTodayClick)="selectDate($event,rdvHour)"
+                        (onSelect)="selectDate($event, rdvHour)"
+                        [inline]="true"></p-calendar>
+          </div>
+
+          <!-- Créneaux -->
+          <div #rdvHour class="col-12 row justify-content-center mt-2 pb-4">
+            <h5 class="col-12">{{date ? 'Sélectionnner le créneau' : ''}}</h5>
+            <div class="row justify-content-center mt-1 mb-2 col-6 col-md-4 col-lg-3" *ngFor="let creneau of creneauxDisplay">
+              <app-select-button *ngIf="date" [selected]="heure === creneau" (onSelectedHour)="selectHeure($event)" [value]="creneau"></app-select-button>
+            </div>
+          </div>
+        </div>
+        <button (click)="stepper.reset()">Reset</button>
+
+        {{quandForm.getRawValue() | json}}
+        {{date}}
+      </ng-template>
+    </mat-step>
+  </mat-stepper>
+
+  <div class="footer">
+    <p-button icon="pi pi-times" (click)="ref.close()" label="Annuler" styleClass="p-button-text"></p-button>
+    <button type="submit" pButton icon="pi pi-check" (click)="save()" class="p-button-text" [disabled]="form.invalid" [label]="rdv ? 'Enregistrer':'Créer'"></button>
+  </div>
+</div>

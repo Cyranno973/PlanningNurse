@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {PatientService} from "../../repository/patient.service";
-import Patient from "../../model/patient";
+import {Patient} from "../../model/patient";
 import {DialogService} from "primeng/dynamicdialog";
 import {FormPatientComponent} from "./form-patient/form-patient.component";
 

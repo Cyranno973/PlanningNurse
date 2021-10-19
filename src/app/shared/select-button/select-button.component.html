@@ -1,0 +1,10 @@
+<button pButton pRipple
+        type="button"
+        [style]="'min-width: 78px'"
+        [label]="value"
+        (keydown.space)="onSelectedHour.emit(value)"
+        (keydown.enter)="onSelectedHour.emit(value)"
+        (click)="onSelectedHour.emit(value)"
+        class="p-button-rounded"
+        [ngClass]="{'p-button-outlined ': !selected}">
+</button>
