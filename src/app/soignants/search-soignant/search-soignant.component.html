@@ -1,5 +1,5 @@
 <div class="container">
-  <form [formGroup]="searchInfirmierForm">
+  <form [formGroup]="form">
     <input class="text-capitalize" placeholder="nom" type="text" (input)="searchString('nom')" formControlName="nom"/>
     <input class="text-capitalize" placeholder="Prénom" type="text" (input)="searchString('prenom')" formControlName="prenom"/>
   </form>

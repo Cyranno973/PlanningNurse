@@ -3,10 +3,18 @@ import {map} from "rxjs/operators";
 import {Observable} from "rxjs";
 import firebase from "firebase/compat/app";
 
-export default class DatabaseModel {
-  id: string;
-  lastUpdate: Date;
-  dateCreation: Date;
+export class DatabaseModel {
+  id?: string;
+  lastUpdate?: Date;
+  dateCreation?: Date;
+}
+
+export class Type {
+  static readonly DATE = '[object Date]';
+  static readonly NUMBER = '[object Number]';
+  static readonly ARRAY = '[object Array]';
+  static readonly MAP = '[object Map]';
+  static readonly PRIMITIVES = [Type.DATE, Type.NUMBER];
 }
 
 export class AbstractCrudRepository<T extends DatabaseModel> {
@@ -22,11 +30,12 @@ export class AbstractCrudRepository<T extends DatabaseModel> {
     );
   }
 
-  findById(id: string): Promise<T> {
+  findById(id: string, failIfNotFound: boolean = true): Promise<T> {
     return this.ref.doc(id).ref.get()
       .then(doc => {
-        if (doc.exists) return {id, ...this.toDates(doc.data())};
-        throw `Aucun document trouvé avec l'id=[${id}]`;
+        if (doc.exists) return {id, ...this.toDates(doc.data())} as T;
+        if (failIfNotFound) throw `Aucun document trouvé avec l'id=[${id}]`;
+        return null;
       });
   }
 
@@ -35,7 +44,7 @@ export class AbstractCrudRepository<T extends DatabaseModel> {
     return this.ref.add({...this.cleanObject(object)})
       .then(createdDocRef => {
         object.id = createdDocRef.id
-        return object;
+        return object as T;
       });
   }
 
@@ -44,7 +53,7 @@ export class AbstractCrudRepository<T extends DatabaseModel> {
     return this.ref.doc(id).set({...this.cleanObject(data)})
       .then(() => {
         data.id = id;
-        return this.toDates(data);
+        return this.toDates(data) as T;
       });
   }
 
@@ -53,7 +62,7 @@ export class AbstractCrudRepository<T extends DatabaseModel> {
   }
 
   // Convertit les timestamps des objets en Dates
-  private toDates(object: any): any {
+  private toDates(object: T): T {
     Object.keys(object)
       .filter(key => object[key] instanceof firebase.firestore.Timestamp)
       .forEach(key => object[key] = object[key].toDate())
@@ -61,10 +70,20 @@ export class AbstractCrudRepository<T extends DatabaseModel> {
   }
 
   // Supprime les champs vides ("") / null ou objets vides ({})
+  // Et Convertit les Map et tableaux d'objets en Objets javascript pur pour stocker dans Firestore
   private cleanObject(obj) {
+    switch (Object.prototype.toString.call(obj)) {
+      case Type.ARRAY:
+        return obj.map(prop => Object.prototype.toString.call(prop) !== '[object Array]' ? this.cleanObject(prop) : Object.assign({}, prop));
+      case Type.MAP:
+        return this.cleanObject(Object.fromEntries(obj));
+      case Type.NUMBER:
+        return obj;
+    }
+
     return Object.entries(obj)
-      .map(([k, v]) => [k, v && typeof v === 'object' && Object.prototype.toString.call(v) !== "[object Date]" ? this.cleanObject(v) : v])
-      .reduce((a, [k, v]) => (v == null || (!Object.keys(v).length && Object.prototype.toString.call(v) !== "[object Date]") ? a : (a[k] = v, a))
+      .map(([k, v]) => [k, v && typeof v === 'object' && !Type.PRIMITIVES.includes(Object.prototype.toString.call(v)) ? this.cleanObject(v) : v])
+      .reduce((a, [k, v]) => (v == null || (!Object.keys(v).length && !Type.PRIMITIVES.includes(Object.prototype.toString.call(v))) ? a : (a[k] = v, a))
         , {});
   }
 }

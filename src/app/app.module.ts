@@ -19,11 +19,11 @@ import {environment} from "../environments/environment";
 import {AngularFireModule} from "@angular/fire/compat";
 import {AngularFirestoreModule} from "@angular/fire/compat/firestore";
 import {SETTINGS as AUTH_SETTINGS} from '@angular/fire/compat/auth';
-import {InfirmieresModule} from "./infirmieres/infirmieres.module";
 import {PatientsModule} from "./patients/patients.module";
 import {PlanningModule} from "./planning/planning.module";
 import {HomeModule} from "./home/home.module";
 import {ReactiveFormsModule} from "@angular/forms";
+import {SoignantsModule} from "./soignants/soignants.module";
 
 registerLocaleData(localeFr);
 
@@ -39,7 +39,7 @@ registerLocaleData(localeFr);
     FlatpickrModule.forRoot(),
     AppRoutingModule,
     HomeModule,
-    InfirmieresModule,
+    SoignantsModule,
     PatientsModule,
     PlanningModule,
     ReactiveFormsModule
