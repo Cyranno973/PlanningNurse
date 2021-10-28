@@ -36,6 +36,7 @@ export class FormRdvComponent implements OnInit {
   dureeRdv: number = 20; // en minutes
   horaires: Horaire[] = [];
   creatingPatient: boolean;
+  minDate = new Date();
   private patients: Patient[] = [];
   private mois: Mois;
 
@@ -189,7 +190,7 @@ export class FormRdvComponent implements OnInit {
     const mois = this.mois;
     const jour = this.selectedDate.getDate();
     const soignant = new Soignant(this.quiForm.get('soignant').value);
-    const rdv = new Rdv(this.selectedheure, this.selectedPatient, soignant);
+    const rdv = new Rdv(this.selectedheure, this.selectedPatient, this.selectedDate, soignant);
 
     if (mois.jours.has(jour)) // Si le mois contient le jour X, on y ajoute le RDV
       mois.jours.get(jour).push(rdv);
@@ -197,8 +198,7 @@ export class FormRdvComponent implements OnInit {
       mois.jours.set(jour, [rdv]);
 
     // Update va enregistrer ou créer le document s'il n'existe pas avec l'id passé
-    this.rs.update(mois.id, mois)
-      .then(() => this.ref.close())
+    this.rs.save(mois, rdv).then(() => this.ref.close())
       .catch((err) => console.log(err));
   }
 }

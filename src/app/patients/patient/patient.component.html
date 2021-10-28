@@ -1,8 +1,11 @@
-<div class="container">
+<div class="container patient">
   <div class="row">
     <div class="col-12 col-md-6" *ngIf="patient">
       [CARTE D'INFORMATIONS PERSONNELLES]
-      <h2 class="d-inline-block">{{patient.prenom}} {{patient.nom | uppercase}}</h2>
+
+      <h2 class="d-inline-block">
+        <i class="pi pi-id-card mr-1" style="font-size: 1.5rem"></i>{{patient.prenom}} {{patient.nom | uppercase}}
+      </h2>
       <p-button icon="pi pi-user-edit" (click)="edit()" label="Modifier"></p-button>
       <div class="form-group">
         <ul>
@@ -22,8 +25,25 @@
       [SOINS ET COMMENTAIRES]
     </div>
 
-    <div class="col-12 col-md-6 border-left row align-items-center justify-content-center">
-      [Historique des RDV]
+    <div class="rdvs col-12 col-md-6 border-left row align-items-center justify-content-center">
+      <div class="card">
+        <h5>Historique des rdvs</h5>
+        <p-timeline [value]="rdvs" align="alternate" styleClass="customized-timeline">
+          <ng-template pTemplate="marker" let-rdv>
+            <span class="custom-marker p-shadow-2" [ngClass]="rdv.statut">
+                <i class="pi pi-calendar"></i>
+            </span>
+          </ng-template>
+          <ng-template pTemplate="content" let-rdv>
+            <p-card [header]="rdv.statut"
+                    [subheader]="rdv.date | date : 'dd/MM/yyyy à HH:mm'">
+              {{rdv.statut}}
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
+              <button pButton label="Read more" class="p-button-text"></button>
+            </p-card>
+          </ng-template>
+        </p-timeline>
+      </div>
     </div>
   </div>
 </div>

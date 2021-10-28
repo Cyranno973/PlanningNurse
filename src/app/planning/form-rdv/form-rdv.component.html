@@ -63,6 +63,7 @@
             <p-calendar formControlName="jour"
                         class="d-block"
                         [monthNavigator]="true"
+                        [minDate]="minDate"
                         (onMonthChange)="selectMonth($event)"
                         (onSelect)="selectDay($event, rdvHour)"
                         [inline]="true"></p-calendar>

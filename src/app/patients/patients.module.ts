@@ -5,6 +5,8 @@ import {RouterModule} from "@angular/router";
 import {SharedModule} from "../shared/shared.module";
 import {PatientComponent} from "./patient/patient.component";
 import {FormPatientComponent} from './patient/form-patient/form-patient.component';
+import {TimelineModule} from "primeng/timeline";
+import {CardModule} from "primeng/card";
 
 @NgModule({
   declarations: [
@@ -15,7 +17,9 @@ import {FormPatientComponent} from './patient/form-patient/form-patient.componen
   imports: [
     CommonModule,
     SharedModule,
-    RouterModule
+    RouterModule,
+    TimelineModule,
+    CardModule
   ]
 })
 export class PatientsModule {
