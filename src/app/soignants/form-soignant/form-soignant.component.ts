@@ -1,19 +1,19 @@
 import {Component, HostListener, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {InfirmiereService} from "../../repository/infirmiere.service";
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
-import Infirmiere from "../../model/infirmiere";
+import {Soignant} from "../../model/soignant";
+import {SoignantService} from "../../repository/soignant.service";
 
 @Component({
-  selector: 'app-form-infirmiere',
-  templateUrl: './form-infirmiere.component.html',
-  styleUrls: ['./form-infirmiere.component.scss']
+  selector: 'app-form-soignant',
+  templateUrl: './form-soignant.component.html',
+  styleUrls: ['./form-soignant.component.scss']
 })
-export class FormInfirmiereComponent implements OnInit {
+export class FormSoignantComponent implements OnInit {
   nurseForm: FormGroup;
-  infirmiere: Infirmiere = this.config.data;
+  soignant: Soignant = this.config.data;
 
-  constructor(private is: InfirmiereService, private formBuilder: FormBuilder, public ref: DynamicDialogRef, public config: DynamicDialogConfig) {
+  constructor(private is: SoignantService, private formBuilder: FormBuilder, public ref: DynamicDialogRef, public config: DynamicDialogConfig) {
   }
 
   ngOnInit(): void {
@@ -23,12 +23,12 @@ export class FormInfirmiereComponent implements OnInit {
   initNurseForm() {
     this.nurseForm = this.formBuilder.group(
       {
-        prenom: [this.infirmiere?.prenom, [Validators.required]],
-        nom: [this.infirmiere?.nom, [Validators.required]],
-        mail: [this.infirmiere?.mail, Validators.email],
-        pwd: [this.infirmiere?.password],
-        tel: [this.infirmiere?.tel],
-        trg: [this.infirmiere?.trg]
+        prenom: [this.soignant?.prenom, [Validators.required]],
+        nom: [this.soignant?.nom, [Validators.required]],
+        mail: [this.soignant?.mail, Validators.email],
+        pwd: [this.soignant?.password],
+        tel: [this.soignant?.tel],
+        trg: [this.soignant?.trg]
       }
     )
   }
@@ -43,14 +43,14 @@ export class FormInfirmiereComponent implements OnInit {
   }
 
   onSubmitNurseForm() {
-    let save: Promise<Infirmiere>
+    let save: Promise<Soignant>
     let nom = this.nurseForm.get('nom').value;
     let prenom = this.nurseForm.get('prenom').value;
     let trigrammes = this.createTrigramme(nom, prenom);
     this.nurseForm.patchValue({
       trg: trigrammes,
     });
-    if (this.infirmiere) save = this.is.update(this.infirmiere.id, this.nurseForm.value);
+    if (this.soignant) save = this.is.update(this.soignant.id, this.nurseForm.value);
     else save = this.is.create(this.nurseForm.value);
 
     save

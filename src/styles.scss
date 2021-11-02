@@ -133,7 +133,7 @@ input {
 }
 
 .custom-modal {
-  &.patient {
+  &.patient, &.soignant {
     width: 420px;
   }
 
@@ -165,6 +165,7 @@ input {
   content: '*';
   color: red;
   display: inline-block;
+  margin-left: 4px;
 }
 
 .plus-btn-wrapper {

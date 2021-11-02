@@ -4,12 +4,13 @@ import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dyna
 import {PatientService} from "../../repository/patient.service";
 import {take} from "rxjs/operators";
 import {Patient} from "../../model/patient";
-import Infirmiere from "../../model/infirmiere";
-import {InfirmiereService} from "../../repository/infirmiere.service";
+import {Soignant} from "../../model/soignant";
+import {SoignantService} from "../../repository/soignant.service";
 import {FormPatientComponent} from "../../patients/patient/form-patient/form-patient.component";
 import {Dropdown} from "primeng/dropdown";
-import {Rdv} from "../../model/planning-mois";
+import {Mois, Rdv} from "../../model/planning-rdv";
 import {PlanningService} from "../../repository/planning.service";
+import {Horaire} from "../../model/horaire";
 
 @Component({
   selector: 'app-form-rdv',
@@ -25,57 +26,66 @@ export class FormRdvComponent implements OnInit {
   quandForm: FormGroup;
   foundPatients: Patient[];
   selectedPatient: Patient;
-  infirmieres: Infirmiere[];
+  selectedDate: Date;
+  selectedheure: number;
+  soignants: Soignant[];
   proposerNouveau: boolean;
-  date: Date;
-  heure: string;
   // Unités de temps en minutes
-  serviceDebut: number = 540; // 9h
-  serviceFin: number = 1080; // 18h
-  dureeRdv: number = 15;
-  creneauxDisplay: string[] = [];
-  private creneaux: number[] = [this.serviceDebut];
+  serviceDebut: number = 540; // 9h00
+  serviceFin: number = 1080; // 18h00
+  dureeRdv: number = 20; // en minutes
+  horaires: Horaire[] = [];
+  creatingPatient: boolean;
   private patients: Patient[] = [];
-  private creatingPatient: boolean;
+  private mois: Mois;
 
   constructor(private fb: FormBuilder, private config: DynamicDialogConfig,
-              private ps: PatientService, private is: InfirmiereService,
+              private ps: PatientService, private is: SoignantService,
               private rs: PlanningService, private dialogService: DialogService,
               public ref: DynamicDialogRef) {
   }
 
   ngOnInit(): void {
+    this.loadData();
+    this.initForms();
+    this.computeHoraires();
+  }
+
+  private loadData() {
     // Récupère les soignants
-    this.is.getAll().pipe(take(1)).subscribe(infirmieres => this.infirmieres = infirmieres);
+    this.is.getAll().pipe(take(1))
+      .subscribe(
+        soignants => this.soignants = soignants,
+        (err) => console.log(`Erreur pendant la récupération des soignants`, err));
+
+    // Récupère le mois en cours
+    this.rs.getMois()
+      .then(mois => this.mois = mois)
+      .catch((err) => console.log(`Erreur pendant la récupération du planning du mois`, err));
+  }
+
+  private computeHoraires() {
+    for (let h = this.serviceDebut; h < this.serviceFin; h += this.dureeRdv) {
+      this.horaires.push(new Horaire(h));
+    }
+  }
+
+  private initForms() {
     this.quiForm = this.fb.group({
-      patient: [],
-      patientName: [],
-      infirmiere: []
+      patient: [{value: null, disabled: this.creatingPatient}, Validators.required],
+      patientName: [{value: null, disabled: this.creatingPatient}],
+      soignant: [{value: null, disabled: this.creatingPatient}]
     });
 
     this.quandForm = this.fb.group({
-      date: ['', Validators.required],
-      heure: ['', Validators.required]
+      jour: [{value: '', disabled: this.creatingPatient}, Validators.required],
+      heure: [{value: '', disabled: this.creatingPatient}, Validators.required]
     });
 
     this.form = this.fb.group({
       qui: this.quiForm,
       quand: this.quandForm
     });
-
-    let creneau: number = this.serviceDebut;
-    while (creneau < this.serviceFin) {
-      creneau = this.creneaux[this.creneaux.length - 1] + this.dureeRdv;
-      this.creneaux.push(creneau);
-    }
-
-    this.creneauxDisplay = this.creneaux.map(c => FormRdvComponent.toTime(c));
-  }
-
-  private static toTime(num): string {
-    const hours = Math.floor(num / 60);
-    const minutes = num % 60;
-    return `${hours}h${minutes ? minutes : '00'}`;
   }
 
   @HostListener('document:keydown.escape', ['$event'])
@@ -112,6 +122,7 @@ export class FormRdvComponent implements OnInit {
   }
 
   selectPatient(patient: Patient) {
+    if (!patient) return
     this.selectedPatient = patient;
     this.quiForm.get('patient').setValue(patient);
     this.quiForm.get('patientName').setValue(`${patient.prenom} ${patient.nom}`);
@@ -147,30 +158,47 @@ export class FormRdvComponent implements OnInit {
     setTimeout(() => el.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"}), 400);
   }
 
-  resetDate(htmlElement: HTMLDivElement) {
-    this.date = null;
-    this.quandForm.get('date').reset();
-    this.scroll(htmlElement);
+  selectMonth(dateEvent: { month: number, year: number }) {
+    this.rs.getMois(`${dateEvent.year}-${dateEvent.month}`)
+      .then(mois => this.mois = mois)
+      .catch((err) => console.log(`Oups, erreur pendant la récupération du planning du mois`, err));
   }
 
-  selectDate(date: any, htmlElement: HTMLDivElement) {
+  selectDay(date: any, htmlElement: HTMLDivElement) {
     if (date instanceof PointerEvent) return;
 
     if (date instanceof Date) {
-      this.date = date;
-      this.quandForm.get('date').setValue(date);
+      this.selectedDate = date;
+      this.quandForm.get('jour').setValue(date);
     } else {
-      this.resetDate(htmlElement);
+      this.selectedDate = null;
+      this.quandForm.get('jour').reset();
     }
     this.scroll(htmlElement);
   }
 
-  selectHeure(creneau: string) {
-    this.heure = creneau;
-    this.quandForm.get('heure').setValue(creneau);
+  selectHour(heure: number) {
+    this.selectedheure = heure;
+    this.quandForm.get('heure').setValue(heure);
   }
 
+  /**
+   * Enregistre un rdv en BDD
+   */
   save() {
-    throw 'A  implémenter';
+    const mois = this.mois;
+    const jour = this.selectedDate.getDate();
+    const soignant = new Soignant(this.quiForm.get('soignant').value);
+    const rdv = new Rdv(this.selectedheure, this.selectedPatient, soignant);
+
+    if (mois.jours.has(jour)) // Si le mois contient le jour X, on y ajoute le RDV
+      mois.jours.get(jour).push(rdv);
+    else // Sinon on set le jour avec le premier rdv
+      mois.jours.set(jour, [rdv]);
+
+    // Update va enregistrer ou créer le document s'il n'existe pas avec l'id passé
+    this.rs.update(mois.id, mois)
+      .then(() => this.ref.close())
+      .catch((err) => console.log(err));
   }
 }

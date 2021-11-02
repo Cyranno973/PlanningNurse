@@ -7,7 +7,7 @@ import {SignUpComponent} from "./authentification/sign-up/sign-up.component";
 import {PasswordResetComponent} from "./authentification/password-reset/password-reset.component";
 import {PlanningComponent} from "./planning/planning.component";
 import {PatientComponent} from "./patients/patient/patient.component";
-import {InfirmieresComponent} from "./infirmieres/infirmieres.component";
+import {SoignantsComponent} from "./soignants/soignants.component";
 import {PatientsComponent} from "./patients/patients.component";
 
 const routes: Routes = [
@@ -20,7 +20,7 @@ const routes: Routes = [
   // Nouvelles routes
   {path: 'patients', component: PatientsComponent},
   {path: 'patients/:id', component: PatientComponent},
-  {path: 'infirmieres', component: InfirmieresComponent},
+  {path: 'infirmieres', component: SoignantsComponent},
   {path: '**', redirectTo: '/home'}
 ]
 

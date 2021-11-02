@@ -1,34 +1,34 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {KeyValue} from "@angular/common";
-import Infirmiere from "../../model/infirmiere";
-import {InfirmiereService} from "../../repository/infirmiere.service";
+import {Soignant} from "../../model/soignant";
 import {Subscription} from "rxjs";
+import {SoignantService} from "../../repository/soignant.service";
 
 @Component({
-  selector: 'app-search-infirmiere',
-  templateUrl: './search-infirmiere.component.html',
-  styleUrls: ['./search-infirmiere.component.scss']
+  selector: 'app-search-soignant',
+  templateUrl: './search-soignant.component.html',
+  styleUrls: ['./search-soignant.component.scss']
 })
-export class SearchInfirmiereComponent implements OnInit {
+export class SearchSoignantComponent implements OnInit {
 
-  infirmieres: Infirmiere[];
-  searchInfirmierForm: FormGroup;
-  searchResults: Infirmiere[] = [];
+  soignants: Soignant[];
+  form: FormGroup;
+  searchResults: Soignant[] = [];
   searchFilters: KeyValue<string, string>[] = [];
   subscription: Subscription;
 
-  constructor(private fb: FormBuilder, private is: InfirmiereService) {
+  constructor(private fb: FormBuilder, private is: SoignantService) {
   }
 
   ngOnInit(): void {
-    this.searchInfirmierForm = this.fb.group({
+    this.form = this.fb.group({
         nom: [''], prenom: ['']
       }
     );
 
     this.subscription = this.is.getAll().subscribe(data => {
-      this.infirmieres = data;
+      this.soignants = data;
     });
   }
 
@@ -38,7 +38,7 @@ export class SearchInfirmiereComponent implements OnInit {
   }
 
   private updateSearchFilters(key: string) {
-    const value = this.searchInfirmierForm.get(key).value;
+    const value = this.form.get(key).value;
     const index = this.searchFilters.findIndex(f => f.key === key);
 
     if (!!value) {
@@ -50,7 +50,7 @@ export class SearchInfirmiereComponent implements OnInit {
 
   private refreshSearch() {
     // Filtre les infirmiere dont la valeur des champs du formulaire correspondent
-    this.searchResults = this.infirmieres.filter(i =>
+    this.searchResults = this.soignants.filter(i =>
       this.searchFilters.every(q => new RegExp(q.value, 'ig').test(i[q.key]))
     );
   }
