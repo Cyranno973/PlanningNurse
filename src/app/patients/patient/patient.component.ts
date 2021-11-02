@@ -7,6 +7,8 @@ import {FormPatientComponent} from "./form-patient/form-patient.component";
 import {Rdv} from "../../model/planning-rdv";
 import {PatientRdvsService} from "../../repository/patient-rdvs.service";
 import {RdvStatus} from "../../model/enums/rdv-status";
+import {FormRdvComponent} from "../../planning/form-rdv/form-rdv.component";
+import {filter} from "rxjs/operators";
 
 
 @Component({
@@ -48,7 +50,12 @@ export class PatientComponent implements OnInit {
       });
   }
 
-  rdvId(index: number, rdv: Rdv): string {
-    return rdv.id;
+  creerRdv() {
+    this.dialogService.open(FormRdvComponent, {
+      data: {patient: this.patient}, dismissableMask: true,
+      header: 'Nouveau RDV', styleClass: 'custom-modal rdv'
+    }).onClose
+      .pipe(filter(patientRdvs => !!patientRdvs))
+      .subscribe((patientRdvs) => this.rdvs = patientRdvs?.rdvs);
   }
 }

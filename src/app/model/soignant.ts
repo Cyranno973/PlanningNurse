@@ -13,4 +13,8 @@ export class Soignant extends DatabaseModel {
     super();
     return Object.assign(this, init);
   }
+
+  public static fullName(s: Soignant): string {
+    return `${s?.prenom} ${s?.nom}`;
+  }
 }

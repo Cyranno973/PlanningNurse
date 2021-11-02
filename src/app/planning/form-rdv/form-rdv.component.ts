@@ -20,6 +20,7 @@ import {Horaire} from "../../model/horaire";
 })
 export class FormRdvComponent implements OnInit {
 
+  patient: Patient = this.config.data?.patient;
   rdv: Rdv = this.config.data?.rdv;
   form: FormGroup;
   quiForm: FormGroup;
@@ -50,6 +51,7 @@ export class FormRdvComponent implements OnInit {
     this.loadData();
     this.initForms();
     this.computeHoraires();
+    this.selectPatient(this.patient)
   }
 
   private loadData() {
@@ -73,8 +75,8 @@ export class FormRdvComponent implements OnInit {
 
   private initForms() {
     this.quiForm = this.fb.group({
-      patient: [{value: null, disabled: this.creatingPatient}, Validators.required],
-      patientName: [{value: null, disabled: this.creatingPatient}],
+      patient: [{value: null, disabled: this.creatingPatient || this.patient}, Validators.required],
+      patientName: [{value: null, disabled: this.creatingPatient || this.patient}],
       soignant: [{value: null, disabled: this.creatingPatient}]
     });
 
@@ -105,7 +107,7 @@ export class FormRdvComponent implements OnInit {
   }
 
   loadPatients() {
-    if (!this.patients.length) {
+    if (!this.patients.length && !this.patient) {
       this.ps.getAll()
         .pipe(take(1))
         .subscribe(patiens => this.patients = patiens);
@@ -126,7 +128,7 @@ export class FormRdvComponent implements OnInit {
     if (!patient) return
     this.selectedPatient = patient;
     this.quiForm.get('patient').setValue(patient);
-    this.quiForm.get('patientName').setValue(`${patient.prenom} ${patient.nom}`);
+    this.quiForm.get('patientName').setValue(Patient.fullName(patient));
     this.proposerNouveau = false;
   }
 
@@ -198,7 +200,7 @@ export class FormRdvComponent implements OnInit {
       mois.jours.set(jour, [rdv]);
 
     // Update va enregistrer ou créer le document s'il n'existe pas avec l'id passé
-    this.rs.save(mois, rdv).then(() => this.ref.close())
+    this.rs.save(mois, rdv).then((rdv) => this.ref.close(rdv[0]))
       .catch((err) => console.log(err));
   }
 }

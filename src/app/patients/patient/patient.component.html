@@ -15,9 +15,9 @@
           <li>
             <h3>Téléphone</h3>
             <ul>
-              <li>Mobile : {{patient.telephone?.mobile}}</li>
-              <li>Fixe : {{patient.telephone?.fixe}}</li>
-              <li *ngIf="patient.telephone?.autre">Autre : {{patient.telephone?.autre}}</li>
+              <li>Mobile : {{patient.tel?.mobile}}</li>
+              <li>Fixe : {{patient.tel?.fixe}}</li>
+              <li *ngIf="patient.tel?.autre">Autre : {{patient.tel?.autre}}</li>
             </ul>
           </li>
         </ul>
@@ -25,9 +25,9 @@
       [SOINS ET COMMENTAIRES]
     </div>
 
-    <div class="rdvs col-12 col-md-6 border-left row align-items-center justify-content-center">
+    <div class="rdvs col-12 col-md-6 row align-items-center justify-content-center">
+      <h5>Historique des rdvs</h5>
       <div class="card">
-        <h5>Historique des rdvs</h5>
         <p-timeline [value]="rdvs" align="alternate" styleClass="customized-timeline">
           <ng-template pTemplate="marker" let-rdv>
             <span class="custom-marker p-shadow-2" [ngClass]="rdv.statut">
@@ -35,14 +35,19 @@
             </span>
           </ng-template>
           <ng-template pTemplate="content" let-rdv>
-            <p-card [header]="rdv.statut"
-                    [subheader]="rdv.date | date : 'dd/MM/yyyy à HH:mm'">
-              {{rdv.statut}}
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-              <button pButton label="Read more" class="p-button-text"></button>
+            <p-card [subheader]="rdv.date | date : 'dd/MM/yyyy à HH:mm'">
+              <span>Soignant : {{rdv.soignant?.prenom}} {{rdv.soignant?.nom}}</span>
+              <span>Statut : {{rdv.statut}}</span>
+              <span>Notes : {{rdv.notes}}</span>
+              <button pButton icon="pi pi-pencil" label="Editer" class="p-button-text"></button>
             </p-card>
           </ng-template>
         </p-timeline>
+
+      </div>
+      <!-- Créer un RDV -->
+      <div style="position: absolute; right: 0; bottom: 0">
+        <p-speedDial [rotateAnimation]="false" (onClick)="creerRdv()"></p-speedDial>
       </div>
     </div>
   </div>

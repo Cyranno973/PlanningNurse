@@ -13,7 +13,7 @@
 
       <div class="row">
         <!-- Choix du patient -->
-        <div class="col-12 col-md-7 row mandatory">
+        <div class="col-12 col-md-7 row" [ngClass]="{disabled: !patient}">
           <p-autoComplete placeholder="Patient" appendTo="body" inputStyleClass="text-capitalize"
                           class="d-inline-block"
                           (keydown.backspace)="clearPatient()"

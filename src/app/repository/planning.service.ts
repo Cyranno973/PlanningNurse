@@ -36,8 +36,10 @@ export class PlanningService extends AbstractCrudRepository<Mois> {
     // Récupère les rdvs d'un patient et ajoute s'il n'existe pas
     const promisePatientRdvs = this.prs.findById(rdv.patient.id, false)
       .then(pr => {
-        if (pr?.rdvs) pr.rdvs.push(rdv);
-        else pr = new PatientRdvs(rdv.patient.id, [rdv]);
+        if (pr?.rdvs) {
+          pr.rdvs.push(rdv);
+          pr.rdvs.sort((a, b) => b.date.getTime() - a.date.getTime())
+        } else pr = new PatientRdvs(rdv.patient.id, [rdv]);
         return this.prs.update(pr.id, pr);
       })
 

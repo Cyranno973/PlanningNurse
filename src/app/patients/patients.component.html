@@ -2,22 +2,50 @@
 
   <div class="row col-12">
     <form class="search row" [formGroup]="searchForm">
-      <div class="col-12">
+      <div class="col-12 col-md-auto p-1">
         <input type="text" class="text-capitalize" (input)="searchString('prenom')" placeholder="Prénom" formControlName="prenom">
       </div>
-      <div class="col-12">
+      <div class="col-12 col-md-auto p-1">
         <input type="text" class="text-capitalize" (input)="searchString('nom')" placeholder="Nom" formControlName="nom">
       </div>
     </form>
   </div>
 
-  <ul *ngIf="!searchFilters.length || searchResults?.length else noResult">
-    <li *ngFor="let p of (!!searchFilters.length ? searchResults : patients)" class="cursor-pointer" [routerLink]="'/patients/' + p.id">{{p.prenom}} {{p.nom}}</li>
-  </ul>
-
-  <ng-template #noResult>
-    Aucun patient trouvé
-  </ng-template>
+  <p-table [value]="!!searchFilters.length ? searchResults : patients"
+           dataKey="id" editMode="row" responsiveLayout="scroll" [styleClass]="'table-hover'"
+           [scrollable]="true" scrollHeight="600px" scrollDirection="both">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 25%">Nom</th>
+        <th style="width: 25%">Prénom</th>
+        <th style="width: 25%">Mail</th>
+        <th style="width: 25%">Tel</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-editing="editing" let-patient>
+      <tr class="cursor-pointer" [routerLink]="'/patients/' + patient.id">
+        <td style="width: 25%">{{patient.nom}}</td>
+        <td style="width: 25%">{{patient.prenom}}</td>
+        <td style="width: 25%">
+          <a (click)="$event.stopImmediatePropagation()" [href]="'mailto:' + patient.email">
+            {{patient.email}}
+          </a>
+        </td>
+        <td style="width: 25%">
+          <a (click)="$event.stopImmediatePropagation()" [href]="'tel:' + patient.tel?.mobile ?? patient.tel?.fixe ?? patient.tel?.autre">
+            {{patient.tel?.mobile ?? patient.tel?.fixe ?? patient.tel?.autre}}
+          </a>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+      <tr>
+        <td style="width: 100%" [attr.colspan]="columns?.length">
+          Aucun patient trouvé
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
 </div>
 
 <div class="plus-btn-wrapper">

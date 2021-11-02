@@ -16,7 +16,8 @@ export class Rdv {
   recurrence?: {
     dateDebut: Date;
     dateFin: Date;
-  }
+  };
+  notes: string;
 
   constructor(heure: number, patient: Patient, date: Date, soignant?: Soignant) {
     this.heure = heure;
