@@ -1,0 +1,36 @@
+<div class="container-fluid">
+  <p-table [value]="infirmieres" dataKey="id" editMode="row" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nom</th>
+        <th>Prenom</th>
+        <th>Mail</th>
+        <th>Tel</th>
+        <th>Trigramme</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-editing="editing" let-ri="rowIndex" let-infirmiere>
+      <tr [pEditableRow]="infirmiere">
+        <td pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="infirmiere.nom">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{infirmiere.nom}}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>{{infirmiere.prenom}}</td>
+        <td>{{infirmiere.mail}}</td>
+        <td>{{infirmiere.tel}}</td>
+        <td>{{infirmiere.trg}}</td>
+        <td>
+          <i class="pr-3 pi pi-pencil" *ngIf="!editing" (click)="updateNurseForm(infirmiere)"></i>
+          <i class="pi pi-trash" (click)="deleteNurse(infirmiere)"></i>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

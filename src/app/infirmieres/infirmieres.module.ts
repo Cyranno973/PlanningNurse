@@ -4,6 +4,11 @@ import {InfirmieresComponent} from './infirmieres.component';
 import {TableModule} from "primeng/table";
 import {DialogModule} from 'primeng/dialog';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {PlanicationComponent} from './planication/planication.component';
+import {FormInfirmiereComponent} from './form-infirmiere/form-infirmiere.component';
+import {TableauInfirmieresComponent} from './tableau-infirmieres/tableau-infirmieres.component';
+import {SharedModule} from "../shared/shared.module";
+import {SearchInfirmiereComponent} from './search-infirmiere/search-infirmiere.component';
 
 @NgModule({
   imports: [
@@ -11,10 +16,15 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     TableModule,
     DialogModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ],
   declarations: [
-    InfirmieresComponent
+    InfirmieresComponent,
+    PlanicationComponent,
+    FormInfirmiereComponent,
+    TableauInfirmieresComponent,
+    SearchInfirmiereComponent
   ]
 })
 export class InfirmieresModule {
