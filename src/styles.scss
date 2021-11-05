@@ -138,7 +138,7 @@ input {
   }
 
   &.rdv {
-    width: 650px;
+    width: 700px;
   }
 
   .p-dialog-content {
@@ -185,7 +185,8 @@ input {
   height: 2rem;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
   border-radius: 50%;
+  color: black;
+  border: 1px solid black;
   z-index: 1;
 }

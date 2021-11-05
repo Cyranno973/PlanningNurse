@@ -4,13 +4,22 @@
   }
 
   .rdvs {
+    border-left: 1px solid;
+    border-right: 1px solid;
+
     .card {
+      padding-bottom: 10px;
       max-height: 500px;
       overflow-y: auto;
     }
 
-    .SOUHAITE {
-      background-color: #39ace7;
+    .badge {
+      border-radius: 2px;
+      padding: 0.25em 0.5rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: .3px;
     }
   }
 }

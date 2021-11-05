@@ -50,10 +50,16 @@ export class PatientComponent implements OnInit {
       });
   }
 
-  creerRdv() {
+  openRdv(rdv?: Rdv) {
+    this.openRdvForm({patient: this.patient, rdv});
+  }
+
+  private openRdvForm(data: { patient?: Patient, rdv?: Rdv }) {
     this.dialogService.open(FormRdvComponent, {
-      data: {patient: this.patient}, dismissableMask: true,
-      header: 'Nouveau RDV', styleClass: 'custom-modal rdv'
+      data: data,
+      dismissableMask: true,
+      header: data?.rdv ? 'Editer RDV' : 'Nouveau RDV',
+      styleClass: 'custom-modal rdv'
     }).onClose
       .pipe(filter(patientRdvs => !!patientRdvs))
       .subscribe((patientRdvs) => this.rdvs = patientRdvs?.rdvs);

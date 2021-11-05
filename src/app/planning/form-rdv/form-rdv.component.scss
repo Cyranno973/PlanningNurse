@@ -1,4 +1,11 @@
 .form-rdv-container {
+  .p-calendar {
+    // Style du jour sélectionné dans le calendrier
+    .p-datepicker table td > span.p-highlight {
+      border: 1px solid #800000;
+    }
+  }
+
   .quand-form {
     h5 {
       padding: 0 12px 12px 12px;

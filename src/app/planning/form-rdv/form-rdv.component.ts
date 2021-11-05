@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, HostListener, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {PatientService} from "../../repository/patient.service";
@@ -11,6 +11,8 @@ import {Dropdown} from "primeng/dropdown";
 import {Mois, Rdv} from "../../model/planning-rdv";
 import {PlanningService} from "../../repository/planning.service";
 import {Horaire} from "../../model/horaire";
+import {RdvStatus} from "../../model/enums/rdv-status";
+import {MatStepper} from "@angular/material/stepper";
 
 @Component({
   selector: 'app-form-rdv',
@@ -19,7 +21,8 @@ import {Horaire} from "../../model/horaire";
   encapsulation: ViewEncapsulation.None
 })
 export class FormRdvComponent implements OnInit {
-
+  @ViewChild('stepper')
+  stepper: MatStepper;
   patient: Patient = this.config.data?.patient;
   rdv: Rdv = this.config.data?.rdv;
   form: FormGroup;
@@ -38,6 +41,7 @@ export class FormRdvComponent implements OnInit {
   horaires: Horaire[] = [];
   creatingPatient: boolean;
   minDate = new Date();
+  rdvStatus = RdvStatus;
   private patients: Patient[] = [];
   private mois: Mois;
 
@@ -52,6 +56,12 @@ export class FormRdvComponent implements OnInit {
     this.initForms();
     this.computeHoraires();
     this.selectPatient(this.patient)
+
+    if (this.rdv) {
+      this.selectMonth({year: this.rdv.date.getFullYear(), month: this.rdv.date.getMonth() + 1});
+      this.selectDay(this.rdv.date)
+      this.selectHour(this.rdv.heure);
+    }
   }
 
   private loadData() {
@@ -81,8 +91,10 @@ export class FormRdvComponent implements OnInit {
     });
 
     this.quandForm = this.fb.group({
+      date: [{value: this.rdv?.date ?? this.minDate, disabled: this.creatingPatient}, Validators.required],
       jour: [{value: '', disabled: this.creatingPatient}, Validators.required],
-      heure: [{value: '', disabled: this.creatingPatient}, Validators.required]
+      heure: [{value: '', disabled: this.creatingPatient}, Validators.required],
+      status: [{value: RdvStatus[this.rdv?.statut] ?? RdvStatus.SOUHAITE, disabled: this.creatingPatient}, Validators.required]
     });
 
     this.form = this.fb.group({
@@ -167,7 +179,7 @@ export class FormRdvComponent implements OnInit {
       .catch((err) => console.log(`Oups, erreur pendant la récupération du planning du mois`, err));
   }
 
-  selectDay(date: any, htmlElement: HTMLDivElement) {
+  selectDay(date: any, htmlElement?: HTMLDivElement) {
     if (date instanceof PointerEvent) return;
 
     if (date instanceof Date) {
@@ -177,7 +189,8 @@ export class FormRdvComponent implements OnInit {
       this.selectedDate = null;
       this.quandForm.get('jour').reset();
     }
-    this.scroll(htmlElement);
+    if (htmlElement)
+      this.scroll(htmlElement);
   }
 
   selectHour(heure: number) {
@@ -192,7 +205,8 @@ export class FormRdvComponent implements OnInit {
     const mois = this.mois;
     const jour = this.selectedDate.getDate();
     const soignant = new Soignant(this.quiForm.get('soignant').value);
-    const rdv = new Rdv(this.selectedheure, this.selectedPatient, this.selectedDate, soignant);
+    const status = this.quandForm.get('status').value as RdvStatus;
+    const rdv = new Rdv(this.selectedheure, this.selectedPatient, this.selectedDate, soignant, status.code);
 
     if (mois.jours.has(jour)) // Si le mois contient le jour X, on y ajoute le RDV
       mois.jours.get(jour).push(rdv);
@@ -202,5 +216,11 @@ export class FormRdvComponent implements OnInit {
     // Update va enregistrer ou créer le document s'il n'existe pas avec l'id passé
     this.rs.save(mois, rdv).then((rdv) => this.ref.close(rdv[0]))
       .catch((err) => console.log(err));
+  }
+
+  selectedSoigant($event: any) {
+    const soignant = $event.value;
+    if (this.selectedPatient && soignant)
+      this.stepper.next();
   }
 }

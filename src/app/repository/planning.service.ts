@@ -37,11 +37,20 @@ export class PlanningService extends AbstractCrudRepository<Mois> {
     const promisePatientRdvs = this.prs.findById(rdv.patient.id, false)
       .then(pr => {
         if (pr?.rdvs) {
-          pr.rdvs.push(rdv);
+          // Récupère l'index du rdv pour savoir si c'est une MAJ ou un nouveau rdv
+          const index = pr.rdvs.findIndex(r => r.id === rdv.id);
+
+          if (index > -1)
+            pr.rdvs[index] = rdv; // Met à jour le RDV
+          else
+            pr.rdvs.push(rdv); // Ajoute le rdv
+
+          // Trie les rdvs par date
           pr.rdvs.sort((a, b) => b.date.getTime() - a.date.getTime())
-        } else pr = new PatientRdvs(rdv.patient.id, [rdv]);
+        } else
+          pr = new PatientRdvs(rdv.patient.id, [rdv]);
         return this.prs.update(pr.id, pr);
-      })
+      });
 
     // Exécute en parallèle la promesse d'enregistrement de PatientRdv et du Mois
     return Promise.all([promisePatientRdvs, this.update(mois.id, mois)]);

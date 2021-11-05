@@ -19,11 +19,12 @@ export class Rdv {
   };
   notes: string;
 
-  constructor(heure: number, patient: Patient, date: Date, soignant?: Soignant) {
+  constructor(heure: number, patient: Patient, date: Date, soignant?: Soignant, status?: RdvStatusCode) {
     this.heure = heure;
     this.patient = {id: patient.id, nom: patient.nom, prenom: patient.prenom};
     date.setHours(Utils.toHours(heure), Utils.toMinutes(heure));
     this.date = date;
+    this.statut = status ?? RdvStatusCode.SOUHAITE;
 
     if (soignant)
       this.soignant = {id: soignant.id, nom: soignant.nom, prenom: soignant.prenom};
