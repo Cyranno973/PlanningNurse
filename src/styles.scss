@@ -138,7 +138,7 @@ input {
   }
 
   &.rdv {
-    width: 650px;
+    width: 700px;
   }
 
   .p-dialog-content {
@@ -177,4 +177,16 @@ input {
     right: 0;
     bottom: 0;
   }
+}
+
+.custom-marker {
+  display: flex;
+  width: 2rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: black;
+  border: 1px solid black;
+  z-index: 1;
 }

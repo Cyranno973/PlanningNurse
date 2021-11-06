@@ -25,10 +25,10 @@ export class FormPatientComponent implements OnInit {
       dateNaissance: [this.patient?.dateNaissance],
       email: [this.patient?.email],
       address: [this.patient?.address],
-      telephone: this.fb.group({
-        mobile: [this.patient?.telephone?.mobile],
-        fixe: [this.patient?.telephone?.fixe],
-        autre: [this.patient?.telephone?.autre]
+      tel: this.fb.group({
+        mobile: [this.patient?.tel?.mobile],
+        fixe: [this.patient?.tel?.fixe],
+        autre: [this.patient?.tel?.autre]
       })
     });
   }

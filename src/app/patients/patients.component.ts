@@ -30,6 +30,7 @@ export class PatientsComponent implements OnInit, OnDestroy {
       }
     );
 
+    // TODO : Paginer la requête pour ne pas tout lire à chaque fois
     this.subscription = this.ps.getAll().subscribe(data => {
       this.patients = data;
       this.refreshSearch();
@@ -41,6 +42,7 @@ export class PatientsComponent implements OnInit, OnDestroy {
     this.refreshSearch();
   }
 
+  // TODO : Lancer la requête avec un bouton ou après quelques ms de délai en cherchant en BDD car les patients seront paginés
   private refreshSearch() {
     // Filtre les patients dont la valeur des champs du formulaire correspondent
     this.searchResults = this.patients.filter(patient =>

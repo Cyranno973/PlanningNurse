@@ -1,11 +1,13 @@
 import {DatabaseModel} from "../repository/AbstractCrudRepository";
-import {RdvStatus} from "./enums/rdv-status";
+import {RdvStatusCode} from "./enums/rdv-status";
 import {Soignant} from "./soignant";
 import {Patient} from "./patient";
+import {Utils} from "../shared/Utils";
 
 export class Rdv {
   id: string;
-  statut: RdvStatus = RdvStatus.SOUHAITE;
+  date: Date;
+  statut: RdvStatusCode = RdvStatusCode.SOUHAITE;
   soignant?: Soignant;
   patient?: Patient;
   // 10h15, 12h00....
@@ -14,11 +16,15 @@ export class Rdv {
   recurrence?: {
     dateDebut: Date;
     dateFin: Date;
-  }
+  };
+  notes: string;
 
-  constructor(heure: number, patient: Patient, soignant?: Soignant) {
+  constructor(heure: number, patient: Patient, date: Date, soignant?: Soignant, status?: RdvStatusCode) {
     this.heure = heure;
     this.patient = {id: patient.id, nom: patient.nom, prenom: patient.prenom};
+    date.setHours(Utils.toHours(heure), Utils.toMinutes(heure));
+    this.date = date;
+    this.statut = status ?? RdvStatusCode.SOUHAITE;
 
     if (soignant)
       this.soignant = {id: soignant.id, nom: soignant.nom, prenom: soignant.prenom};

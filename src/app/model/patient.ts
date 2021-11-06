@@ -6,7 +6,7 @@ export class Patient extends DatabaseModel {
   email?: string;
   address?: string;
   dateNaissance?: Date;
-  telephone?: {
+  tel?: {
     mobile: string;
     fixe: string;
     autre: string;
@@ -17,5 +17,9 @@ export class Patient extends DatabaseModel {
     const patient = Object.assign(this, init);
     patient.dateNaissance = new Date(init?.dateNaissance);
     return patient;
+  }
+
+  public static fullName(p: Patient): string {
+    return `${p?.prenom} ${p?.nom}`;
   }
 }

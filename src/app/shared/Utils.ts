@@ -12,9 +12,17 @@ export class Utils {
       throw 'heure invalide';
     }
 
-    const hours = Math.floor(num / 60);
-    const minutes = num % 60;
+    const hours = this.toHours(num);
+    const minutes = this.toMinutes(num);
     return `${hours}h${minutes ? minutes : '00'}`;
+  }
+
+  static toHours(time: number): number {
+    return Math.floor(time / 60);
+  }
+
+  static toMinutes(num) {
+    return num % 60;
   }
 }
 
