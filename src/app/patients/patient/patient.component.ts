@@ -6,7 +6,7 @@ import {DialogService} from "primeng/dynamicdialog";
 import {FormPatientComponent} from "./form-patient/form-patient.component";
 import {Rdv} from "../../model/planning-rdv";
 import {PatientRdvsService} from "../../repository/patient-rdvs.service";
-import {RdvStatus} from "../../model/enums/rdv-status";
+import {RdvStatut} from "../../model/enums/rdv-statut";
 import {FormRdvComponent} from "../../planning/form-rdv/form-rdv.component";
 import {filter} from "rxjs/operators";
 
@@ -19,7 +19,7 @@ import {filter} from "rxjs/operators";
 export class PatientComponent implements OnInit {
   patient: Patient;
   rdvs: Rdv[];
-  rdvStatus = RdvStatus;
+  rdvStatus = RdvStatut;
 
   constructor(private route: ActivatedRoute,
               private ps: PatientService,

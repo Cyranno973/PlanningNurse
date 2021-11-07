@@ -1,16 +1,10 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {ControlContainer, FormGroupDirective} from "@angular/forms";
+import {HoraireStatut} from "../../model/enums/horaire-statut";
 
 @Component({
   selector: 'app-select-button',
   templateUrl: './select-button.component.html',
-  styleUrls: ['./select-button.component.scss'],
-  viewProviders: [
-    {
-      provide: ControlContainer,
-      useExisting: FormGroupDirective
-    }
-  ]
+  styleUrls: ['./select-button.component.scss']
 })
 export class SelectButtonComponent {
 
@@ -20,6 +14,9 @@ export class SelectButtonComponent {
   selected: boolean;
   @Output()
   onSelectedHour = new EventEmitter<string>();
+  @Input()
+  statut: HoraireStatut;
+  hStatut = HoraireStatut;
 
   constructor() {
   }

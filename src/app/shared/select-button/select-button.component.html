@@ -1,10 +1,18 @@
-<button pButton pRipple
-        type="button"
-        [style]="'min-width: 78px'"
-        [label]="value"
-        (keydown.space)="onSelectedHour.emit(value)"
-        (keydown.enter)="onSelectedHour.emit(value)"
-        (click)="onSelectedHour.emit(value)"
-        class="p-button-rounded"
-        [ngClass]="{'p-button-outlined ': !selected}">
-</button>
+<div [title]="statut.label">
+  <button pButton pRipple
+          type="button"
+          [style]="'min-width: 78px'"
+          [label]="value"
+          (keydown.space)="onSelectedHour.emit(value)"
+          (keydown.enter)="onSelectedHour.emit(value)"
+          (click)="onSelectedHour.emit(value)"
+          class="p-button-rounded"
+          [ngStyle]="{
+          'color':  statut.colorHigh,
+          'border-color': statut.colorHigh,
+          'background-color': selected ? 'white' : statut.colorLow,
+          'font-weight': selected ? 'bold':'normal'
+          }"
+          [ngClass]="{'p-button-outlined': selected, 'disabled': statut === hStatut.COMPLET}">
+  </button>
+</div>

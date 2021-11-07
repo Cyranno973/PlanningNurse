@@ -1,4 +1,5 @@
 import {DatabaseModel} from "../repository/AbstractCrudRepository";
+import {Soignant} from "./soignant";
 
 export class Patient extends DatabaseModel {
   prenom: string;
@@ -11,6 +12,7 @@ export class Patient extends DatabaseModel {
     fixe: string;
     autre: string;
   };
+  soignant?: Soignant;
 
   public constructor(init?: Partial<Patient>) {
     super();
@@ -20,6 +22,7 @@ export class Patient extends DatabaseModel {
   }
 
   public static fullName(p: Patient): string {
+    if (!p) return '';
     return `${p?.prenom} ${p?.nom}`;
   }
 }

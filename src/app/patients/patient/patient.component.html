@@ -1,12 +1,13 @@
 <div class="container-fluid patient">
   <div class="row">
-    <div class="col-12 col-md-6" *ngIf="patient">
+    <div class="col-12 col-md-5" *ngIf="patient">
       <h2 class="d-inline-block">
         <i class="pi pi-id-card mr-1" style="font-size: 1.5rem"></i>{{patient.prenom}} {{patient.nom | uppercase}}
       </h2>
       <p-button icon="pi pi-user-edit" (click)="edit()" label="Modifier"></p-button>
       <div class="form-group">
         <ul>
+          <li>Soignant suiveur : {{patient.soignant?.trg}}</li>
           <li>Date de naissance : {{patient.dateNaissance | date : 'dd/MM/yyyy'}}</li>
           <li>Email : {{patient.email}}</li>
           <li>Adresse : {{patient.address}}</li>
@@ -23,33 +24,38 @@
       [SOINS ET COMMENTAIRES]
     </div>
 
-    <div class="rdvs col-12 col-md-6 row align-items-center justify-content-center">
+    <div class="rdvs col-12 col-md-7 row">
       <h5 class="col-12">Rdvs
         <button pButton pRipple type="button" icon="pi pi-plus" (click)="openRdv()" class="p-button-rounded p-button-outlined"></button>
       </h5>
 
-      <div class="card">
-        <p-timeline [value]="rdvs" align="alternate" styleClass="customized-timeline">
+      <div class="card col-12">
+        <p-timeline [value]="rdvs" styleClass="customized-timeline">
           <ng-template pTemplate="marker" let-rdv>
             <span class="custom-marker p-shadow-2">
                 <i class="pi pi-calendar"></i>
             </span>
           </ng-template>
+
           <ng-template pTemplate="content" let-rdv>
-            <p-card [subheader]="rdv.date | date : 'dd/MM/yyyy à HH:mm'">
-
-              Statut : <span class="badge" [style.color]="rdvStatus[rdv.statut]?.colorHigh"
-                             [style.backgroundColor]="rdvStatus[rdv.statut]?.colorLow">
-                {{rdvStatus[rdv.statut]?.label}}
-              </span>
-
-              <span>Soignant : {{rdv.soignant?.prenom}} {{rdv.soignant?.nom}}</span>
-              <span>Notes : {{rdv.notes}}</span>
+            <p-card>
+              <ul class="list-unstyled">
+                <li>
+                  Statut : <span class="badge" [style.color]="rdvStatus[rdv.statut]?.colorHigh"
+                                 [style.backgroundColor]="rdvStatus[rdv.statut]?.colorLow">
+                      {{rdvStatus[rdv.statut]?.label}}
+                    </span>
+                </li>
+                <li>Soignant : {{rdv.soignant?.prenom}} {{rdv.soignant?.nom}}</li>
+                <li *ngIf="rdv.notes">Notes : {{rdv.notes}}</li>
+              </ul>
               <button pButton icon="pi pi-pencil" label="Editer" (click)="openRdv(rdv)" class="p-button-text"></button>
             </p-card>
           </ng-template>
+          <ng-template pTemplate="opposite" let-rdv>
+            {{rdv.date | date : 'dd/MM/yyyy à HH:mm'}}
+          </ng-template>
         </p-timeline>
-
       </div>
     </div>
   </div>

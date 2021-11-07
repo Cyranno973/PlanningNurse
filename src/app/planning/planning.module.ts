@@ -7,7 +7,6 @@ import {FormRdvComponent} from './form-rdv/form-rdv.component';
 import {MatStepperModule} from "@angular/material/stepper";
 import {AutoCompleteModule} from "primeng/autocomplete";
 import {CalendarModule} from "primeng/calendar";
-import {DropdownModule} from "primeng/dropdown";
 
 
 @NgModule({
@@ -21,8 +20,7 @@ import {DropdownModule} from "primeng/dropdown";
     CalendarWeekModule,
     MatStepperModule,
     AutoCompleteModule,
-    CalendarModule,
-    DropdownModule
+    CalendarModule
   ]
 })
 export class PlanningModule {
