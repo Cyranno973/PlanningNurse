@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, HostListener, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {PatientService} from "../../repository/patient.service";
@@ -11,8 +11,10 @@ import {Dropdown} from "primeng/dropdown";
 import {Mois, Rdv} from "../../model/planning-rdv";
 import {PlanningService} from "../../repository/planning.service";
 import {Horaire} from "../../model/horaire";
-import {RdvStatus} from "../../model/enums/rdv-status";
-import {MatStepper} from "@angular/material/stepper";
+import {RdvStatut} from "../../model/enums/rdv-statut";
+import {Utils} from "../../shared/Utils";
+import {PatientRdvs} from "../../model/patient-rdvs";
+import {HoraireStatut} from "../../model/enums/horaire-statut";
 
 @Component({
   selector: 'app-form-rdv',
@@ -21,8 +23,6 @@ import {MatStepper} from "@angular/material/stepper";
   encapsulation: ViewEncapsulation.None
 })
 export class FormRdvComponent implements OnInit {
-  @ViewChild('stepper')
-  stepper: MatStepper;
   patient: Patient = this.config.data?.patient;
   rdv: Rdv = this.config.data?.rdv;
   form: FormGroup;
@@ -30,9 +30,9 @@ export class FormRdvComponent implements OnInit {
   quandForm: FormGroup;
   foundPatients: Patient[];
   selectedPatient: Patient;
-  selectedDate: Date;
-  selectedheure: number;
-  soignants: Soignant[];
+  date: Date;
+  heure: number;
+  soignants: Soignant[] = [];
   proposerNouveau: boolean;
   // Unités de temps en minutes
   serviceDebut: number = 540; // 9h00
@@ -41,7 +41,8 @@ export class FormRdvComponent implements OnInit {
   horaires: Horaire[] = [];
   creatingPatient: boolean;
   minDate = new Date();
-  rdvStatus = RdvStatus;
+  selectedStep = 0;
+  rdvStatus = RdvStatut;
   private patients: Patient[] = [];
   private mois: Mois;
 
@@ -52,29 +53,43 @@ export class FormRdvComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.soignants.push(this.rdv?.soignant ?? this.patient?.soignant ?? new Soignant());
     this.loadData();
     this.initForms();
     this.computeHoraires();
     this.selectPatient(this.patient)
 
     if (this.rdv) {
-      this.selectMonth({year: this.rdv.date.getFullYear(), month: this.rdv.date.getMonth() + 1});
-      this.selectDay(this.rdv.date)
-      this.selectHour(this.rdv.heure);
+      this.selectMonth({year: this.rdv.date.getFullYear(), month: this.rdv.date.getMonth() + 1})
+        .then(() => {
+          this.selectDay(new Date(this.rdv.date), null, false);
+          this.selectHour(this.rdv.heure, false);
+          this.selectSoigant()
+          this.quandForm.get('date').setValue(this.rdv.date);
+        });
+      this.selectedStep = 2;
+    } else {
+      this.selectDay(this.minDate, null, false);
+      this.selectSoigant()
+      this.date = this.minDate;
+      this.quandForm.get('date').setValue(this.minDate);
     }
   }
 
   private loadData() {
-    // Récupère les soignants
-    this.is.getAll().pipe(take(1))
-      .subscribe(
-        soignants => this.soignants = soignants,
-        (err) => console.log(`Erreur pendant la récupération des soignants`, err));
-
     // Récupère le mois en cours
     this.rs.getMois()
       .then(mois => this.mois = mois)
       .catch((err) => console.log(`Erreur pendant la récupération du planning du mois`, err));
+  }
+
+  loadSoignants() {
+    // Récupère les soignants
+    if (!this.soignants?.length)
+      this.is.getAll().pipe(take(1))
+        .subscribe(
+          soignants => this.soignants = soignants,
+          err => console.log(`Erreur pendant la récupération des soignants`, err));
   }
 
   private computeHoraires() {
@@ -85,16 +100,16 @@ export class FormRdvComponent implements OnInit {
 
   private initForms() {
     this.quiForm = this.fb.group({
-      patient: [{value: null, disabled: this.creatingPatient || this.patient}, Validators.required],
-      patientName: [{value: null, disabled: this.creatingPatient || this.patient}],
-      soignant: [{value: null, disabled: this.creatingPatient}]
+      patient: [{value: this.rdv?.patient, disabled: this.creatingPatient || this.patient}, Validators.required],
+      patientName: [{value: Patient.fullName(this.rdv?.patient), disabled: this.creatingPatient || this.patient}],
+      soignant: [{value: this.rdv?.soignant ?? this.patient?.soignant, disabled: this.creatingPatient}]
     });
 
     this.quandForm = this.fb.group({
-      date: [{value: this.rdv?.date ?? this.minDate, disabled: this.creatingPatient}, Validators.required],
+      date: [{value: '', disabled: this.creatingPatient}, Validators.required],
       jour: [{value: '', disabled: this.creatingPatient}, Validators.required],
       heure: [{value: '', disabled: this.creatingPatient}, Validators.required],
-      status: [{value: RdvStatus[this.rdv?.statut] ?? RdvStatus.SOUHAITE, disabled: this.creatingPatient}, Validators.required]
+      status: [{value: RdvStatut[this.rdv?.statut] ?? RdvStatut.SOUHAITE, disabled: this.creatingPatient}, Validators.required]
     });
 
     this.form = this.fb.group({
@@ -174,28 +189,51 @@ export class FormRdvComponent implements OnInit {
   }
 
   selectMonth(dateEvent: { month: number, year: number }) {
-    this.rs.getMois(`${dateEvent.year}-${dateEvent.month}`)
+    return this.rs.getMois(`${dateEvent.year}-${dateEvent.month}`)
       .then(mois => this.mois = mois)
       .catch((err) => console.log(`Oups, erreur pendant la récupération du planning du mois`, err));
   }
 
-  selectDay(date: any, htmlElement?: HTMLDivElement) {
+  private calculeDispos(soignant: Soignant = this.quiForm.get('soignant').value) {
+    const jour = this.date.getDate();
+
+    // Disponibilité des horaires
+    if (soignant && jour && this.mois && this.mois.jours?.has(jour)) {
+      const rdvsSoignant = this.mois.jours.get(jour).filter(r => r.soignant?.id === soignant?.id);
+
+      this.horaires.forEach(h => {
+        const rdv = rdvsSoignant.find(r => r.heure === h.heure);
+        h.statut = HoraireStatut.fromRdvStatut(rdv?.statut);
+      });
+
+    } else {
+      // TODO : le cas des disponibilité de toute les soignants
+      this.horaires.forEach(r => r.statut = HoraireStatut.DISPONIBLE);
+    }
+
+  }
+
+  selectDay(date: any, htmlElement?: HTMLDivElement, touched: boolean = true) {
     if (date instanceof PointerEvent) return;
 
     if (date instanceof Date) {
-      this.selectedDate = date;
+      this.date = date;
       this.quandForm.get('jour').setValue(date);
+      this.calculeDispos();
     } else {
-      this.selectedDate = null;
+      this.date = null;
       this.quandForm.get('jour').reset();
     }
-    if (htmlElement)
-      this.scroll(htmlElement);
+
+    if (htmlElement) this.scroll(htmlElement);
+    if (touched) this.quandForm.markAsTouched();
   }
 
-  selectHour(heure: number) {
-    this.selectedheure = heure;
+  selectHour(heure: number, touched: boolean = true) {
+    this.heure = heure;
+    this.date.setHours(Utils.toHours(heure), Utils.toMinutes(heure));
     this.quandForm.get('heure').setValue(heure);
+    if (touched) this.quandForm.markAsTouched();
   }
 
   /**
@@ -203,24 +241,63 @@ export class FormRdvComponent implements OnInit {
    */
   save() {
     const mois = this.mois;
-    const jour = this.selectedDate.getDate();
+    const jour = this.date.getDate();
     const soignant = new Soignant(this.quiForm.get('soignant').value);
-    const status = this.quandForm.get('status').value as RdvStatus;
-    const rdv = new Rdv(this.selectedheure, this.selectedPatient, this.selectedDate, soignant, status.code);
+    const status = this.quandForm.get('status').value as RdvStatut;
+    const rdv = new Rdv(this.rdv?.id, this.heure, this.selectedPatient, this.date, soignant, status.code);
 
-    if (mois.jours.has(jour)) // Si le mois contient le jour X, on y ajoute le RDV
-      mois.jours.get(jour).push(rdv);
-    else // Sinon on set le jour avec le premier rdv
+    // Si le mois contient le jour X, on y ajoute le RDV
+    if (mois.jours.has(jour)) {
+      const index = mois.jours.get(jour).findIndex(r => r.id === rdv.id);
+
+      // Met à jour le RDV dans la journée ou l'ajoute s'il n'existe pas
+      if (index > -1) {
+        mois.jours.get(jour)[index] = rdv;
+      } else {
+        mois.jours.get(jour).push(rdv);
+      }
+    } else { // Sinon on set le jour avec le premier rdv
       mois.jours.set(jour, [rdv]);
+    }
+
+    // Si le rdv existait, on le supprime si nécessaire du jour où il était planifié
+    const isSameMonth = Mois.fromDate(this.rdv?.date) === mois.id;
+    if (this.rdv && isSameMonth && this.rdv.date.getDate() !== rdv.date.getDate()) {
+      this.removeFromDay(mois, this.rdv);
+    }
+
 
     // Update va enregistrer ou créer le document s'il n'existe pas avec l'id passé
-    this.rs.save(mois, rdv).then((rdv) => this.ref.close(rdv[0]))
-      .catch((err) => console.log(err));
+    this.rs.save(mois, rdv).then(prdvs => {
+        this.removeFromMonth(rdv, prdvs);
+        this.ref.close(prdvs);
+      }
+    ).catch((err) => console.log(err));
   }
 
-  selectedSoigant($event: any) {
-    const soignant = $event.value;
-    if (this.selectedPatient && soignant)
-      this.stepper.next();
+  // Si le mois est différent, on le retire de là où il était avant
+  private removeFromMonth(rdv: Rdv, prdvs: PatientRdvs) {
+    let moisDifferent = Mois.fromDate(this.rdv?.date) !== Mois.fromDate(rdv.date);
+    if (this.rdv && moisDifferent) {
+      this.rs.getMois(Mois.fromDate(this.rdv?.date))
+        .then(mois => {
+          this.removeFromDay(mois, this.rdv);
+          this.rs.update(mois.id, mois).then(() => this.ref.close(prdvs));
+        });
+    }
+  }
+
+  // On supprime le rdv des rdvs de la journée
+  private removeFromDay(m: Mois, rdv: Rdv) {
+    const rdvsFilterd = m.jours.get(rdv.date.getDate()).filter(r => r.id !== rdv.id);
+    m.jours.set(rdv.date.getDate(), rdvsFilterd);
+  }
+
+  selectSoigant($event?: any) {
+    const soignant = $event?.value ?? this.rdv?.soignant ?? this.patient?.soignant;
+    if (this.selectedPatient && soignant) {
+      this.calculeDispos(soignant);
+      this.selectedStep = !this.rdv ? 1 : 2;
+    }
   }
 }

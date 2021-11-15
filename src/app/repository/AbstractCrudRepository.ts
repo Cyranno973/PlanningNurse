@@ -18,20 +18,24 @@ export class Type {
 }
 
 export class AbstractCrudRepository<T extends DatabaseModel> {
-  private ref: AngularFirestoreCollection<T>
+  collection: AngularFirestoreCollection<T>
+  db: AngularFirestore;
+  dbPath: string;
 
   constructor(db: AngularFirestore, dbPath: string) {
-    this.ref = db.collection<T>(dbPath);
+    this.collection = db.collection<T>(dbPath);
+    this.db = db;
+    this.dbPath = dbPath;
   }
 
   getAll(): Observable<T[]> {
-    return this.ref.snapshotChanges().pipe(
+    return this.collection.snapshotChanges().pipe(
       map(changes => changes.map(c => ({id: c.payload.doc.id, ...this.fromFirestore(c.payload.doc.data())})))
     );
   }
 
   findById(id: string, failIfNotFound: boolean = true): Promise<T> {
-    return this.ref.doc(id).ref.get()
+    return this.collection.doc(id).ref.get()
       .then(doc => {
         if (doc.exists) return {id, ...this.fromFirestore(doc.data())} as T;
         if (failIfNotFound) throw `Aucun document trouvé avec l'id=[${id}]`;
@@ -41,7 +45,7 @@ export class AbstractCrudRepository<T extends DatabaseModel> {
 
   create(object: T): Promise<T> {
     object.dateCreation = new Date();
-    return this.ref.add({...this.toFirestore(object)})
+    return this.collection.add({...this.toFirestore(object)})
       .then(createdDocRef => {
         object.id = createdDocRef.id
         return object as T;
@@ -50,7 +54,7 @@ export class AbstractCrudRepository<T extends DatabaseModel> {
 
   update(id: string, data: T): Promise<T> {
     data.lastUpdate = new Date();
-    return this.ref.doc(id).set({...this.toFirestore(data)})
+    return this.collection.doc(id).set({...this.toFirestore(data)})
       .then(() => {
         data.id = id;
         return this.fromFirestore(data) as T;
@@ -58,7 +62,7 @@ export class AbstractCrudRepository<T extends DatabaseModel> {
   }
 
   delete(id: string): Promise<void> {
-    return this.ref.doc(id).delete();
+    return this.collection.doc(id).delete();
   }
 
   // Convertit les timestamps des objets en Dates

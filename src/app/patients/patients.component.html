@@ -13,19 +13,19 @@
 
   <p-table [value]="!!searchFilters.length ? searchResults : patients"
            dataKey="id" editMode="row" responsiveLayout="scroll" [styleClass]="'table-hover'"
-           [scrollable]="true" scrollHeight="600px" scrollDirection="both">
+           [scrollable]="true" scrollHeight="flex" scrollDirection="both">
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 25%">Nom</th>
         <th style="width: 25%">Prénom</th>
+        <th style="width: 25%">Nom</th>
         <th style="width: 25%">Mail</th>
         <th style="width: 25%">Tel</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-editing="editing" let-patient>
       <tr class="cursor-pointer" [routerLink]="'/patients/' + patient.id">
-        <td style="width: 25%">{{patient.nom}}</td>
         <td style="width: 25%">{{patient.prenom}}</td>
+        <td style="width: 25%">{{patient.nom}}</td>
         <td style="width: 25%">
           <a (click)="$event.stopImmediatePropagation()" [href]="'mailto:' + patient.email">
             {{patient.email}}

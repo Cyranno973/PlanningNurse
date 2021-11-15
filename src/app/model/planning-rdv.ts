@@ -1,15 +1,14 @@
 import {DatabaseModel} from "../repository/AbstractCrudRepository";
-import {RdvStatusCode} from "./enums/rdv-status";
+import {RdvStatutCode} from "./enums/rdv-statut";
 import {Soignant} from "./soignant";
 import {Patient} from "./patient";
 import {Utils} from "../shared/Utils";
 
-export class Rdv {
-  id: string;
+export class Rdv extends DatabaseModel {
   date: Date;
-  statut: RdvStatusCode = RdvStatusCode.SOUHAITE;
-  soignant?: Soignant;
-  patient?: Patient;
+  statut: RdvStatutCode = RdvStatutCode.SOUHAITE;
+  soignant: Soignant;
+  patient: Patient;
   // 10h15, 12h00....
   heure: number;
   duree?: number;
@@ -19,16 +18,16 @@ export class Rdv {
   };
   notes: string;
 
-  constructor(heure: number, patient: Patient, date: Date, soignant?: Soignant, status?: RdvStatusCode) {
+  constructor(id: string, heure: number, patient: Patient, date: Date, soignant?: Soignant, status?: RdvStatutCode) {
+    super();
+    this.id = id;
     this.heure = heure;
     this.patient = {id: patient.id, nom: patient.nom, prenom: patient.prenom};
-    date.setHours(Utils.toHours(heure), Utils.toMinutes(heure));
     this.date = date;
-    this.statut = status ?? RdvStatusCode.SOUHAITE;
+    this.date.setHours(Utils.toHours(heure), Utils.toMinutes(heure));
+    this.statut = status ?? RdvStatutCode.SOUHAITE;
 
-    if (soignant)
-      this.soignant = {id: soignant.id, nom: soignant.nom, prenom: soignant.prenom};
-    this.id = `${patient.id}-${heure}`
+    if (soignant) this.soignant = new Soignant(soignant);
   }
 }
 
@@ -41,5 +40,11 @@ export class Mois extends DatabaseModel {
   constructor(id?: string) {
     super();
     this.id = id;
+    this.jours = new Map<number, Rdv[]>()
+  }
+
+  static fromDate(date: Date) {
+    if (!date) return '';
+    return `${date.getFullYear()}-${date.getMonth() + 1}`;
   }
 }

@@ -179,6 +179,11 @@ input {
   }
 }
 
+.disabled {
+  pointer-events: none;
+  opacity: .8;
+}
+
 .custom-marker {
   display: flex;
   width: 2rem;

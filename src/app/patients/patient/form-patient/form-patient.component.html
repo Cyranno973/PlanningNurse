@@ -25,6 +25,25 @@
       <input id="adresse" type="text" autocomplete="off" formControlName="address">
     </div>
 
+    <div class="row">
+      <label for="adresse">Soignant</label>
+      <p-dropdown [options]="soignants"
+                  dataKey="id"
+                  placeholder="Soignant"
+                  formControlName="soignant"
+                  [showClear]="true">
+        <!-- Soignant sélectioné -->
+        <ng-template let-value pTemplate="selectedItem">
+          {{value.prenom}} {{value.nom}} ({{value.trg}})
+        </ng-template>
+        <!-- Suggestions -->
+        <ng-template let-soignant pTemplate="item">
+          {{soignant.prenom}} {{soignant.nom}} ({{soignant.trg}})
+        </ng-template>
+      </p-dropdown>
+    </div>
+
+
     <h4>Téléphones</h4>
     <div formGroupName="tel">
       <div class="row">

@@ -8,8 +8,9 @@ import {SpeedDialModule} from "primeng/speeddial";
 import {TooltipModule} from "primeng/tooltip";
 import {DialogService, DynamicDialogModule} from "primeng/dynamicdialog";
 import {RippleModule} from "primeng/ripple";
-import { SelectButtonComponent } from './select-button/select-button.component';
+import {SelectButtonComponent} from './select-button/select-button.component';
 import {SelectButtonModule} from "primeng/selectbutton";
+import {DropdownModule} from "primeng/dropdown";
 
 /**
  * Module avec les éléments partagés
@@ -29,7 +30,8 @@ import {SelectButtonModule} from "primeng/selectbutton";
     TooltipModule,
     DynamicDialogModule,
     RippleModule,
-    SelectButtonModule
+    SelectButtonModule,
+    DropdownModule
   ],
   providers: [DialogService, DatePipe],
   exports: [
@@ -42,7 +44,8 @@ import {SelectButtonModule} from "primeng/selectbutton";
     DynamicDialogModule,
     TooltipModule,
     RippleModule,
-    SelectButtonComponent
+    SelectButtonComponent,
+    DropdownModule
   ]
 })
 export class SharedModule {

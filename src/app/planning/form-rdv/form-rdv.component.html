@@ -1,5 +1,5 @@
 <div class="form-rdv-container" [formGroup]="form">
-  <mat-stepper orientation="vertical" #stepper [selectedIndex]="rdv ? 2:0">
+  <mat-stepper orientation="vertical" [selectedIndex]="selectedStep">
     <mat-step [stepControl]="quiForm" formGroupName="qui" [formGroup]="quiForm">
       <!-- Label -->
       <ng-template matStepLabel>
@@ -13,7 +13,7 @@
 
       <div class="row">
         <!-- Choix du patient -->
-        <div class="col-12 col-md-7 row" [ngClass]="{disabled: !patient}">
+        <div class="col-12 col-md-7 row" [ngClass]="{'mandatory': !patient}">
           <p-autoComplete placeholder="Patient" appendTo="body" inputStyleClass="text-capitalize"
                           class="d-inline-block"
                           (keydown.backspace)="clearPatient()"
@@ -32,14 +32,16 @@
           <button *ngIf="proposerNouveau" pButton pRipple pTooltip="Patient non trouvé. L'ajouter ?" (click)="newPatient()"
                   type="button" icon="pi pi-plus" class="ml-1 p-button-rounded p-button-danger p-button-outlined"></button>
         </div>
-        <!-- Choix de l'infirmière -->
+        <!-- Choix du soignant -->
         <div class="col-12 col-md-5">
           <p-dropdown [options]="soignants" #dropdownSoignant
-                      (keydown.escape)="clearDropdownOnEscape($event, dropdownSoignant)"
+                      dataKey="id"
+                      (onShow)="loadSoignants()"
                       placeholder="Soignant"
-                      optionLabel="prenom"
+                      (keydown.escape)="clearDropdownOnEscape($event, dropdownSoignant)"
                       formControlName="soignant"
-                      (onChange)="selectedSoigant($event)"
+                      (onChange)="selectSoigant($event)"
+                      appendTo="body"
                       [showClear]="true">
             <!-- Infirmière sélectionée -->
             <ng-template let-value pTemplate="selectedItem">
@@ -68,26 +70,29 @@
                         [yearRange]="'2021:' + (minDate.getFullYear() + 5)"
                         [minDate]="minDate"
                         (onMonthChange)="selectMonth($event)"
+                        (onYearChange)="selectMonth($event)"
                         (onSelect)="selectDay($event, rdvHour)"
                         [inline]="true"></p-calendar>
           </div>
 
           <!-- Créneaux -->
           <div #rdvHour class="col-12 row justify-content-center mt-2 pb-4">
-            <h5 class="col-12">{{selectedDate ? 'Sélectionner l\'heure du rdv' : ''}}</h5>
+            <h5 class="col-12">{{date ? 'Sélectionner l\'heure du rdv' : ''}}</h5>
             <div class="row justify-content-center mt-1 mb-2 col-6 col-md-4 col-lg-3" *ngFor="let horaire of horaires">
-              <app-select-button *ngIf="selectedDate" [selected]="selectedheure === horaire.heure"
-                                 (onSelectedHour)="selectHour(horaire.heure)" [value]="horaire.heureString"></app-select-button>
+              <app-select-button *ngIf="date"
+                                 [statut]="horaire.statut"
+                                 [selected]="heure === horaire.heure"
+                                 [value]="horaire.heureString"
+                                 (onSelectedHour)="selectHour(horaire.heure)"></app-select-button>
             </div>
           </div>
         </div>
-        <button (click)="stepper.reset()">Reset</button>
       </ng-template>
     </mat-step>
     <mat-step [stepControl]="quandForm" formGroupName="quand" [formGroup]="quandForm">
       <ng-template matStepLabel>Statut : {{quandForm.get('status').value.label}}</ng-template>
       <div class="row col-12 justify-content-center">
-        <p-dropdown [options]="rdvStatus.all()" formControlName="status">
+        <p-dropdown [options]="rdvStatus.all()" formControlName="status" appendTo="body">
         </p-dropdown>
       </div>
     </mat-step>
@@ -95,6 +100,6 @@
 
   <div class="footer">
     <p-button icon="pi pi-times" (click)="ref.close()" label="Annuler" styleClass="p-button-text"></p-button>
-    <button type="submit" pButton icon="pi pi-check" (click)="save()" class="p-button-text" [disabled]="form.invalid" [label]="rdv ? 'Enregistrer':'Créer'"></button>
+    <button type="submit" pButton icon="pi pi-check" (click)="save()" class="p-button-text" [disabled]="form.untouched || form.invalid" [label]="rdv ? 'Enregistrer':'Créer'"></button>
   </div>
 </div>
