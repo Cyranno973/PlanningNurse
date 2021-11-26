@@ -17,6 +17,9 @@ export class Rdv extends DatabaseModel {
     dateFin: Date;
   };
   notes: string;
+  metadata?: {
+    height?: number;
+  }
 
   constructor(id: string, heure: number, patient: Patient, date: Date, soignant?: Soignant, status?: RdvStatutCode) {
     super();

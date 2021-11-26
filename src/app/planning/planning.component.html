@@ -1,12 +1,20 @@
-<h1>debut</h1>
-<div class="test container">
-  <mwl-calendar-week-view
-    [viewDate]="viewDate"
-    [events]="events"
-    [refresh]="refresh"
-    [daysInWeek]=""
-    [locale]="locale"
-    [weekStartsOn]="weekStartsOn"
-    [weekendDays]="weekendDays">
-  </mwl-calendar-week-view>
+<div class="row col-12 m-0 p-0">
+  <!-- Plannig global -->
+  <div class="row col-12 col-md-8">
+    <div class="test">
+      <!--      <mwl-calendar-week-view-->
+      <!--        [viewDate]="viewDate"-->
+      <!--        [events]="events"-->
+      <!--        [refresh]="refresh"-->
+      <!--        [daysInWeek]=""-->
+      <!--        [locale]="locale"-->
+      <!--        [weekStartsOn]="weekStartsOn"-->
+      <!--        [weekendDays]="weekendDays">-->
+      <!--      </mwl-calendar-week-view>-->
+    </div>
+  </div>
+  <!-- Plannig perso -->
+  <div class="row col-12 p-0 col-md-4">
+    <app-planning-perso></app-planning-perso>
+  </div>
 </div>

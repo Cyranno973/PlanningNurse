@@ -34,10 +34,6 @@ export class FormRdvComponent implements OnInit {
   heure: number;
   soignants: Soignant[] = [];
   proposerNouveau: boolean;
-  // Unités de temps en minutes
-  serviceDebut: number = 540; // 9h00
-  serviceFin: number = 1080; // 18h00
-  dureeRdv: number = 20; // en minutes
   horaires: Horaire[] = [];
   creatingPatient: boolean;
   minDate = new Date();
@@ -53,11 +49,11 @@ export class FormRdvComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.soignants.push(this.rdv?.soignant ?? this.patient?.soignant ?? new Soignant());
     this.loadData();
     this.initForms();
-    this.computeHoraires();
     this.selectPatient(this.patient)
+    if (this.rdv?.soignant || this.patient?.soignant)
+      this.soignants.push(this.rdv?.soignant ?? this.patient?.soignant);
 
     if (this.rdv) {
       this.selectMonth({year: this.rdv.date.getFullYear(), month: this.rdv.date.getMonth() + 1})
@@ -77,6 +73,7 @@ export class FormRdvComponent implements OnInit {
   }
 
   private loadData() {
+    this.horaires = Utils.getHoraires();
     // Récupère le mois en cours
     this.rs.getMois()
       .then(mois => this.mois = mois)
@@ -90,12 +87,6 @@ export class FormRdvComponent implements OnInit {
         .subscribe(
           soignants => this.soignants = soignants,
           err => console.log(`Erreur pendant la récupération des soignants`, err));
-  }
-
-  private computeHoraires() {
-    for (let h = this.serviceDebut; h < this.serviceFin; h += this.dureeRdv) {
-      this.horaires.push(new Horaire(h));
-    }
   }
 
   private initForms() {
