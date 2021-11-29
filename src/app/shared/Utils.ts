@@ -16,7 +16,7 @@ export class Utils {
 
     const hours = this.toHours(num);
     const minutes = this.toMinutes(num);
-    return `${hours}h${minutes ? minutes : '00'}`;
+    return `${hours}h${minutes || '00'}`;
   }
 
   /**
@@ -24,10 +24,10 @@ export class Utils {
    * @param duree en minutes
    */
   static getHoraires(duree: number = 30): Horaire[] {
+    // Unités de temps en minutes
     const debut: number = 540; // 9h00
     const fin: number = 1080; // 18h00
     const horaires: Horaire[] = [];
-    // Unités de temps en minutes
     for (let heure = debut; heure < fin; heure += duree) {
       horaires.push(new Horaire(heure));
     }
@@ -38,7 +38,7 @@ export class Utils {
     return Math.floor(time / 60);
   }
 
-  static toMinutes(num) {
+  static toMinutes(num): number {
     return num % 60;
   }
 }

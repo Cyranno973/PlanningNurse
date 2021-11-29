@@ -6,8 +6,14 @@
 
     <!-- RDVS -->
     <div class="col-10 row p-0 m-0 rdvs">
-      <div class="col rdv" *ngFor="let rdv of horaire.rdvs">
-        {{rdv.patient.prenom}}
+      <div class="col rdv rdv-wrapper"
+           *ngFor="let rdv of horaire.rdvs"
+           [style.color]="rdvStatus[rdv.statut]?.colorHigh"
+           [style.borderColor]="rdvStatus[rdv.statut]?.colorHigh"
+           [style.backgroundColor]="rdvStatus[rdv.statut]?.colorLow"
+           [style.marginTop]="rdv.date.getMinutes() + 'px'"
+           [style.height]="(rdv.duree ?? 60) + 'px'">
+        {{rdv.patient | abrege}} ({{rdv.duree ?? 60}}min)
       </div>
     </div>
   </div>

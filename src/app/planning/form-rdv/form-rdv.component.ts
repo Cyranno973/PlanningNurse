@@ -15,6 +15,7 @@ import {RdvStatut} from "../../model/enums/rdv-statut";
 import {Utils} from "../../shared/Utils";
 import {PatientRdvs} from "../../model/patient-rdvs";
 import {HoraireStatut} from "../../model/enums/horaire-statut";
+import {FullNamePipe} from "../../shared/pipes/full-name.pipe";
 
 @Component({
   selector: 'app-form-rdv',
@@ -32,6 +33,7 @@ export class FormRdvComponent implements OnInit {
   selectedPatient: Patient;
   date: Date;
   heure: number;
+  duree: number = 30; // minutes
   soignants: Soignant[] = [];
   proposerNouveau: boolean;
   horaires: Horaire[] = [];
@@ -45,7 +47,7 @@ export class FormRdvComponent implements OnInit {
   constructor(private fb: FormBuilder, private config: DynamicDialogConfig,
               private ps: PatientService, private is: SoignantService,
               private rs: PlanningService, private dialogService: DialogService,
-              public ref: DynamicDialogRef) {
+              public ref: DynamicDialogRef, private pipefullName: FullNamePipe) {
   }
 
   ngOnInit(): void {
@@ -73,7 +75,7 @@ export class FormRdvComponent implements OnInit {
   }
 
   private loadData() {
-    this.horaires = Utils.getHoraires();
+    this.horaires = Utils.getHoraires(this.duree);
     // Récupère le mois en cours
     this.rs.getMois()
       .then(mois => this.mois = mois)
@@ -92,7 +94,7 @@ export class FormRdvComponent implements OnInit {
   private initForms() {
     this.quiForm = this.fb.group({
       patient: [{value: this.rdv?.patient, disabled: this.creatingPatient || this.patient}, Validators.required],
-      patientName: [{value: Patient.fullName(this.rdv?.patient), disabled: this.creatingPatient || this.patient}],
+      patientName: [{value: this.pipefullName.transform(this.rdv?.patient), disabled: this.creatingPatient || this.patient}],
       soignant: [{value: this.rdv?.soignant ?? this.patient?.soignant, disabled: this.creatingPatient}]
     });
 
@@ -146,7 +148,7 @@ export class FormRdvComponent implements OnInit {
     if (!patient) return
     this.selectedPatient = patient;
     this.quiForm.get('patient').setValue(patient);
-    this.quiForm.get('patientName').setValue(Patient.fullName(patient));
+    this.quiForm.get('patientName').setValue(this.pipefullName.transform(patient));
     this.proposerNouveau = false;
   }
 
@@ -235,7 +237,7 @@ export class FormRdvComponent implements OnInit {
     const jour = this.date.getDate();
     const soignant = new Soignant(this.quiForm.get('soignant').value);
     const status = this.quandForm.get('status').value as RdvStatut;
-    const rdv = new Rdv(this.rdv?.id, this.heure, this.selectedPatient, this.date, soignant, status.code);
+    const rdv = new Rdv(this.rdv?.id, this.heure, this.selectedPatient, this.date, this.duree, soignant, status.code);
 
     // Si le mois contient le jour X, on y ajoute le RDV
     if (mois.jours.has(jour)) {

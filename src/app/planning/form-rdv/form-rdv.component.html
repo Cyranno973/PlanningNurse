@@ -24,7 +24,7 @@
                           (onFocus)="loadPatients()"
                           (completeMethod)="searchPatient($event)">
             <ng-template let-patient pTemplate="item">
-              <span>{{patient.prenom}} {{patient.nom | uppercase}}</span>
+              <span>{{patient | fullName}}</span>
               <span *ngIf="patient.dateNaissance" class="small"> (né le {{patient.dateNaissance | date : 'dd/MM/yyyy'}})</span>
             </ng-template>
           </p-autoComplete>
@@ -45,11 +45,11 @@
                       [showClear]="true">
             <!-- Infirmière sélectionée -->
             <ng-template let-value pTemplate="selectedItem">
-              {{value.prenom}} {{value.nom}} ({{value.trg}})
+              {{value | fullName}} ({{value.trg}})
             </ng-template>
             <!-- Suggestions autocomplete -->
             <ng-template let-soignant pTemplate="item">
-              {{soignant.prenom}} {{soignant.nom}} ({{soignant.trg}})
+              {{soignant | fullName}} ({{soignant.trg}})
             </ng-template>
           </p-dropdown>
         </div>

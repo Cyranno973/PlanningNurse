@@ -7,6 +7,7 @@ import {MatStepperModule} from "@angular/material/stepper";
 import {AutoCompleteModule} from "primeng/autocomplete";
 import {PlanningPersoComponent} from './planning-perso/planning-perso.component';
 import {CalendarModule} from "primeng/calendar";
+import {CalendarWeekModule} from "angular-calendar";
 
 
 @NgModule({
@@ -18,13 +19,14 @@ import {CalendarModule} from "primeng/calendar";
   exports: [
     PlanningPersoComponent
   ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    MatStepperModule,
-    AutoCompleteModule,
-    CalendarModule
-  ]
+    imports: [
+        CommonModule,
+        SharedModule,
+        MatStepperModule,
+        AutoCompleteModule,
+        CalendarModule,
+        CalendarWeekModule
+    ]
 })
 export class PlanningModule {
 }

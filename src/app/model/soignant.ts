@@ -1,6 +1,7 @@
 import {DatabaseModel} from "../repository/AbstractCrudRepository";
+import {Personne} from "./Personne";
 
-export class Soignant extends DatabaseModel {
+export class Soignant extends DatabaseModel implements Personne {
   nom: string;
   prenom: string;
   trg: string;
@@ -11,9 +12,5 @@ export class Soignant extends DatabaseModel {
   constructor(init?: Partial<Soignant>) {
     super();
     return Object.assign(this, init);
-  }
-
-  public static fullName(s: Soignant): string {
-    return `${s?.prenom} ${s?.nom}`;
   }
 }

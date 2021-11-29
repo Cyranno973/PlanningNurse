@@ -13,4 +13,8 @@ export class Horaire {
     this.heureString = Utils.toDisplayTime(this.heure)
     this.statut = HoraireStatut.DISPONIBLE;
   }
+
+  resetRdvs() {
+    this.rdvs = [];
+  }
 }

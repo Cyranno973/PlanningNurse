@@ -11,13 +11,17 @@ import {RippleModule} from "primeng/ripple";
 import {SelectButtonComponent} from './select-button/select-button.component';
 import {SelectButtonModule} from "primeng/selectbutton";
 import {DropdownModule} from "primeng/dropdown";
+import { AbbreviatePipe } from './pipes/abbreviate.pipe';
+import { FullNamePipe } from './pipes/full-name.pipe';
 
 /**
  * Module avec les éléments partagés
  */
 @NgModule({
   declarations: [
-    SelectButtonComponent
+    SelectButtonComponent,
+    AbbreviatePipe,
+    FullNamePipe
   ],
   imports: [
     CommonModule,
@@ -34,19 +38,21 @@ import {DropdownModule} from "primeng/dropdown";
     DropdownModule
   ],
   providers: [DialogService, DatePipe],
-  exports: [
-    ButtonModule,
-    DialogModule,
-    TableModule,
-    FormsModule,
-    ReactiveFormsModule,
-    SpeedDialModule,
-    DynamicDialogModule,
-    TooltipModule,
-    RippleModule,
-    SelectButtonComponent,
-    DropdownModule
-  ]
+    exports: [
+        ButtonModule,
+        DialogModule,
+        TableModule,
+        FormsModule,
+        ReactiveFormsModule,
+        SpeedDialModule,
+        DynamicDialogModule,
+        TooltipModule,
+        RippleModule,
+        SelectButtonComponent,
+        DropdownModule,
+        AbbreviatePipe,
+        FullNamePipe
+    ]
 })
 export class SharedModule {
 }

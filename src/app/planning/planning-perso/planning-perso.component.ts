@@ -3,6 +3,7 @@ import {RdvsService} from "../../repository/rdvs.service";
 import {Utils} from "../../shared/Utils";
 import {Horaire} from "../../model/horaire";
 import {Rdv} from "../../model/planning-rdv";
+import {RdvStatut} from "../../model/enums/rdv-statut";
 
 @Component({
   selector: 'app-planning-perso',
@@ -12,8 +13,8 @@ import {Rdv} from "../../model/planning-rdv";
 export class PlanningPersoComponent implements OnInit {
 
   horaires: Horaire[];
-  rdvs: Rdv[];
   loading = false;
+  rdvStatus = RdvStatut;
 
   constructor(private rs: RdvsService) {
   }
@@ -21,18 +22,17 @@ export class PlanningPersoComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
     this.horaires = Utils.getHoraires(60);
-    this.rs.getByTrigrammeSoignant('FoS')
-      .subscribe(rdvs => {
-        this.rdvs = rdvs;
-        this.matchHoraires();
-      });
 
+    // TODO : Récupérer l'id du soignant connectée et remplacer celui-ci en dure qui correspond à FOS
+    this.rs.getBySoignantId('VEHHVVzuG1sf5osTy5Fs')
+      .subscribe(rdvs => this.ajouteRdvsAuxHoraires(rdvs));
   }
 
-  private matchHoraires() {
-    // Caser les RDV dans les horaires correspondant
-    this.rdvs.forEach(rdv => {
-      // Compute height
+  /**
+   * Ajoute les RDV dans les horaires correspondant
+   */
+  private ajouteRdvsAuxHoraires(rdvs: Rdv[]) {
+    rdvs.forEach(rdv => {
       const index = this.horaires.findIndex(horaire => Utils.toHours(horaire.heure) === rdv.date.getHours());
       if (this.horaires[index].rdvs) {
         this.horaires[index].rdvs.push(rdv);

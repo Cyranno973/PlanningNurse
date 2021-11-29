@@ -14,11 +14,15 @@
     }
 
     .rdvs {
-      background-color: rgba(139, 210, 250, 0.76);
+      background-color: rgba(144, 206, 245, 0.52);
       border-top: 2.5px solid white;
+      position: relative;
 
       .rdv {
-        border: 1px solid;
+        z-index: 3;
+        font-size: 12px;
+        border-radius: 8px;
+        border: 0.5px dashed;
       }
     }
   }

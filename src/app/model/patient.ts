@@ -1,7 +1,8 @@
 import {DatabaseModel} from "../repository/AbstractCrudRepository";
 import {Soignant} from "./soignant";
+import {Personne} from "./Personne";
 
-export class Patient extends DatabaseModel {
+export class Patient extends DatabaseModel implements Personne {
   prenom: string;
   nom: string;
   email?: string;
@@ -14,15 +15,11 @@ export class Patient extends DatabaseModel {
   };
   soignant?: Soignant;
 
-  public constructor(init?: Partial<Patient>) {
+  constructor(init?: Partial<Patient>) {
     super();
     const patient = Object.assign(this, init);
-    patient.dateNaissance = new Date(init?.dateNaissance);
+    if (init?.dateNaissance)
+      patient.dateNaissance = new Date(init?.dateNaissance);
     return patient;
-  }
-
-  public static fullName(p: Patient): string {
-    if (!p) return '';
-    return `${p?.prenom} ${p?.nom}`;
   }
 }
