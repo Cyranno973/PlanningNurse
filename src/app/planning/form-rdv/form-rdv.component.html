@@ -43,9 +43,9 @@
                       (onChange)="selectSoigant($event)"
                       appendTo="body"
                       [showClear]="true">
-            <!-- Infirmière sélectionée -->
-            <ng-template let-value pTemplate="selectedItem">
-              {{value | fullName}} ({{value.trg}})
+            <!-- Soignant sélectioné -->
+            <ng-template let-soignant pTemplate="selectedItem">
+              {{soignant | fullName}} ({{soignant.trg}})
             </ng-template>
             <!-- Suggestions autocomplete -->
             <ng-template let-soignant pTemplate="item">

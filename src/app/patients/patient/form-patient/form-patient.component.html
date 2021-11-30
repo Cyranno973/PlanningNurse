@@ -33,8 +33,8 @@
                   formControlName="soignant"
                   [showClear]="true">
         <!-- Soignant sélectioné -->
-        <ng-template let-value pTemplate="selectedItem">
-          {{value | fullName}} ({{value.trg}})
+        <ng-template let-soignant pTemplate="selectedItem">
+          {{soignant | fullName}} ({{soignant.trg}})
         </ng-template>
         <!-- Suggestions -->
         <ng-template let-soignant pTemplate="item">

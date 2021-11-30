@@ -23,7 +23,7 @@ export class PlanningPersoComponent implements OnInit {
     this.loading = true;
     this.horaires = Utils.getHoraires(60);
 
-    // TODO : Récupérer l'id du soignant connectée et remplacer celui-ci en dure qui correspond à FOS
+    // TODO : Récupérer l'id du soignant connecté et remplacer celui-ci en dure qui correspond à FOS
     this.rs.getBySoignantId('VEHHVVzuG1sf5osTy5Fs')
       .subscribe(rdvs => this.ajouteRdvsAuxHoraires(rdvs));
   }

@@ -7,7 +7,8 @@ import {Personne} from "../../model/Personne";
 export class FullNamePipe implements PipeTransform {
 
   transform(personne: Personne, ...args: unknown[]): unknown {
-    return `${personne?.prenom} ${personne?.nom?.toUpperCase()}`;
+    if (!personne) return '';
+    return `${personne.prenom} ${personne.nom?.toUpperCase()}`;
   }
 
 }

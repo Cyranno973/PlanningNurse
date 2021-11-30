@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {PatientService} from "../../repository/patient.service";
@@ -16,6 +16,7 @@ import {Utils} from "../../shared/Utils";
 import {PatientRdvs} from "../../model/patient-rdvs";
 import {HoraireStatut} from "../../model/enums/horaire-statut";
 import {FullNamePipe} from "../../shared/pipes/full-name.pipe";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-form-rdv',
@@ -23,7 +24,7 @@ import {FullNamePipe} from "../../shared/pipes/full-name.pipe";
   styleUrls: ['./form-rdv.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class FormRdvComponent implements OnInit {
+export class FormRdvComponent implements OnInit, OnDestroy {
   patient: Patient = this.config.data?.patient;
   rdv: Rdv = this.config.data?.rdv;
   form: FormGroup;
@@ -43,6 +44,7 @@ export class FormRdvComponent implements OnInit {
   rdvStatus = RdvStatut;
   private patients: Patient[] = [];
   private mois: Mois;
+  private subscription: Subscription = new Subscription();
 
   constructor(private fb: FormBuilder, private config: DynamicDialogConfig,
               private ps: PatientService, private is: SoignantService,
@@ -84,11 +86,11 @@ export class FormRdvComponent implements OnInit {
 
   loadSoignants() {
     // Récupère les soignants
-    if (!this.soignants?.length)
+    this.subscription.add(
       this.is.getAll().pipe(take(1))
         .subscribe(
           soignants => this.soignants = soignants,
-          err => console.log(`Erreur pendant la récupération des soignants`, err));
+          err => console.log(`Erreur pendant la récupération des soignants`, err)));
   }
 
   private initForms() {
@@ -128,9 +130,9 @@ export class FormRdvComponent implements OnInit {
 
   loadPatients() {
     if (!this.patients.length && !this.patient) {
-      this.ps.getAll()
+      this.subscription.add(this.ps.getAll()
         .pipe(take(1))
-        .subscribe(patiens => this.patients = patiens);
+        .subscribe(patiens => this.patients = patiens));
     }
   }
 
@@ -159,13 +161,13 @@ export class FormRdvComponent implements OnInit {
 
   newPatient() {
     this.creatingPatient = true;
-    this.dialogService.open(FormPatientComponent, {
+    this.subscription.add(this.dialogService.open(FormPatientComponent, {
       header: 'Nouveau patient', styleClass: 'custom-modal patient'
     }).onClose
       .subscribe(nouveauPatient => {
         this.selectPatient(nouveauPatient);
         this.creatingPatient = false
-      });
+      }));
   }
 
   // Permet de supprimer le contenu d'un dropdown avec la touche Echap sans propager l'event Echap
@@ -292,5 +294,9 @@ export class FormRdvComponent implements OnInit {
       this.calculeDispos(soignant);
       this.selectedStep = !this.rdv ? 1 : 2;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 }

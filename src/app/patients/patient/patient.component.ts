@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {PatientService} from "../../repository/patient.service";
 import {Patient} from "../../model/patient";
@@ -6,6 +6,8 @@ import {DialogService} from "primeng/dynamicdialog";
 import {FormPatientComponent} from "./form-patient/form-patient.component";
 import {Rdv} from "../../model/planning-rdv";
 import {RdvStatut} from "../../model/enums/rdv-statut";
+import {Subscription} from "rxjs";
+import {filter} from "rxjs/operators";
 
 
 @Component({
@@ -13,10 +15,11 @@ import {RdvStatut} from "../../model/enums/rdv-statut";
   templateUrl: './patient.component.html',
   styleUrls: ['./patient.component.scss']
 })
-export class PatientComponent implements OnInit {
+export class PatientComponent implements OnInit, OnDestroy {
   patient: Patient;
   rdvs: Rdv[];
   rdvStatus = RdvStatut;
+  private subscription: Subscription = new Subscription();
 
   constructor(private route: ActivatedRoute,
               private ps: PatientService,
@@ -31,16 +34,20 @@ export class PatientComponent implements OnInit {
   }
 
   edit() {
-    this.dialogService.open(FormPatientComponent,
-      {
-        data: {patient: this.patient},
-        header: 'Modifier patient',
-        dismissableMask: true,
-        styleClass: 'custom-modal patient'
-      })
-      .onClose.subscribe(
-      (patient: Patient) => {
-        if (patient) this.patient = patient;
-      });
+    this.subscription.add(
+      this.dialogService.open(FormPatientComponent,
+        {
+          data: {patient: this.patient},
+          header: 'Modifier patient',
+          dismissableMask: true,
+          styleClass: 'custom-modal patient'
+        }).onClose
+        .pipe(filter(patient => !!patient))
+        .subscribe((patient: Patient) => this.patient = patient)
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 }
