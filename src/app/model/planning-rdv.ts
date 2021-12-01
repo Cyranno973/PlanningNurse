@@ -18,16 +18,17 @@ export class Rdv extends DatabaseModel {
   };
   notes: string;
 
-  constructor(id: string, heure: number, patient: Patient, date: Date, soignant?: Soignant, status?: RdvStatutCode) {
+  constructor(id: string, heure: number, patient: Patient, date: Date, duree: number, soignant?: Soignant, status?: RdvStatutCode) {
     super();
     this.id = id;
     this.heure = heure;
-    this.patient = {id: patient.id, nom: patient.nom, prenom: patient.prenom};
+    this.patient = new Patient({id: patient.id, nom: patient.nom, prenom: patient.prenom});
     this.date = date;
     this.date.setHours(Utils.toHours(heure), Utils.toMinutes(heure));
+    this.duree = duree;
     this.statut = status ?? RdvStatutCode.SOUHAITE;
 
-    if (soignant) this.soignant = new Soignant(soignant);
+    if (soignant) this.soignant = new Soignant({id: soignant.id, nom: soignant.nom, prenom: soignant.prenom, trg: soignant.trg});
   }
 }
 

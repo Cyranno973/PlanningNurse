@@ -1,0 +1,29 @@
+.planning {
+  .horaire {
+    // 1px = 1min
+    height: 60px;
+
+    .heure {
+      font-size: 12px;
+      color: #495057;
+      background-color: #fff;
+
+      span {
+        margin-top: -8px;
+      }
+    }
+
+    .rdvs {
+      background-color: rgba(144, 206, 245, 0.52);
+      border-top: 2.5px solid white;
+      position: relative;
+
+      .rdv {
+        z-index: 3;
+        font-size: 12px;
+        border-radius: 8px;
+        border: 0.5px dashed;
+      }
+    }
+  }
+}

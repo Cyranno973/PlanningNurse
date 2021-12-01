@@ -12,7 +12,6 @@ import {AppRoutingModule} from './app-routing.module';
 import {SignUpComponent} from './authentification/sign-up/sign-up.component';
 import {PasswordResetComponent} from './authentification/password-reset/password-reset.component';
 import {HeaderComponent} from './header/header.component';
-import {TableauPatientsComponent} from './patients/patient/tableau-patients/tableau-patients.component';
 import {UserComponent} from './user/user/user.component';
 import localeFr from '@angular/common/locales/fr';
 import {environment} from "../environments/environment";
@@ -50,7 +49,6 @@ registerLocaleData(localeFr);
     SignUpComponent,
     PasswordResetComponent,
     HeaderComponent,
-    TableauPatientsComponent,
     UserComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

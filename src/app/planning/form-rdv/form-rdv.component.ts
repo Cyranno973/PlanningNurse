@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {PatientService} from "../../repository/patient.service";
@@ -15,6 +15,8 @@ import {RdvStatut} from "../../model/enums/rdv-statut";
 import {Utils} from "../../shared/Utils";
 import {PatientRdvs} from "../../model/patient-rdvs";
 import {HoraireStatut} from "../../model/enums/horaire-statut";
+import {FullNamePipe} from "../../shared/pipes/full-name.pipe";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-form-rdv',
@@ -22,7 +24,7 @@ import {HoraireStatut} from "../../model/enums/horaire-statut";
   styleUrls: ['./form-rdv.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class FormRdvComponent implements OnInit {
+export class FormRdvComponent implements OnInit, OnDestroy {
   patient: Patient = this.config.data?.patient;
   rdv: Rdv = this.config.data?.rdv;
   form: FormGroup;
@@ -32,12 +34,9 @@ export class FormRdvComponent implements OnInit {
   selectedPatient: Patient;
   date: Date;
   heure: number;
+  duree: number = 30; // minutes
   soignants: Soignant[] = [];
   proposerNouveau: boolean;
-  // Unités de temps en minutes
-  serviceDebut: number = 540; // 9h00
-  serviceFin: number = 1080; // 18h00
-  dureeRdv: number = 20; // en minutes
   horaires: Horaire[] = [];
   creatingPatient: boolean;
   minDate = new Date();
@@ -45,19 +44,20 @@ export class FormRdvComponent implements OnInit {
   rdvStatus = RdvStatut;
   private patients: Patient[] = [];
   private mois: Mois;
+  private subscription: Subscription = new Subscription();
 
   constructor(private fb: FormBuilder, private config: DynamicDialogConfig,
               private ps: PatientService, private is: SoignantService,
               private rs: PlanningService, private dialogService: DialogService,
-              public ref: DynamicDialogRef) {
+              public ref: DynamicDialogRef, private pipefullName: FullNamePipe) {
   }
 
   ngOnInit(): void {
-    this.soignants.push(this.rdv?.soignant ?? this.patient?.soignant ?? new Soignant());
     this.loadData();
     this.initForms();
-    this.computeHoraires();
     this.selectPatient(this.patient)
+    if (this.rdv?.soignant || this.patient?.soignant)
+      this.soignants.push(this.rdv?.soignant ?? this.patient?.soignant);
 
     if (this.rdv) {
       this.selectMonth({year: this.rdv.date.getFullYear(), month: this.rdv.date.getMonth() + 1})
@@ -77,6 +77,7 @@ export class FormRdvComponent implements OnInit {
   }
 
   private loadData() {
+    this.horaires = Utils.getHoraires(this.duree);
     // Récupère le mois en cours
     this.rs.getMois()
       .then(mois => this.mois = mois)
@@ -85,23 +86,17 @@ export class FormRdvComponent implements OnInit {
 
   loadSoignants() {
     // Récupère les soignants
-    if (!this.soignants?.length)
+    this.subscription.add(
       this.is.getAll().pipe(take(1))
         .subscribe(
           soignants => this.soignants = soignants,
-          err => console.log(`Erreur pendant la récupération des soignants`, err));
-  }
-
-  private computeHoraires() {
-    for (let h = this.serviceDebut; h < this.serviceFin; h += this.dureeRdv) {
-      this.horaires.push(new Horaire(h));
-    }
+          err => console.log(`Erreur pendant la récupération des soignants`, err)));
   }
 
   private initForms() {
     this.quiForm = this.fb.group({
       patient: [{value: this.rdv?.patient, disabled: this.creatingPatient || this.patient}, Validators.required],
-      patientName: [{value: Patient.fullName(this.rdv?.patient), disabled: this.creatingPatient || this.patient}],
+      patientName: [{value: this.pipefullName.transform(this.rdv?.patient), disabled: this.creatingPatient || this.patient}],
       soignant: [{value: this.rdv?.soignant ?? this.patient?.soignant, disabled: this.creatingPatient}]
     });
 
@@ -135,9 +130,9 @@ export class FormRdvComponent implements OnInit {
 
   loadPatients() {
     if (!this.patients.length && !this.patient) {
-      this.ps.getAll()
+      this.subscription.add(this.ps.getAll()
         .pipe(take(1))
-        .subscribe(patiens => this.patients = patiens);
+        .subscribe(patiens => this.patients = patiens));
     }
   }
 
@@ -155,7 +150,7 @@ export class FormRdvComponent implements OnInit {
     if (!patient) return
     this.selectedPatient = patient;
     this.quiForm.get('patient').setValue(patient);
-    this.quiForm.get('patientName').setValue(Patient.fullName(patient));
+    this.quiForm.get('patientName').setValue(this.pipefullName.transform(patient));
     this.proposerNouveau = false;
   }
 
@@ -166,13 +161,13 @@ export class FormRdvComponent implements OnInit {
 
   newPatient() {
     this.creatingPatient = true;
-    this.dialogService.open(FormPatientComponent, {
+    this.subscription.add(this.dialogService.open(FormPatientComponent, {
       header: 'Nouveau patient', styleClass: 'custom-modal patient'
     }).onClose
       .subscribe(nouveauPatient => {
         this.selectPatient(nouveauPatient);
         this.creatingPatient = false
-      });
+      }));
   }
 
   // Permet de supprimer le contenu d'un dropdown avec la touche Echap sans propager l'event Echap
@@ -244,7 +239,7 @@ export class FormRdvComponent implements OnInit {
     const jour = this.date.getDate();
     const soignant = new Soignant(this.quiForm.get('soignant').value);
     const status = this.quandForm.get('status').value as RdvStatut;
-    const rdv = new Rdv(this.rdv?.id, this.heure, this.selectedPatient, this.date, soignant, status.code);
+    const rdv = new Rdv(this.rdv?.id, this.heure, this.selectedPatient, this.date, this.duree, soignant, status.code);
 
     // Si le mois contient le jour X, on y ajoute le RDV
     if (mois.jours.has(jour)) {
@@ -299,5 +294,9 @@ export class FormRdvComponent implements OnInit {
       this.calculeDispos(soignant);
       this.selectedStep = !this.rdv ? 1 : 2;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 }

@@ -1,67 +1,15 @@
-import {ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {Subject} from 'rxjs';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {CalendarDateFormatter, CalendarEvent, CalendarView, DAYS_OF_WEEK,} from 'angular-calendar';
-import {EventService} from "../services/event.service";
-import {CustomDateFormatter} from '../utility/custom-date-formatter.provider';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-planning',
   templateUrl: './planning.component.html',
-  styleUrls: ['./planning.component.scss'],
-  providers: [
-    {
-      provide: CalendarDateFormatter,
-      useClass: CustomDateFormatter
-    }
-  ]
+  styleUrls: ['./planning.component.scss']
 })
 export class PlanningComponent implements OnInit {
-
-  // gestion date fr
-  view: string = 'month';
-
-  viewDate: Date = new Date();
-
-  events: CalendarEvent[] = [];
-
-  locale: string = 'fr';
-
-  weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
-
-  weekendDays: number[] = [DAYS_OF_WEEK.FRIDAY, DAYS_OF_WEEK.SATURDAY];
-  // fin gestion date
-
-  @ViewChild('modalContent', {static: true}) modalContent: TemplateRef<any>;
-
-  // view: CalendarView = CalendarView.Week;
-
-  CalendarView = CalendarView;
-
-  // viewDate: Date = new Date();
-
-  // events: CalendarEvent[];
-
-  modalData: {
-    action: string;
-    event: CalendarEvent;
-  };
-
-  refresh: Subject<any> = new Subject();
-
-  activeDayIsOpen: boolean = true;
-
-
-  constructor(private modal: NgbModal, private eventService: EventService) {
+  constructor() {
   }
 
   ngOnInit(): void {
-    this.eventService.getAllEvent().subscribe(
-      events => {
-        this.events = events;
-      }
-    )
   }
 
 
@@ -122,16 +70,5 @@ export class PlanningComponent implements OnInit {
   // deleteEvent(eventToDelete: CalendarEvent) {
   //   this.events = this.events.filter((event) => event !== eventToDelete);
   // }
-
-  setView(view: CalendarView) {
-    this.view = view;
-  }
-
-  //
-  closeOpenMonthViewDay() {
-    this.activeDayIsOpen = false;
-  }
-
-
 }
 

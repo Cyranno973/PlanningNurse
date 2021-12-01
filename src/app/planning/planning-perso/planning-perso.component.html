@@ -1,0 +1,20 @@
+<div class="row col-12 m-0 p-0 planning pb-4">
+  <div class="col-12 row m-0 p-0 horaire" *ngFor="let horaire of horaires">
+    <div class="col-2 heure align-items-center text-right">
+      <span class="d-block pr-1">{{horaire.heureString}}</span>
+    </div>
+
+    <!-- RDVS -->
+    <div class="col-10 row p-0 m-0 rdvs">
+      <div class="col rdv rdv-wrapper"
+           *ngFor="let rdv of horaire.rdvs"
+           [style.color]="rdvStatus[rdv.statut]?.colorHigh"
+           [style.borderColor]="rdvStatus[rdv.statut]?.colorHigh"
+           [style.backgroundColor]="rdvStatus[rdv.statut]?.colorLow"
+           [style.marginTop]="rdv.date.getMinutes() + 'px'"
+           [style.height]="(rdv.duree ?? 60) + 'px'">
+        {{rdv.patient | abrege}} ({{rdv.duree ?? 60}}min)
+      </div>
+    </div>
+  </div>
+</div>

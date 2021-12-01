@@ -33,12 +33,12 @@
                   formControlName="soignant"
                   [showClear]="true">
         <!-- Soignant sélectioné -->
-        <ng-template let-value pTemplate="selectedItem">
-          {{value.prenom}} {{value.nom}} ({{value.trg}})
+        <ng-template let-soignant pTemplate="selectedItem">
+          {{soignant | fullName}} ({{soignant.trg}})
         </ng-template>
         <!-- Suggestions -->
         <ng-template let-soignant pTemplate="item">
-          {{soignant.prenom}} {{soignant.nom}} ({{soignant.trg}})
+          {{soignant | fullName}} ({{soignant.trg}})
         </ng-template>
       </p-dropdown>
     </div>

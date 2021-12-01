@@ -195,3 +195,13 @@ input {
   border: 1px solid black;
   z-index: 1;
 }
+
+.rdv-wrapper {
+  border-radius: 8px;
+  padding: 0.25em 0.5rem;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: .3px;
+  display: inline-flex;
+  align-items: center;
+}

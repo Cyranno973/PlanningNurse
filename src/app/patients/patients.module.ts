@@ -7,12 +7,15 @@ import {SharedModule} from "../shared/shared.module";
 import {RouterModule} from "@angular/router";
 import {TimelineModule} from "primeng/timeline";
 import {CardModule} from "primeng/card";
+import {PatientRdvsComponent} from './patient/patient-rdvs/patient-rdvs.component';
+import {FullNamePipe} from "../shared/pipes/full-name.pipe";
 
 @NgModule({
   declarations: [
     PatientsComponent,
     PatientComponent,
-    FormPatientComponent
+    FormPatientComponent,
+    PatientRdvsComponent
   ],
   imports: [
     CommonModule,
@@ -20,6 +23,9 @@ import {CardModule} from "primeng/card";
     RouterModule,
     TimelineModule,
     CardModule
+  ],
+  providers: [
+    FullNamePipe
   ]
 })
 export class PatientsModule {
