@@ -1,30 +1,33 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {RdvsService} from "../../repository/rdvs.service";
 import {Utils} from "../../shared/Utils";
 import {Horaire} from "../../model/horaire";
 import {Rdv} from "../../model/planning-rdv";
 import {RdvStatut} from "../../model/enums/rdv-statut";
+import {Subscription} from "rxjs";
+import {SoignantService} from "../../repository/soignant.service";
 
 @Component({
   selector: 'app-planning-perso',
   templateUrl: './planning-perso.component.html',
   styleUrls: ['./planning-perso.component.scss']
 })
-export class PlanningPersoComponent implements OnInit {
+export class PlanningPersoComponent implements OnInit, OnDestroy {
 
   horaires: Horaire[];
   loading = false;
   rdvStatus = RdvStatut;
+  subscriptions: Subscription;
 
-  constructor(private rs: RdvsService) {
+  constructor(private ss: SoignantService, private rs: RdvsService) {
   }
 
   ngOnInit(): void {
     this.loading = true;
     this.horaires = Utils.getHoraires(60);
 
-    // TODO : Récupérer l'id du soignant connecté et remplacer celui-ci en dure qui correspond à FOS
-    this.rs.getBySoignantId('VEHHVVzuG1sf5osTy5Fs')
+    // TODO : Récupérer l'id du soignant connecté et remplacer celui-ci en dur qui correspond à FOS
+    this.subscriptions = this.rs.getBySoignantId('VEHHVVzuG1sf5osTy5Fs')
       .subscribe(rdvs => this.ajouteRdvsAuxHoraires(rdvs));
   }
 
@@ -40,5 +43,9 @@ export class PlanningPersoComponent implements OnInit {
         this.horaires[index].rdvs = [rdv];
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions?.unsubscribe();
   }
 }
