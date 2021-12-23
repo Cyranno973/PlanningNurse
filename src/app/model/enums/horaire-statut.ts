@@ -1,21 +1,11 @@
 import {RdvStatutCode} from "./rdv-statut";
 
-export enum HoraireStatutCode {
-  A_CONFIRMER = 'A_CONFIRMER',
-  LIBRE = 'LIBRE',
-  COMPLET = 'COMPLET'
-}
-
 export class HoraireStatut {
-  static readonly A_CONFIRMER = new HoraireStatut(HoraireStatutCode.A_CONFIRMER, 'A confirmer', '#805b36', '#ffd8b2');
-  static readonly DISPONIBLE = new HoraireStatut(HoraireStatutCode.LIBRE, 'Disponible', '#256029', '#C8E6C9');
-  static readonly COMPLET = new HoraireStatut(HoraireStatutCode.COMPLET, 'Complet', '#c63737', '#ffcdd2');
+  static readonly A_CONFIRMER = new HoraireStatut('A_CONFIRMER', 'A confirmer', '#805b36', '#ffd8b2');
+  static readonly DISPONIBLE = new HoraireStatut('LIBRE', 'Disponible', '#256029', '#C8E6C9');
+  static readonly COMPLET = new HoraireStatut('COMPLET', 'Complet', '#c63737', '#ffcdd2');
 
-  constructor(public code: HoraireStatutCode, public label: string, public colorHigh: string, public colorLow: string) {
-  }
-
-  static all(): HoraireStatut[] {
-    return Object.keys(HoraireStatut).map(v => HoraireStatut[v]);
+  constructor(public code: string, public label: string, public colorHigh: string, public colorLow: string) {
   }
 
   static fromRdvStatut(rdvStatutCode: RdvStatutCode): HoraireStatut {

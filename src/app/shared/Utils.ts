@@ -1,4 +1,5 @@
 import {Horaire} from "../model/horaire";
+import {Mois, Rdv} from "../model/planning-rdv";
 
 export class Utils {
 
@@ -41,5 +42,15 @@ export class Utils {
   static toMinutes(num): number {
     return num % 60;
   }
-}
 
+  /**
+   * Supprime un RDV d'un mois <br/> /!\ Affecte le mois directement
+   * @param mois
+   * @param rdv
+   */
+  static removeRdv(mois: Mois, rdv: Rdv): void {
+    if (!mois || !rdv) return;
+    const rdvsFilterd = mois.jours.get(rdv.date.getDate()).filter(r => r.id !== rdv.id);
+    mois.jours.set(rdv.date.getDate(), rdvsFilterd);
+  }
+}

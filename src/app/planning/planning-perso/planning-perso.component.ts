@@ -14,7 +14,7 @@ import {SoignantService} from "../../repository/soignant.service";
 })
 export class PlanningPersoComponent implements OnInit, OnDestroy {
 
-  horaires: Horaire[];
+  horaires: Horaire[] = [];
   loading = false;
   rdvStatus = RdvStatut;
   subscriptions: Subscription;
@@ -28,7 +28,10 @@ export class PlanningPersoComponent implements OnInit, OnDestroy {
 
     // TODO : Récupérer l'id du soignant connecté et remplacer celui-ci en dur qui correspond à FOS
     this.subscriptions = this.rs.getBySoignantId('VEHHVVzuG1sf5osTy5Fs')
-      .subscribe(rdvs => this.ajouteRdvsAuxHoraires(rdvs));
+      .subscribe(rdvs => {
+        this.horaires.forEach(h => h.resetRdvs());
+        this.ajouteRdvsAuxHoraires(rdvs);
+      });
   }
 
   /**
@@ -43,6 +46,14 @@ export class PlanningPersoComponent implements OnInit, OnDestroy {
         this.horaires[index].rdvs = [rdv];
       }
     });
+  }
+
+  trackByHeure(index: number, h: Horaire): string {
+    return h.heureString;
+  }
+
+  trackById(index: number, rdv: Rdv): string {
+    return rdv.id;
   }
 
   ngOnDestroy(): void {

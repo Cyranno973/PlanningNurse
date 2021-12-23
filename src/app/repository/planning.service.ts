@@ -6,6 +6,7 @@ import {PatientRdvsService} from "./patient-rdvs.service";
 import {PatientRdvs} from "../model/patient-rdvs";
 import {RdvsService} from "./rdvs.service";
 import firebase from "firebase/compat/app";
+import {Utils} from "../shared/Utils";
 
 @Injectable({
   providedIn: 'root'
@@ -24,12 +25,14 @@ export class PlanningService extends AbstractCrudRepository<Mois> {
       const date = new Date();
       id = `${date.getFullYear()}-${date.getMonth() + 1}`
     }
+
     return this.findById(id, false)
       .then(mois => {
         if (mois) {
           if (mois.jours) {
             mois.jours = Object.keys(mois.jours).reduce((jours, key) => jours.set(Number(key), mois.jours[key]), new Map<number, Rdv[]>());
 
+            // Reconvertit en Dates les dates
             for (let entry of mois.jours.entries()) {
               entry[1].forEach(r => {
                 Object.keys(r)
@@ -45,23 +48,40 @@ export class PlanningService extends AbstractCrudRepository<Mois> {
       });
   }
 
-  save(mois: Mois, rdv: Rdv): Promise<PatientRdvs> {
-    // si le rdv existe, on le met à jour et on met à jour en cascade les collections contenant le rdv
-    if (rdv.id)
-      return this.rs.update(rdv.id, rdv)
-        .then(r => this.saveDerivedRdvs(r, mois));
+  deleteRdv(rdv: Rdv): Promise<void> {
+    return this.prs.findById(rdv.patient.id, false)
+      .then(pr => {
+        // Etape 1 => On supprime le rdv de PatientRdvs
+        pr.rdvs = pr.rdvs.filter(r => r.id !== rdv.id);
 
-    return this.rs.create(rdv)
-      .then(r => this.saveDerivedRdvs(r, mois));
+        // Enregistre puis récupère le mois du rdv
+        return this.prs.update(pr.id, pr)
+          .then(() => this.getMois(Mois.fromDate(rdv.date)));
+      }) // Etape 2 => On supprime le rdv du Mois
+      .then(mois => {
+        Utils.removeRdv(mois, rdv);
+        return this.update(mois.id, mois);
+
+      }) // 3. On supprime le RDV de sa collection
+      .then(() => this.rs.delete(rdv.id));
   }
 
-  private saveDerivedRdvs(rdv: Rdv, mois: Mois) {
+  save(mois: Mois, rdv: Rdv): Promise<Rdv> {
+    // si le rdv existe, on le met à jour et on met à jour en cascade les collections contenant le rdv
+    if (rdv.id)
+      return this.rs.update(rdv.id, rdv).then(r => this.updateRdvCascade(r, mois));
+
+    return this.rs.create(rdv).then(r => this.updateRdvCascade(r, mois));
+  }
+
+  // Met à jour le RDV dans les collections dans lequel il se trouve (Mois, PatientRdvs, Rdv)
+  private updateRdvCascade(rdv: Rdv, mois: Mois) {
     // Récupère les rdvs d'un patient et ajoute s'il n'existe pas
     const promisePatientRdvs = this.getPromisePatientRdvs(rdv);
 
-    // Exécute en parallèle la promesse d'enregistrement de PatientRdv et du Mois
+    // Exécute en parallèle la promesse d'enregistrement de PatientRdv et du Mois et retourne le RDV (créé ou mis à jour)
     return Promise.all([promisePatientRdvs, this.update(mois.id, mois)])
-      .then((pratientRdvsMonth) => pratientRdvsMonth[0]);
+      .then(patientRdvsMois => patientRdvsMois[0].rdvs.find(r => r.id === rdv.id));
   }
 
   private getPromisePatientRdvs(rdv: Rdv) {

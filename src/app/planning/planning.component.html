@@ -2,7 +2,7 @@
 
   <!-- Plannig global -->
   <div class="row col-12 col-md-7 m-0 border justify-content-center align-items-center">
-    <app-calendrier-global class="w-100"></app-calendrier-global>
+    <calendrier-global class="w-100" (openRdv)="openRdv($event)"></calendrier-global>
   </div>
 
   <!-- Plannig perso -->
@@ -10,4 +10,8 @@
     <app-planning-perso></app-planning-perso>
   </div>
 
+</div>
+
+<div class="plus-btn-wrapper">
+  <p-speedDial [rotateAnimation]="false" title="Ajouter un RDV" (onClick)="openRdv()"></p-speedDial>
 </div>

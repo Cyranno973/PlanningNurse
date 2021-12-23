@@ -5,7 +5,7 @@ import {Rdv} from "./planning-rdv";
 export class Horaire {
   heure: number;
   statut: HoraireStatut = HoraireStatut.DISPONIBLE;
-  heureString?: string;
+  heureString: string;
   rdvs?: Rdv[];
 
   constructor(heure: number) {

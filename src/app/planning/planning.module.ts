@@ -13,6 +13,7 @@ import {FullCalendarModule} from "@fullcalendar/angular";
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import {AbbreviatePipe} from "../shared/pipes/abbreviate.pipe";
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -38,6 +39,9 @@ FullCalendarModule.registerPlugins([
     CalendarModule,
     CalendarWeekModule,
     FullCalendarModule
+  ],
+  providers: [
+    AbbreviatePipe
   ]
 })
 export class PlanningModule {

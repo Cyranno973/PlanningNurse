@@ -1,9 +1,7 @@
 <div class="row patient-rdvs">
-  <h5 class="col-12">Rdvs
-    <button pButton pRipple type="button" icon="pi pi-plus" (click)="openRdv()" class="p-button-rounded p-button-outlined"></button>
-  </h5>
+  <h5 class="col-12">Rdvs</h5>
 
-  <div class="card col-12">
+  <div class="card col-12" *ngIf="rdvs?.length else noRdvs">
     <p-timeline [value]="rdvs" styleClass="customized-timeline">
       <ng-template pTemplate="marker" let-rdv>
             <span class="custom-marker p-shadow-2">
@@ -15,11 +13,8 @@
         <p-card>
           <ul class="list-unstyled">
             <li>
-              Statut : <span class="rdv-wrapper"
-                             [style.color]="rdvStatus[rdv.statut]?.colorHigh"
-                             [style.backgroundColor]="rdvStatus[rdv.statut]?.colorLow">
-                      {{rdvStatus[rdv.statut]?.label}}
-                    </span>
+              Statut :
+              <rdv-badge [rdv]="rdv">{{rdvStatus[rdv.statut]?.label}}</rdv-badge>
             </li>
             <li [title]="rdv.soignant | fullName">
               Soignant : {{rdv.soignant | abrege}}
@@ -34,4 +29,12 @@
       </ng-template>
     </p-timeline>
   </div>
+
+  <ng-template #noRdvs>
+    <div class="col-12 text-center">Aucun RDV</div>
+  </ng-template>
+</div>
+
+<div class="plus-btn-wrapper">
+  <p-speedDial [rotateAnimation]="false" title="Ajouter un RDV" (onClick)="openRdv()"></p-speedDial>
 </div>

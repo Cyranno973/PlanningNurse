@@ -1,0 +1,32 @@
+@mixin rdv-colors($highColor, $lowColor) {
+  color: $highColor;
+  border-color: $highColor;
+  background-color: $lowColor;
+}
+
+.rdv-badge {
+  border-radius: 8px;
+  border: 1px solid;
+  padding: 0.25em 0.5rem;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: .3px;
+  display: inline-flex;
+  align-items: center;
+
+  &.SOUHAITE {
+    @include rdv-colors(#8a5340, #feedaf);
+  }
+
+  &.CONFIRME {
+    @include rdv-colors(#23547b, #b3e5fc);
+  }
+
+  &.VALIDE {
+    @include rdv-colors(#256029, #c8e6c9);
+  }
+
+  &.ANNULE {
+    @include rdv-colors(#000000, #bdbdbd);
+  }
+}
