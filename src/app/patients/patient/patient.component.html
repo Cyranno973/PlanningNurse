@@ -1,6 +1,6 @@
 <div class="container-fluid patient">
   <div class="row">
-    <div class="col-12 col-md-5" *ngIf="patient">
+    <div class="col-12 col-md-6" *ngIf="patient">
       <h2 class="d-inline-block">
         <i class="pi pi-id-card mr-1" style="font-size: 1.5rem"></i>{{patient | fullName}}
       </h2>
@@ -24,6 +24,6 @@
       [SOINS ET COMMENTAIRES]
     </div>
 
-    <app-patient-rdvs class="col-12 col-md-7" *ngIf="patient" [patient]="patient"></app-patient-rdvs>
+    <app-patient-rdvs class="col-12 col-md-6" *ngIf="patient" [patient]="patient"></app-patient-rdvs>
   </div>
 </div>

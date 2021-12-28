@@ -6,13 +6,12 @@ export enum RdvStatutCode {
 }
 
 export class RdvStatut {
-  static readonly SOUHAITE = new RdvStatut(RdvStatutCode.SOUHAITE, 'Souhaité', '#8a5340', '#feedaf');
-  static readonly CONFIRME = new RdvStatut(RdvStatutCode.CONFIRME, 'Confirmé', '#23547b', '#b3e5fc');
-  static readonly VALIDE = new RdvStatut(RdvStatutCode.VALIDE, 'Validé', '#256029', '#c8e6c9');
-  static readonly ANNULE = new RdvStatut(RdvStatutCode.ANNULE, 'Annulé', '#000000', '#BDBDBD');
+  static readonly SOUHAITE = new RdvStatut(RdvStatutCode.SOUHAITE, 'Souhaité');
+  static readonly CONFIRME = new RdvStatut(RdvStatutCode.CONFIRME, 'Confirmé');
+  static readonly VALIDE = new RdvStatut(RdvStatutCode.VALIDE, 'Validé');
+  static readonly ANNULE = new RdvStatut(RdvStatutCode.ANNULE, 'Annulé');
 
-  constructor(public code: RdvStatutCode, public label: string,
-              public colorHigh: string, public colorLow: string) {
+  constructor(public code: RdvStatutCode, public label: string) {
   }
 
   static all(): RdvStatut[] {

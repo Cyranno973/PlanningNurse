@@ -1,4 +1,14 @@
 .form-rdv-container {
+
+  .summary {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: white;
+    width: 100%;
+    padding-left: 10px;
+  }
+
   .p-calendar {
     // Style du jour sélectionné dans le calendrier
     .p-datepicker table td > span.p-highlight {

@@ -13,6 +13,7 @@ import {SelectButtonModule} from "primeng/selectbutton";
 import {DropdownModule} from "primeng/dropdown";
 import { AbbreviatePipe } from './pipes/abbreviate.pipe';
 import { FullNamePipe } from './pipes/full-name.pipe';
+import { RdvBadgeComponent } from './rdv-wrapper/rdv-badge.component';
 
 /**
  * Module avec les éléments partagés
@@ -21,7 +22,8 @@ import { FullNamePipe } from './pipes/full-name.pipe';
   declarations: [
     SelectButtonComponent,
     AbbreviatePipe,
-    FullNamePipe
+    FullNamePipe,
+    RdvBadgeComponent
   ],
   imports: [
     CommonModule,
@@ -38,21 +40,22 @@ import { FullNamePipe } from './pipes/full-name.pipe';
     DropdownModule
   ],
   providers: [DialogService, DatePipe],
-    exports: [
-        ButtonModule,
-        DialogModule,
-        TableModule,
-        FormsModule,
-        ReactiveFormsModule,
-        SpeedDialModule,
-        DynamicDialogModule,
-        TooltipModule,
-        RippleModule,
-        SelectButtonComponent,
-        DropdownModule,
-        AbbreviatePipe,
-        FullNamePipe
-    ]
+  exports: [
+    ButtonModule,
+    DialogModule,
+    TableModule,
+    FormsModule,
+    ReactiveFormsModule,
+    SpeedDialModule,
+    DynamicDialogModule,
+    TooltipModule,
+    RippleModule,
+    SelectButtonComponent,
+    DropdownModule,
+    AbbreviatePipe,
+    FullNamePipe,
+    RdvBadgeComponent
+  ]
 })
 export class SharedModule {
 }

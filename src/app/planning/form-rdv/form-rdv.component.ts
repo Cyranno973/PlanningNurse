@@ -13,7 +13,6 @@ import {PlanningService} from "../../repository/planning.service";
 import {Horaire} from "../../model/horaire";
 import {RdvStatut} from "../../model/enums/rdv-statut";
 import {Utils} from "../../shared/Utils";
-import {PatientRdvs} from "../../model/patient-rdvs";
 import {HoraireStatut} from "../../model/enums/horaire-statut";
 import {FullNamePipe} from "../../shared/pipes/full-name.pipe";
 import {Subscription} from "rxjs";
@@ -32,6 +31,7 @@ export class FormRdvComponent implements OnInit, OnDestroy {
   quandForm: FormGroup;
   foundPatients: Patient[];
   selectedPatient: Patient;
+  selectedSoignant: Soignant;
   date: Date;
   heure: number;
   duree: number = 30; // minutes
@@ -55,7 +55,7 @@ export class FormRdvComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadData();
     this.initForms();
-    this.selectPatient(this.patient)
+    this.selectPatient(this.patient ?? this.rdv?.patient)
     if (this.rdv?.soignant || this.patient?.soignant)
       this.soignants.push(this.rdv?.soignant ?? this.patient?.soignant);
 
@@ -69,10 +69,7 @@ export class FormRdvComponent implements OnInit, OnDestroy {
         });
       this.selectedStep = 2;
     } else {
-      this.selectDay(this.minDate, null, false);
-      this.selectSoigant()
-      this.date = this.minDate;
-      this.quandForm.get('date').setValue(this.minDate);
+      this.selectSoigant();
     }
   }
 
@@ -219,6 +216,7 @@ export class FormRdvComponent implements OnInit, OnDestroy {
       this.date = null;
       this.quandForm.get('jour').reset();
     }
+    this.heure = null;
 
     if (htmlElement) this.scroll(htmlElement);
     if (touched) this.quandForm.markAsTouched();
@@ -226,6 +224,9 @@ export class FormRdvComponent implements OnInit, OnDestroy {
 
   selectHour(heure: number, touched: boolean = true) {
     this.heure = heure;
+    // pour que le pipe 'date' du template se mette à jour
+    // lors du changement de l'heure, on re-set la date
+    this.date = new Date(this.date);
     this.date.setHours(Utils.toHours(heure), Utils.toMinutes(heure));
     this.quandForm.get('heure').setValue(heure);
     if (touched) this.quandForm.markAsTouched();
@@ -258,42 +259,46 @@ export class FormRdvComponent implements OnInit, OnDestroy {
     // Si le rdv existait, on le supprime si nécessaire du jour où il était planifié
     const isSameMonth = Mois.fromDate(this.rdv?.date) === mois.id;
     if (this.rdv && isSameMonth && this.rdv.date.getDate() !== rdv.date.getDate()) {
-      this.removeFromDay(mois, this.rdv);
+      Utils.removeRdv(mois, this.rdv);
     }
 
-
     // Update va enregistrer ou créer le document s'il n'existe pas avec l'id passé
-    this.rs.save(mois, rdv).then(prdvs => {
-        this.removeFromMonth(rdv, prdvs);
-        this.ref.close(prdvs);
-      }
-    ).catch((err) => console.log(err));
+    this.rs.save(mois, rdv)
+      .then(prdvs => {
+          this.removeFromMonth(rdv);
+          this.ref.close(prdvs);
+        }
+      ).catch((err) => console.log(err));
   }
 
   // Si le mois est différent, on le retire de là où il était avant
-  private removeFromMonth(rdv: Rdv, prdvs: PatientRdvs) {
+  private removeFromMonth(rdv: Rdv) {
     let moisDifferent = Mois.fromDate(this.rdv?.date) !== Mois.fromDate(rdv.date);
     if (this.rdv && moisDifferent) {
       this.rs.getMois(Mois.fromDate(this.rdv?.date))
         .then(mois => {
-          this.removeFromDay(mois, this.rdv);
-          this.rs.update(mois.id, mois).then(() => this.ref.close(prdvs));
+          Utils.removeRdv(mois, this.rdv);
+          this.rs.update(mois.id, mois).then(() => this.ref.close(rdv));
         });
     }
   }
 
-  // On supprime le rdv des rdvs de la journée
-  private removeFromDay(m: Mois, rdv: Rdv) {
-    const rdvsFilterd = m.jours.get(rdv.date.getDate()).filter(r => r.id !== rdv.id);
-    m.jours.set(rdv.date.getDate(), rdvsFilterd);
-  }
-
-  selectSoigant($event?: any) {
+  selectSoigant($event?: { value: Soignant }) {
     const soignant = $event?.value ?? this.rdv?.soignant ?? this.patient?.soignant;
+    this.selectedSoignant = soignant;
     if (this.selectedPatient && soignant) {
-      this.calculeDispos(soignant);
       this.selectedStep = !this.rdv ? 1 : 2;
     }
+  }
+
+  trackByHeure(index: number, h: Horaire): string {
+    return h.heureString;
+  }
+
+  delete() {
+    this.rs.deleteRdv(this.rdv)
+      .then(() => this.ref.close({deleted: true, ...this.rdv}))
+      .catch((err) => console.log(err));
   }
 
   ngOnDestroy(): void {

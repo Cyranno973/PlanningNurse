@@ -138,7 +138,8 @@ input {
   }
 
   &.rdv {
-    width: 700px;
+    width: 750px;
+    height: 100%;
   }
 
   .p-dialog-content {
@@ -182,26 +183,4 @@ input {
 .disabled {
   pointer-events: none;
   opacity: .8;
-}
-
-.custom-marker {
-  display: flex;
-  width: 2rem;
-  height: 2rem;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  color: black;
-  border: 1px solid black;
-  z-index: 1;
-}
-
-.rdv-wrapper {
-  border-radius: 8px;
-  padding: 0.25em 0.5rem;
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: .3px;
-  display: inline-flex;
-  align-items: center;
 }
