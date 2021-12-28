@@ -6,6 +6,8 @@ import {Rdv} from "../../model/planning-rdv";
 import {RdvStatut} from "../../model/enums/rdv-statut";
 import {Subscription} from "rxjs";
 import {SoignantService} from "../../repository/soignant.service";
+import {FormRdvComponent} from "../form-rdv/form-rdv.component";
+import {DialogService} from "primeng/dynamicdialog";
 
 @Component({
   selector: 'app-planning-perso',
@@ -19,7 +21,7 @@ export class PlanningPersoComponent implements OnInit, OnDestroy {
   rdvStatus = RdvStatut;
   subscriptions: Subscription;
 
-  constructor(private ss: SoignantService, private rs: RdvsService) {
+  constructor(private ss: SoignantService, private rs: RdvsService, private dialogService: DialogService) {
   }
 
   ngOnInit(): void {
@@ -54,6 +56,15 @@ export class PlanningPersoComponent implements OnInit, OnDestroy {
 
   trackById(index: number, rdv: Rdv): string {
     return rdv.id;
+  }
+
+  openRdv(rdv: Rdv) {
+    this.dialogService.open(FormRdvComponent, {
+      data: {rdv},
+      dismissableMask: true,
+      header: 'Editer RDV',
+      styleClass: 'custom-modal rdv'
+    });
   }
 
   ngOnDestroy(): void {

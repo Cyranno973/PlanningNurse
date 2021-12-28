@@ -27,7 +27,7 @@ export class CalendrierGlobalComponent implements OnInit {
     const events: EventInput[] = []
     this.ps.getMois()
       .then(m => {
-        m.jours.forEach((rdvs) => {
+        m.jours.forEach(rdvs => {
           this.rdvs.push(...rdvs);
           rdvs.forEach(rdv => {
             events.push(this.rdvToEvent(rdv));
@@ -36,7 +36,7 @@ export class CalendrierGlobalComponent implements OnInit {
 
         return events;
       }) // Peuplement des options du calendrier
-      .then(eventss => {
+      .then(events => {
         this.options = {
           initialDate: '2019-01-01',
           headerToolbar: {
@@ -44,8 +44,8 @@ export class CalendrierGlobalComponent implements OnInit {
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
           },
-          eventClick: (e) => this.eventClicked(e),
-          events: eventss,
+          eventClick: e => this.eventClicked(e),
+          events: events,
           locales: [frLocale],
           editable: true,
           selectable: true,
@@ -55,7 +55,7 @@ export class CalendrierGlobalComponent implements OnInit {
       })
   }
 
-  rdvToEvent(rdv: Rdv): EventInput {
+  private rdvToEvent(rdv: Rdv): EventInput {
     return {
       id: rdv.id,
       title: this.abrPipe.transform(rdv.patient),

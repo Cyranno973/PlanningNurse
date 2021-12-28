@@ -7,7 +7,8 @@
     <!-- RDVS -->
     <div class="col-10 row p-0 m-0 rdvs">
       <rdv-badge *ngFor="let rdv of horaire.rdvs; trackBy: trackById" [rdv]="rdv"
-                 class="rdv"
+                 class="rdv cursor-pointer"
+                 (click)="openRdv(rdv)"
                  [style.marginTop]="rdv.date.getMinutes() + 'px'"
                  [style.height]="(rdv.duree ?? 60) + 'px'">
         {{rdv.patient | abrege}} ({{rdv.duree ?? 60}}min)
