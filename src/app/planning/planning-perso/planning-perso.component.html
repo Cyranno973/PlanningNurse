@@ -1,17 +1,74 @@
-<div class="row col-12 m-0 p-0 planning pb-4">
-  <div class="col-12 row m-0 p-0 horaire" *ngFor="let horaire of horaires; trackBy: trackByHeure">
-    <div class="col-2 heure align-items-center text-right">
-      <span class="d-block pr-1">{{horaire.heureString}}</span>
-    </div>
+<div class="row col-12 m-0 p-0 planning mb-4 border">
 
-    <!-- RDVS -->
-    <div class="col-10 row p-0 m-0 rdvs">
-      <rdv-badge *ngFor="let rdv of horaire.rdvs; trackBy: trackById" [rdv]="rdv"
-                 class="rdv"
-                 [style.marginTop]="rdv.date.getMinutes() + 'px'"
-                 [style.height]="(rdv.duree ?? 60) + 'px'">
-        {{rdv.patient | abrege}} ({{rdv.duree ?? 60}}min)
-      </rdv-badge>
+  <div class="row col-10 offset-2 p-1 bg-white text-center align-items-center">
+    <button class="col-1 btn btn-link border" [disabled]="loading" (click)="changeDate(-1)">
+      <i class="pi pi-chevron-left"></i>
+    </button>
+    <div class="col-10">
+      <p-calendar [(ngModel)]="date"
+                  [styleClass]="'jour-planning'"
+                  [disabled]="loading"
+                  [showButtonBar]="true"
+                  [showIcon]="true"
+                  [clearButtonStyleClass]="'d-none'"
+                  (onSelect)="changeDate()"
+                  dateFormat="D dd/mm/yy">
+      </p-calendar>
+    </div>
+    <button class="col-1 btn btn-link border" [disabled]="loading" (click)="changeDate(1)">
+      <i class="pi pi-chevron-right"></i>
+    </button>
+  </div>
+
+  <div class="row col-12 m-0 p-0 rdvs-wrapper border">
+    <div class="col-12 row m-0 p-0 horaire" *ngFor="let horaire of horaires; trackBy: trackByHeure">
+      <!-- Heure -->
+      <div class="col-2 heure align-items-center text-center">
+        <h6 class="d-block pr-1">{{horaire.heureString}}</h6>
+      </div>
+
+      <!-- RDVS -->
+      <div class="col-10 row p-0 m-0 rdvs">
+        <div class="rdv-wrapper" *ngFor="let rdv of horaire.rdvs; trackBy: trackById">
+          <rdv-badge [rdv]="rdv" class="rdv col"
+                     [style.marginTop]="rdv.date.getMinutes() + 'px'"
+                     [style.height]="(rdv.duree ?? 60) + 'px'">
+            <div class="rdv-summary">{{rdv.patient | abrege}} ({{rdv.duree ?? 60}}min)</div>
+            <div class="rdv-hover">
+              <!-- Nom Prénom -->
+              <div>
+                {{rdv.patient | fullName}}
+                <i class="pi pi-external-link p-1 float-right cursor-pointer" [routerLink]="'/patients/' + rdv.patient.id"></i>
+              </div>
+              <!-- Heure du RDV -->
+              <div>De {{rdv.date | date : 'HH:mm'}} à {{rdv.fin | date: 'HH:mm'}} ({{rdv.duree ?? 60}}min)</div>
+
+              <address>
+                <!-- Adresse -->
+                <!-- https://developers.google.com/maps/documentation/urls/get-started -->
+                <contact-info [info]="rdv.patient.address" linkType="https://www.google.com/maps/dir/?api=1&destination=" piIcone="home"></contact-info>
+
+                <!-- Mail -->
+                <contact-info [info]="rdv.patient.email" linkType="mailto:" piIcone="envelope"></contact-info>
+
+                <!-- Téléphones -->
+                <div *ngFor="let tel of rdv.patient?.tel | keyvalue">
+                  <contact-info [info]="tel.value" linkType="tel:" piIcone="phone">({{tel.key}})</contact-info>
+                </div>
+              </address>
+              <div class="col-12 text-center">
+                <button pButton label="Editer" icon="pi pi-pencil" (click)="rdvEdit(rdv)" class="p-button-text"></button>
+              </div>
+            </div>
+          </rdv-badge>
+
+          <!-- Ce rdv-bis n'est là que pour empêcher un déclage des RDVs sur la ligne lors du survol
+          parce que le .rdv chane en position absolute -->
+          <div class="rdv-ghost col">
+            <div class="rdv-summary">{{rdv.patient | abrege}} ({{rdv.duree ?? 60}}min)</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

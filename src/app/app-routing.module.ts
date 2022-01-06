@@ -13,7 +13,7 @@ import {PatientsComponent} from "./patients/patients.component";
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
   {path: 'logina', component: SigninComponent},
-  {path: 'planinng', component: PlanningComponent},
+  {path: 'planning', component: PlanningComponent},
   {path: 'signup', component: SignUpComponent},
   {path: 'resetPassword', component: PasswordResetComponent},
 

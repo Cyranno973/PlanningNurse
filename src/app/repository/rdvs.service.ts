@@ -15,15 +15,27 @@ export class RdvsService extends AbstractCrudRepository<Rdv> {
   }
 
   // Récupère les rvs d'un soignant par date
-  getBySoignantId(soignantId: string, date?: Date): Observable<Rdv[]> {
-    date = date ?? new Date();
+  getBySoignantId(soignantId: string, startDate?: Date): Observable<Rdv[]> {
+    startDate = startDate ?? new Date();
+    startDate.setHours(0, 0, 0, 0);
+    const endDate = new Date(startDate);
+    endDate.setHours(23, 59, 59);
+
     return this.db.collection<Rdv[]>(this.dbPath,
       ref => ref
         .where('soignant.id', '==', soignantId)
-        .where('statut', '!=', RdvStatutCode.ANNULE)
-      // TODO : Ajouter les condition pour récupérer les RDV de la journée sélectionée
-      // .where('date', '==', ) // Ramène les rdv pour le jour sélectionné
+        .where('date', '>=', startDate)
+        .where('date', '<=', endDate)
     ).snapshotChanges()
-      .pipe(map(obj => obj.map(c => ({id: c.payload.doc.id, ...this.fromFirestore(c.payload.doc.data())}))));
+      .pipe(
+        map(docChangeAction => docChangeAction
+          .flatMap(rdvs => {
+            const rdv: Rdv = this.fromFirestore(rdvs.payload.doc.data());
+            rdv.fin = new Date(rdv.date.getTime() + rdv.duree * 60000);
+            return ({id: rdvs.payload.doc.id, ...rdv}) as Rdv;
+          })
+          .filter(rdv => rdv.statut !== RdvStatutCode.ANNULE)
+        )
+      );
   }
 }
