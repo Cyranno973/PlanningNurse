@@ -11,9 +11,10 @@ import {RippleModule} from "primeng/ripple";
 import {SelectButtonComponent} from './select-button/select-button.component';
 import {SelectButtonModule} from "primeng/selectbutton";
 import {DropdownModule} from "primeng/dropdown";
-import { AbbreviatePipe } from './pipes/abbreviate.pipe';
-import { FullNamePipe } from './pipes/full-name.pipe';
-import { RdvBadgeComponent } from './rdv-wrapper/rdv-badge.component';
+import {AbbreviatePipe} from './pipes/abbreviate.pipe';
+import {FullNamePipe} from './pipes/full-name.pipe';
+import {RdvBadgeComponent} from './rdv-wrapper/rdv-badge.component';
+import { ContactInfoComponent } from './contact-info/contact-info.component';
 
 /**
  * Module avec les éléments partagés
@@ -23,7 +24,8 @@ import { RdvBadgeComponent } from './rdv-wrapper/rdv-badge.component';
     SelectButtonComponent,
     AbbreviatePipe,
     FullNamePipe,
-    RdvBadgeComponent
+    RdvBadgeComponent,
+    ContactInfoComponent
   ],
   imports: [
     CommonModule,
@@ -54,7 +56,8 @@ import { RdvBadgeComponent } from './rdv-wrapper/rdv-badge.component';
     DropdownModule,
     AbbreviatePipe,
     FullNamePipe,
-    RdvBadgeComponent
+    RdvBadgeComponent,
+    ContactInfoComponent
   ]
 })
 export class SharedModule {

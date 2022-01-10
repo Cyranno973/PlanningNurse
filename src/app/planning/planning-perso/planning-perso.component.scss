@@ -1,25 +1,77 @@
 .planning {
-  .horaire {
-    // 1px = 1min
-    height: 60px;
+  .jour-planning {
+    cursor: pointer;
+    width: 175px;
 
-    .heure {
-      font-size: 12px;
-      color: #495057;
-      background-color: #fff;
+    input {
+      border: none;
 
-      span {
-        margin-top: -8px;
+      &:active, &:focus {
+        outline: none;
+        box-shadow: none;
       }
     }
+  }
 
-    .rdvs {
-      background-color: rgba(144, 206, 245, 0.52);
-      border-top: 2.5px solid white;
-      position: relative;
+  .rdvs-wrapper {
+    .horaire {
+      height: 60px; // 1px => 1min
 
-      .rdv {
-        z-index: 3;
+      .heure {
+        font-size: 12px;
+        color: #495057;
+        background-color: #fff;
+
+        span {
+          margin-top: -8px;
+        }
+      }
+
+      .rdvs {
+        background-color: rgba(144, 206, 245, 0.52);
+        border-top: 2.5px solid white;
+        position: relative;
+
+        .rdv-wrapper {
+          .rdv-ghost {
+            display: none;
+            visibility: hidden;
+          }
+
+          .rdv {
+            z-index: 3;
+            font-weight: bold;
+            position: relative;
+            text-decoration: none;
+            display: block;
+            transition: 0.25s ease;
+
+            &:hover {
+              transform: translate(-5px, -15px);
+              z-index: 5;
+              position: absolute;
+              transition: .2s ease-out;
+
+              // Affiche le rdv-ghost pour ne pas créer de déclalage sur les RDV sur la ligne
+              & + .rdv-ghost {
+                display: block;
+              }
+
+              .rdv-summary {
+                display: none;
+              }
+
+              .rdv-hover {
+                display: block;
+              }
+            }
+
+            .rdv-hover {
+              display: none;
+              line-height: 2;
+            }
+          }
+        }
       }
     }
   }

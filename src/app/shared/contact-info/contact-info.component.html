@@ -1,0 +1,5 @@
+<div *ngIf="info">
+  <i *ngIf="piIcone" class="pi pi-{{piIcone}} small mr-1"></i>
+  <a [href]="linkType + info" class="mr-1" target="_blank">{{info}}</a>
+  <ng-content></ng-content>
+</div>

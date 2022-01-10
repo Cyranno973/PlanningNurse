@@ -11,6 +11,7 @@ export class Rdv extends DatabaseModel {
   patient: Patient;
   // 10h15, 12h00....
   heure: number;
+  fin?: Date;
   duree?: number;
   recurrence?: {
     dateDebut: Date;
@@ -22,7 +23,7 @@ export class Rdv extends DatabaseModel {
     super();
     this.id = id;
     this.heure = heure;
-    this.patient = new Patient({id: patient.id, nom: patient.nom, prenom: patient.prenom});
+    this.patient = patient;
     this.date = date;
     this.date.setHours(Utils.toHours(heure), Utils.toMinutes(heure));
     this.duree = duree;

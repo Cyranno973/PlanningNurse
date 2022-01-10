@@ -216,7 +216,9 @@ export class FormRdvComponent implements OnInit, OnDestroy {
       this.date = null;
       this.quandForm.get('jour').reset();
     }
+
     this.heure = null;
+    this.quandForm.get('heure').reset();
 
     if (htmlElement) this.scroll(htmlElement);
     if (touched) this.quandForm.markAsTouched();

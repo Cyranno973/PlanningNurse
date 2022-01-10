@@ -8,10 +8,11 @@ export class Horaire {
   heureString: string;
   rdvs?: Rdv[];
 
-  constructor(heure: number) {
+  constructor(heure: number, rdv?: Rdv) {
     this.heure = heure;
     this.heureString = Utils.toDisplayTime(this.heure)
     this.statut = HoraireStatut.DISPONIBLE;
+    this.rdvs = rdv ? [rdv] : [];
   }
 
   resetRdvs() {
