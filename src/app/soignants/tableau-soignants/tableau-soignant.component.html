@@ -1,4 +1,8 @@
 <div class="container-fluid">
+  <h4>Soignants</h4>
+  <div class="col-12 d-flex justify-content-end mb-1">
+    <button pButton icon="pi pi-plus" label="Ajouter" (click)="addInfirmiere()" class="p-button-text"></button>
+  </div>
   <p-table [value]="soignants" dataKey="id" editMode="row" responsiveLayout="scroll">
     <ng-template pTemplate="header">
       <tr>
@@ -6,8 +10,8 @@
         <th>Prenom</th>
         <th>Mail</th>
         <th>Tel</th>
-        <th>Trigramme</th>
-        <th>Actions</th>
+        <th>Trg</th>
+        <th></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-editing="editing" let-ri="rowIndex" let-infirmiere>
@@ -15,7 +19,7 @@
         <td pEditableColumn>
           <p-cellEditor>
             <ng-template pTemplate="input">
-              <input pInputText type="text" [(ngModel)]="infirmiere.nom">
+              <input type="text" [(ngModel)]="infirmiere.nom">
             </ng-template>
             <ng-template pTemplate="output">
               {{infirmiere.nom}}

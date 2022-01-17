@@ -31,7 +31,7 @@ export class PlanningPersoComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.horaires = Utils.getHoraires(60);
 
-    this.dateSubject
+    this.subscriptions = this.dateSubject
       .pipe(
         tap(() => this.loading = true),
         // TODO : Récupérer l'id du soignant connecté et remplacer celui-ci en dur qui correspond à FOS

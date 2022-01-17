@@ -56,7 +56,7 @@ export class PlanningService extends AbstractCrudRepository<Mois> {
 
         // Enregistre puis récupère le mois du rdv
         return this.prs.update(pr.id, pr)
-          .then(() => this.getMois(Mois.fromDate(rdv.date)));
+          .then(() => this.getMois(Utils.moisFromDate(rdv.date)));
       }) // Etape 2 => On supprime le rdv du Mois
       .then(mois => {
         Utils.removeRdv(mois, rdv);

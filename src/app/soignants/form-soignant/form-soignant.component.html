@@ -4,5 +4,12 @@
   <input type="password" name="pwd" placeholder="Password" formControlName="pwd"/><br/>
   <input type="email" name="email" placeholder="Email" formControlName="mail"/><br/>
   <input type="tel" class="form-control" id="tel-input" aria-describedby="tel Help" placeholder="Tel" formControlName="tel">
-  <button (click)="onSubmitNurseForm()" [disabled]="nurseForm.invalid">Submit</button>
+
+  <div class="footer">
+    <p-button icon="pi pi-check"
+              label="Valider"
+              styleClass="p-button-text"
+              [disabled]="nurseForm.invalid"
+              (click)="onSubmitNurseForm()"></p-button>
+  </div>
 </form>

@@ -1,20 +1,40 @@
-<table>
-  <thead>
-  <th>Periode</th>
-  <th>Infirmiere</th>
-  </thead>
-  <tbody>
-  <tr>
-    <td>Du 11/10/2021 au 18/10/2021</td>
-    <td>Jackeline</td>
-  </tr>
-  <tr>
-    <td>Du 11/10/2021 au 18/10/2021</td>
-    <td>Jackeline</td>
-  </tr>
-  <tr>
-    <td>Du 11/10/2021 au 18/10/2021</td>
-    <td>Jackeline</td>
-  </tr>
-  </tbody>
-</table>
+<div class="planification">
+  <h4>Planification</h4>
+  <div class="col-12 d-flex justify-content-end mb-1">
+    <button pButton icon="pi pi-plus" label="Ajouter" (click)="ajouterLigne()" class="p-button-text"></button>
+  </div>
+  <p-table [value]="currentplanif.periodes" dataKey="dates" [styleClass]="'table-hover'">
+    <ng-template pTemplate="body" let-periode>
+      <tr>
+        <td style="width: 60%">
+          <p-calendar [(ngModel)]="periode.dates"
+                      [styleClass]="'input-tableau'"
+                      selectionMode="range"
+                      [readonlyInput]="true"
+                      [rangeSeparator]="'->'"
+                      dateFormat="dd/mm/yy">
+          </p-calendar>
+        </td>
+
+        <td>
+          <p-dropdown [options]="soignants"
+                      dataKey="id"
+                      [styleClass]="'choix-soignant'"
+                      [(ngModel)]="periode.soignant"
+                      (onShow)="loadSoignants()"
+                      placeholder="Soignant"
+                      [showClear]="true">
+            <!-- Soignant sélectioné -->
+            <ng-template let-soignant pTemplate="selectedItem">
+              {{soignant | abrege}} ({{soignant.trg}})
+            </ng-template>
+            <!-- Suggestions autocomplete -->
+            <ng-template let-soignant pTemplate="item">
+              {{soignant | abrege}} ({{soignant.trg}})
+            </ng-template>
+          </p-dropdown>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

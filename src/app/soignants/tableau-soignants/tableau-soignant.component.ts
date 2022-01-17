@@ -1,23 +1,33 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Soignant} from "../../model/soignant";
 import {DialogService} from "primeng/dynamicdialog";
 import {FormSoignantComponent} from "../form-soignant/form-soignant.component";
 import {SoignantService} from "../../repository/soignant.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-tableau-soignant',
   templateUrl: './tableau-soignant.component.html',
   styleUrls: ['./tableau-soignant.component.scss']
 })
-export class TableauSoignantComponent implements OnInit {
+export class TableauSoignantComponent implements OnInit, OnDestroy {
 
   soignants: Soignant[];
+  subs: Subscription;
 
-  constructor(private is: SoignantService, private ds: DialogService) {
+  constructor(private ss: SoignantService, private ds: DialogService) {
   }
 
   ngOnInit(): void {
-    this.is.getAll().subscribe(d => this.soignants = d);
+    this.subs = this.ss.getAll().subscribe(soignants => this.soignants = soignants);
+  }
+
+  addInfirmiere() {
+    this.ds.open(FormSoignantComponent, {
+      header: 'Ajouter un soignant',
+      dismissableMask: true,
+      styleClass: 'custom-modal soignant'
+    })
   }
 
   updateNurseForm(nurse: Soignant) {
@@ -30,6 +40,10 @@ export class TableauSoignantComponent implements OnInit {
   }
 
   deleteNurse(nurse: Soignant) {
-    this.is.delete(nurse.id);
+    this.ss.delete(nurse.id).catch(err => console.error(err));
+  }
+
+  ngOnDestroy(): void {
+    this.subs?.unsubscribe();
   }
 }

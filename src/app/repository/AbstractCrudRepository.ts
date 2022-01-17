@@ -66,7 +66,7 @@ export class AbstractCrudRepository<T extends DatabaseModel> {
   }
 
   // Convertit les timestamps des objets en Dates
-  fromFirestore(object: any): any {
+  fromFirestore<T>(object: any): T {
     Object.keys(object)
       .filter(key => object[key] instanceof firebase.firestore.Timestamp || Array.isArray(object[key]))
       .forEach(key => {
@@ -74,7 +74,7 @@ export class AbstractCrudRepository<T extends DatabaseModel> {
           return object[key].map(prop => this.fromFirestore(prop));
         object[key] = object[key].toDate();
       });
-    return object;
+    return object as T;
   }
 
   // Supprime les champs vides ("") / null ou objets vides ({})

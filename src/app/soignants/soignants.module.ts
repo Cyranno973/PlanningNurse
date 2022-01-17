@@ -3,9 +3,9 @@ import {CommonModule} from '@angular/common';
 import {SoignantsComponent} from "./soignants.component";
 import {PlanicationComponent} from "./planication/planication.component";
 import {FormSoignantComponent} from "./form-soignant/form-soignant.component";
-import {SearchSoignantComponent} from "./search-soignant/search-soignant.component";
 import {TableauSoignantComponent} from "./tableau-soignants/tableau-soignant.component";
 import {SharedModule} from "../shared/shared.module";
+import {CalendarModule} from "primeng/calendar";
 
 
 @NgModule({
@@ -13,13 +13,13 @@ import {SharedModule} from "../shared/shared.module";
     SoignantsComponent,
     PlanicationComponent,
     FormSoignantComponent,
-    SearchSoignantComponent,
     TableauSoignantComponent
   ],
-  imports: [
-    CommonModule,
-    SharedModule
-  ]
+    imports: [
+        CommonModule,
+        SharedModule,
+        CalendarModule
+    ]
 })
 export class SoignantsModule {
 }

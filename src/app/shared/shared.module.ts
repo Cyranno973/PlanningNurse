@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {CommonModule, DatePipe} from '@angular/common';
+import {CommonModule, DatePipe, TitleCasePipe} from '@angular/common';
 import {ButtonModule} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
 import {TableModule} from "primeng/table";
@@ -41,7 +41,7 @@ import { ContactInfoComponent } from './contact-info/contact-info.component';
     SelectButtonModule,
     DropdownModule
   ],
-  providers: [DialogService, DatePipe],
+  providers: [DialogService, DatePipe, TitleCasePipe],
   exports: [
     ButtonModule,
     DialogModule,

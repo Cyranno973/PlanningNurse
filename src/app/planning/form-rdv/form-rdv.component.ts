@@ -259,7 +259,7 @@ export class FormRdvComponent implements OnInit, OnDestroy {
     }
 
     // Si le rdv existait, on le supprime si nécessaire du jour où il était planifié
-    const isSameMonth = Mois.fromDate(this.rdv?.date) === mois.id;
+    const isSameMonth = Utils.moisFromDate(this.rdv?.date) === mois.id;
     if (this.rdv && isSameMonth && this.rdv.date.getDate() !== rdv.date.getDate()) {
       Utils.removeRdv(mois, this.rdv);
     }
@@ -275,9 +275,10 @@ export class FormRdvComponent implements OnInit, OnDestroy {
 
   // Si le mois est différent, on le retire de là où il était avant
   private removeFromMonth(rdv: Rdv) {
-    let moisDifferent = Mois.fromDate(this.rdv?.date) !== Mois.fromDate(rdv.date);
+    const existingRdvMois = Utils.moisFromDate(this.rdv?.date);
+    const moisDifferent = existingRdvMois !== Utils.moisFromDate(rdv.date);
     if (this.rdv && moisDifferent) {
-      this.rs.getMois(Mois.fromDate(this.rdv?.date))
+      this.rs.getMois(existingRdvMois)
         .then(mois => {
           Utils.removeRdv(mois, this.rdv);
           this.rs.update(mois.id, mois).then(() => this.ref.close(rdv));

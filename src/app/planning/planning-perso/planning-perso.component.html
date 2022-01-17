@@ -7,10 +7,10 @@
     <div class="col-10">
       <p-calendar [(ngModel)]="date"
                   [styleClass]="'jour-planning'"
-                  [disabled]="loading"
                   [showButtonBar]="true"
                   [showIcon]="true"
                   [clearButtonStyleClass]="'d-none'"
+                  [hideOnDateTimeSelect]="true"
                   (onSelect)="changeDate()"
                   dateFormat="D dd/mm/yy">
       </p-calendar>
@@ -30,10 +30,9 @@
       <!-- RDVS -->
       <div class="col-10 row p-0 m-0 rdvs">
         <div class="rdv-wrapper" *ngFor="let rdv of horaire.rdvs; trackBy: trackById">
-          <rdv-badge [rdv]="rdv" class="rdv col"
-                     [style.marginTop]="rdv.date.getMinutes() + 'px'"
-                     [style.height]="(rdv.duree ?? 60) + 'px'">
-            <div class="rdv-summary">{{rdv.patient | abrege}} ({{rdv.duree ?? 60}}min)</div>
+          <rdv-badge [rdv]="rdv" class="rdv" [style.marginTop]="rdv.date.getMinutes() + 'px'">
+            <div class="rdv-summary" [style.height]="(rdv.duree ?? 60) + 'px'">{{rdv.patient | abrege}} ({{rdv.duree ?? 60}}min)
+            </div>
             <div class="rdv-hover">
               <!-- Nom Prénom -->
               <div>
@@ -64,8 +63,8 @@
 
           <!-- Ce rdv-bis n'est là que pour empêcher un déclage des RDVs sur la ligne lors du survol
           parce que le .rdv chane en position absolute -->
-          <div class="rdv-ghost col">
-            <div class="rdv-summary">{{rdv.patient | abrege}} ({{rdv.duree ?? 60}}min)</div>
+          <div class="rdv-ghost">
+            {{rdv.patient | abrege}} ({{rdv.duree ?? 60}}min)
           </div>
         </div>
       </div>
