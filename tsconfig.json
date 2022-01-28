@@ -5,10 +5,12 @@
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
-    "strict": false, // modifier was true
+    "strict": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
+    "strictPropertyInitialization": false,
+    "skipLibCheck": true,
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,

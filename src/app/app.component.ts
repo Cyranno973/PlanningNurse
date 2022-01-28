@@ -14,6 +14,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.config.setTranslation({
+      firstDayOfWeek: 1,
       accept: 'Valider',
       cancel: 'Annuler',
       monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],

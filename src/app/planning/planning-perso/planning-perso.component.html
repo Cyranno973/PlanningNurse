@@ -31,7 +31,7 @@
       <div class="col-10 row p-0 m-0 rdvs">
         <div class="rdv-wrapper" *ngFor="let rdv of horaire.rdvs; trackBy: trackById">
           <rdv-badge [rdv]="rdv" class="rdv" [style.marginTop]="rdv.date.getMinutes() + 'px'">
-            <div class="rdv-summary" [style.height]="(rdv.duree ?? 60) + 'px'">{{rdv.patient | abrege}} ({{rdv.duree ?? 60}}min)
+            <div class="rdv-summary" [style.height]="(rdv.duree) + 'px'">{{rdv.patient | abrege}} ({{rdv.duree}}min)
             </div>
             <div class="rdv-hover">
               <!-- Nom Prénom -->
@@ -40,7 +40,7 @@
                 <i class="pi pi-external-link p-1 float-right cursor-pointer" [routerLink]="'/patients/' + rdv.patient.id"></i>
               </div>
               <!-- Heure du RDV -->
-              <div>De {{rdv.date | date : 'HH:mm'}} à {{rdv.fin | date: 'HH:mm'}} ({{rdv.duree ?? 60}}min)</div>
+              <div>De {{rdv.date | date : 'HH:mm'}} à {{rdv.fin | date: 'HH:mm'}} ({{rdv.duree}}min)</div>
 
               <address>
                 <!-- Adresse -->
@@ -64,7 +64,7 @@
           <!-- Ce rdv-bis n'est là que pour empêcher un déclage des RDVs sur la ligne lors du survol
           parce que le .rdv chane en position absolute -->
           <div class="rdv-ghost">
-            {{rdv.patient | abrege}} ({{rdv.duree ?? 60}}min)
+            {{rdv.patient | abrege}} ({{rdv.duree}}min)
           </div>
         </div>
       </div>
