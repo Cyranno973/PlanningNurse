@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {PatientService} from "../repository/patient.service";
+import {PatientRepository} from "../repository/patient-repository.service";
 import {Patient} from "../model/patient";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {Subscription} from "rxjs";
@@ -21,7 +21,7 @@ export class PatientsComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   private modalRef: DynamicDialogRef;
 
-  constructor(private ps: PatientService, private fb: FormBuilder, public dialogService: DialogService) {
+  constructor(private patientRepo: PatientRepository, private fb: FormBuilder, public dialogService: DialogService) {
   }
 
   ngOnInit(): void {
@@ -31,7 +31,7 @@ export class PatientsComponent implements OnInit, OnDestroy {
     );
 
     // TODO : Paginer la requête pour ne pas tout lire à chaque fois
-    this.subscription = this.ps.getAll().subscribe(data => {
+    this.subscription = this.patientRepo.getAll().subscribe(data => {
       this.patients = data;
       this.refreshSearch();
     });

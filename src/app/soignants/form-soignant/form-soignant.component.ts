@@ -2,7 +2,7 @@ import {Component, HostListener, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {Soignant} from "../../model/soignant";
-import {SoignantService} from "../../repository/soignant.service";
+import {SoignantRepository} from "../../repository/soignant-repository.service";
 
 @Component({
   selector: 'app-form-soignant',
@@ -13,7 +13,8 @@ export class FormSoignantComponent implements OnInit {
   nurseForm: FormGroup;
   soignant: Soignant = this.config.data;
 
-  constructor(private is: SoignantService, private formBuilder: FormBuilder, public ref: DynamicDialogRef, public config: DynamicDialogConfig) {
+  constructor(private soignantRepo: SoignantRepository, private formBuilder: FormBuilder,
+              public ref: DynamicDialogRef, public config: DynamicDialogConfig) {
   }
 
   ngOnInit(): void {
@@ -50,8 +51,8 @@ export class FormSoignantComponent implements OnInit {
     this.nurseForm.patchValue({
       trg: trigrammes,
     });
-    if (this.soignant) save = this.is.update(this.soignant.id, this.nurseForm.value);
-    else save = this.is.create(this.nurseForm.value);
+    if (this.soignant) save = this.soignantRepo.update(this.soignant.id, this.nurseForm.value);
+    else save = this.soignantRepo.create(this.nurseForm.value);
 
     save
       .then(i => this.ref.close(i))

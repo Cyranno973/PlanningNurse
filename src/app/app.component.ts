@@ -7,7 +7,7 @@ import {PrimeNGConfig} from "primeng/api";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'angular';
+  title = 'Planning Nurse';
 
   constructor(private config: PrimeNGConfig) {
   }

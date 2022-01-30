@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {PatientService} from "../../repository/patient.service";
+import {PatientRepository} from "../../repository/patient-repository.service";
 import {Patient} from "../../model/patient";
 import {DialogService} from "primeng/dynamicdialog";
 import {FormPatientComponent} from "./form-patient/form-patient.component";
@@ -22,13 +22,13 @@ export class PatientComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
 
   constructor(private route: ActivatedRoute,
-              private ps: PatientService,
+              private patientRepo: PatientRepository,
               public dialogService: DialogService) {
   }
 
   ngOnInit(): void {
     const patientId = this.route.snapshot.paramMap.get('id');
-    this.ps.findById(patientId)
+    this.patientRepo.findById(patientId)
       .then(p => this.patient = p)
       .catch(reason => console.log(reason));
   }

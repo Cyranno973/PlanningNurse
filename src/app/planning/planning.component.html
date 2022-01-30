@@ -1,13 +1,13 @@
 <div class="row col-12 m-0 p-0">
 
   <!-- Plannig global -->
-  <div class="row col-12 col-md-6 m-0 border justify-content-center align-items-center">
+  <div class="row col-12 col-md-6 m-0 justify-content-center align-items-center">
     <calendrier-global class="w-100" (openRdv)="openRdv($event)"></calendrier-global>
   </div>
 
   <!-- Plannig perso -->
   <div class="row col-12 m-0 col-md-6">
-    <app-planning-perso (openRdv)="openRdv($event)"></app-planning-perso>
+    <app-planning-perso [choixSoignants]="true" (openRdv)="openRdv($event)"></app-planning-perso>
   </div>
 
 </div>

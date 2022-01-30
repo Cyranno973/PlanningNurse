@@ -1,4 +1,23 @@
-<div class="row col-12 m-0 p-0 planning mb-4 border">
+<div class="row col-12 m-0 p-0 planning mb-4">
+
+  <div class="row col-12 justify-content-end p-0 mb-2" *ngIf="choixSoignants">
+    <p-dropdown [options]="soignants"
+                dataKey="id"
+                [styleClass]="'choix-soignant'"
+                [(ngModel)]="soignant"
+                (onChange)="changeSoignant($event.value)"
+                (onShow)="loadSoignants()"
+                placeholder="Soignant">
+      <!-- Soignant sélectioné -->
+      <ng-template let-soignant pTemplate="selectedItem">
+        {{soignant | abrege}} ({{soignant.trg}})
+      </ng-template>
+      <!-- Suggestions autocomplete -->
+      <ng-template let-soignant pTemplate="item">
+        {{soignant | abrege}} ({{soignant.trg}})
+      </ng-template>
+    </p-dropdown>
+  </div>
 
   <div class="row col-10 offset-2 p-1 bg-white text-center align-items-center">
     <button class="col-1 btn btn-link border" [disabled]="loading" (click)="changeDate(-1)">
@@ -36,8 +55,10 @@
             <div class="rdv-hover">
               <!-- Nom Prénom -->
               <div>
-                {{rdv.patient | fullName}}
-                <i class="pi pi-external-link p-1 float-right cursor-pointer" [routerLink]="'/patients/' + rdv.patient.id"></i>
+                <a [routerLink]="'/patients/' + rdv.patient.id">{{rdv.patient | fullName}}</a>
+                <i class="pi pi-refresh p-1 float-right cursor-pointer"
+                   title="Mettre à jour les données du patient"
+                   (click)="rafraichirDonneesPatient(rdv)"></i>
               </div>
               <!-- Heure du RDV -->
               <div>De {{rdv.date | date : 'HH:mm'}} à {{rdv.fin | date: 'HH:mm'}} ({{rdv.duree}}min)</div>

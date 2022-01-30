@@ -1,12 +1,14 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {RdvsService} from "../../repository/rdvs.service";
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {RdvRepository} from "../../repository/rdv-repository.service";
 import {Utils} from "../../shared/Utils";
 import {Horaire} from "../../model/horaire";
 import {Rdv} from "../../model/planning-rdv";
 import {RdvStatut} from "../../model/enums/rdv-statut";
-import {BehaviorSubject, Subscription} from "rxjs";
-import {SoignantService} from "../../repository/soignant.service";
-import {switchMap, tap} from "rxjs/operators";
+import {BehaviorSubject, combineLatest, Subscription} from "rxjs";
+import {SoignantRepository} from "../../repository/soignant-repository.service";
+import {switchMap, take, tap} from "rxjs/operators";
+import {PatientRepository} from "../../repository/patient-repository.service";
+import {Soignant} from "../../model/soignant";
 
 @Component({
   selector: 'app-planning-perso',
@@ -15,33 +17,69 @@ import {switchMap, tap} from "rxjs/operators";
   encapsulation: ViewEncapsulation.None
 })
 export class PlanningPersoComponent implements OnInit, OnDestroy {
+  @Input()
+  choixSoignants = false;
   @Output()
   openRdv = new EventEmitter<Rdv>();
   horaires: Horaire[] = [];
-  loading = false;
+  soignants: Soignant[] = [];
+  // TODO : Remplacer par le soignant connecté
+  soignant: Soignant = {id: 'VEHHVVzuG1sf5osTy5Fs', nom: '', prenom: '', trg: ''};
   rdvStatus = RdvStatut;
-  subscriptions: Subscription;
   date: Date = new Date();
-  private dateSubject = new BehaviorSubject(this.date);
+  loading = false;
 
-  constructor(private ss: SoignantService, private rs: RdvsService) {
+  private subscriptions: Subscription = new Subscription();
+  private dateSubject = new BehaviorSubject<Date>(this.date);
+  private soignantSubject = new BehaviorSubject<Soignant>(this.soignant);
+
+  constructor(private soignantRepo: SoignantRepository,
+              private rdvRepo: RdvRepository,
+              private patienRepo: PatientRepository) {
   }
 
   ngOnInit(): void {
     this.loading = true;
     this.horaires = Utils.getHoraires(60);
 
-    this.subscriptions = this.dateSubject
+    if (this.choixSoignants) {
+      this.loadSoignants();
+    }
+
+    this.subscriptions.add(combineLatest([this.dateSubject, this.soignantSubject])
       .pipe(
         tap(() => this.loading = true),
-        // TODO : Récupérer l'id du soignant connecté et remplacer celui-ci en dur qui correspond à FOS
-        switchMap(() => this.rs.getBySoignantId('VEHHVVzuG1sf5osTy5Fs', this.date)),
+        switchMap(params => this.rdvRepo.getBySoignantId(params[1].id, this.date)),
         tap(() => this.loading = false)
-      )
-      .subscribe(rdvs => {
+      ).subscribe(rdvs => {
         this.horaires.forEach(h => h.resetRdvs());
         this.ajouteRdvsAuxHoraires(rdvs);
-      });
+      }));
+  }
+
+  loadSoignants() {
+    // Si déjà récupérés, on ne les recharge pas
+    if (this.soignants?.length) return;
+
+    this.subscriptions.add(this.soignantRepo.getAll()
+      .pipe(take(1))
+      .subscribe(
+        soignants => this.soignants = soignants,
+        err => console.error(`Erreur pendant la récupération des soignants`, err)));
+  }
+
+  rafraichirDonneesPatient(rdv: Rdv) {
+    this.patienRepo.findById(rdv.patient.id)
+      .then(patient => {
+        // On ne met à jour que si la date de dernière MAJ est différente
+        if (rdv.patient.lastUpdate?.getTime() !== patient.lastUpdate?.getTime()) {
+          rdv.patient = patient;
+          return this.rdvRepo.update(rdv.id, rdv)
+        }
+
+        return null;
+      })
+      .catch(err => console.error(err));
   }
 
   /**
@@ -80,7 +118,12 @@ export class PlanningPersoComponent implements OnInit, OnDestroy {
     this.dateSubject.next(this.date);
   }
 
+  changeSoignant(soignant: Soignant) {
+    this.soignantSubject.next(soignant);
+  }
+
   ngOnDestroy(): void {
     this.subscriptions?.unsubscribe();
   }
+
 }

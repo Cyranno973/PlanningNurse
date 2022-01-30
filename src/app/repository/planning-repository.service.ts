@@ -2,17 +2,17 @@ import {Injectable} from '@angular/core';
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {AbstractCrudRepository} from "./AbstractCrudRepository";
 import {Mois, Rdv} from "../model/planning-rdv";
-import {PatientRdvsService} from "./patient-rdvs.service";
+import {PatientRdvsRepository} from "./patient-rdvs-repository.service";
 import {PatientRdvs} from "../model/patient-rdvs";
-import {RdvsService} from "./rdvs.service";
+import {RdvRepository} from "./rdv-repository.service";
 import firebase from "firebase/compat/app";
 import {Utils} from "../shared/Utils";
 
 @Injectable({
   providedIn: 'root'
 })
-export class PlanningService extends AbstractCrudRepository<Mois> {
-  constructor(db: AngularFirestore, private prs: PatientRdvsService, private rs: RdvsService) {
+export class PlanningRepository extends AbstractCrudRepository<Mois> {
+  constructor(db: AngularFirestore, private patientRdvsRepo: PatientRdvsRepository, private rdvRepo: RdvRepository) {
     super(db, '/mois');
   }
 
@@ -49,13 +49,13 @@ export class PlanningService extends AbstractCrudRepository<Mois> {
   }
 
   deleteRdv(rdv: Rdv): Promise<void> {
-    return this.prs.findById(rdv.patient.id, false)
+    return this.patientRdvsRepo.findById(rdv.patient.id, false)
       .then(pr => {
         // Etape 1 => On supprime le rdv de PatientRdvs
         pr.rdvs = pr.rdvs.filter(r => r.id !== rdv.id);
 
         // Enregistre puis récupère le mois du rdv
-        return this.prs.update(pr.id, pr)
+        return this.patientRdvsRepo.update(pr.id, pr)
           .then(() => this.getMois(Utils.moisFromDate(rdv.date)));
       }) // Etape 2 => On supprime le rdv du Mois
       .then(mois => {
@@ -63,15 +63,15 @@ export class PlanningService extends AbstractCrudRepository<Mois> {
         return this.update(mois.id, mois);
 
       }) // 3. On supprime le RDV de sa collection
-      .then(() => this.rs.delete(rdv.id));
+      .then(() => this.rdvRepo.delete(rdv.id));
   }
 
   save(mois: Mois, rdv: Rdv): Promise<Rdv> {
     // si le rdv existe, on le met à jour et on met à jour en cascade les collections contenant le rdv
     if (rdv.id)
-      return this.rs.update(rdv.id, rdv).then(r => this.updateRdvCascade(r, mois));
+      return this.rdvRepo.update(rdv.id, rdv).then(r => this.updateRdvCascade(r, mois));
 
-    return this.rs.create(rdv).then(r => this.updateRdvCascade(r, mois));
+    return this.rdvRepo.create(rdv).then(r => this.updateRdvCascade(r, mois));
   }
 
   // Met à jour le RDV dans les collections dans lequel il se trouve (Mois, PatientRdvs, Rdv)
@@ -85,7 +85,7 @@ export class PlanningService extends AbstractCrudRepository<Mois> {
   }
 
   private getPromisePatientRdvs(rdv: Rdv) {
-    return this.prs.findById(rdv.patient.id, false)
+    return this.patientRdvsRepo.findById(rdv.patient.id, false)
       .then(pr => {
         if (pr?.rdvs) {
           // Récupère l'index du rdv pour savoir si c'est une MAJ ou un nouveau rdv
@@ -99,7 +99,7 @@ export class PlanningService extends AbstractCrudRepository<Mois> {
           pr.rdvs.sort((a, b) => b.date.getTime() - a.date.getTime())
         } else
           pr = new PatientRdvs(rdv.patient.id, [rdv]);
-        return this.prs.update(pr.id, pr);
+        return this.patientRdvsRepo.update(pr.id, pr);
       });
   }
 }

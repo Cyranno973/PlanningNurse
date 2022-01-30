@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Soignant} from "../../model/soignant";
 import {DialogService} from "primeng/dynamicdialog";
 import {FormSoignantComponent} from "../form-soignant/form-soignant.component";
-import {SoignantService} from "../../repository/soignant.service";
+import {SoignantRepository} from "../../repository/soignant-repository.service";
 import {Subscription} from "rxjs";
 
 @Component({
@@ -15,11 +15,11 @@ export class TableauSoignantComponent implements OnInit, OnDestroy {
   soignants: Soignant[];
   subs: Subscription;
 
-  constructor(private ss: SoignantService, private ds: DialogService) {
+  constructor(private soignantRepo: SoignantRepository, private ds: DialogService) {
   }
 
   ngOnInit(): void {
-    this.subs = this.ss.getAll().subscribe(soignants => this.soignants = soignants);
+    this.subs = this.soignantRepo.getAll().subscribe(soignants => this.soignants = soignants);
   }
 
   addInfirmiere() {
@@ -40,7 +40,7 @@ export class TableauSoignantComponent implements OnInit, OnDestroy {
   }
 
   deleteNurse(nurse: Soignant) {
-    this.ss.delete(nurse.id).catch(err => console.error(err));
+    this.soignantRepo.delete(nurse.id).catch(err => console.error(err));
   }
 
   ngOnDestroy(): void {

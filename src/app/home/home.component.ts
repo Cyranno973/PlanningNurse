@@ -6,6 +6,7 @@ import {FormRdvComponent} from "../planning/form-rdv/form-rdv.component";
 import {Router} from "@angular/router";
 import {Patient} from "../model/patient";
 import {Subscription} from "rxjs";
+import {Rdv} from "../model/planning-rdv";
 
 
 @Component({
@@ -56,6 +57,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   @HostListener('document:keydown.alt.p', ['$event'])
   sortcutsPatient() {
     this.newPatient();
+  }
+
+  openRdv(rdv?: Rdv) {
+    this.dialogService.open(FormRdvComponent, {
+      data: {rdv},
+      dismissableMask: true,
+      header: rdv ? 'Editer RDV' : 'Nouveau RDV',
+      styleClass: 'custom-modal rdv'
+    });
   }
 
   private newPatient() {

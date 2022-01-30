@@ -9,7 +9,7 @@ import {RdvStatutCode} from "../model/enums/rdv-statut";
 @Injectable({
   providedIn: 'root'
 })
-export class RdvsService extends AbstractCrudRepository<Rdv> {
+export class RdvRepository extends AbstractCrudRepository<Rdv> {
   constructor(db: AngularFirestore) {
     super(db, '/rdvs');
   }
@@ -31,8 +31,9 @@ export class RdvsService extends AbstractCrudRepository<Rdv> {
         map(docChangeAction => docChangeAction
           .flatMap(rdvs => {
             const rdv: Rdv = this.fromFirestore(rdvs.payload.doc.data());
+            rdv.id = rdvs.payload.doc.id;
             rdv.fin = new Date(rdv.date.getTime() + rdv.duree * 60000);
-            return ({id: rdvs.payload.doc.id, ...rdv}) as Rdv;
+            return rdv;
           })
           .filter(rdv => rdv.statut !== RdvStatutCode.ANNULE)
         )

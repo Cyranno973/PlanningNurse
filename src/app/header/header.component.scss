@@ -1,6 +1,10 @@
 header {
   height: 70px;
   background-color: maroon;
+  position: fixed;
+  z-index: 99999;
+  left: 0;
+  width: 100%;
 }
 
 nav {

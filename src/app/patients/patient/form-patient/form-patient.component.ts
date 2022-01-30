@@ -2,10 +2,10 @@ import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {Patient} from "../../../model/patient";
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {PatientService} from "../../../repository/patient.service";
+import {PatientRepository} from "../../../repository/patient-repository.service";
 import {Soignant} from "../../../model/soignant";
 import {take} from "rxjs/operators";
-import {SoignantService} from "../../../repository/soignant.service";
+import {SoignantRepository} from "../../../repository/soignant-repository.service";
 import {Subscription} from "rxjs";
 
 @Component({
@@ -20,7 +20,7 @@ export class FormPatientComponent implements OnInit, OnDestroy {
   soignants: Soignant[];
   private subscription: Subscription = new Subscription();
 
-  constructor(private fb: FormBuilder, private ps: PatientService, private ss: SoignantService,
+  constructor(private fb: FormBuilder, private patientRepo: PatientRepository, private soignantRepo: SoignantRepository,
               private config: DynamicDialogConfig, public ref: DynamicDialogRef) {
   }
 
@@ -40,7 +40,7 @@ export class FormPatientComponent implements OnInit, OnDestroy {
     });
 
     // Récupère les soignants
-    this.subscription.add(this.ss.getAll().pipe(take(1))
+    this.subscription.add(this.soignantRepo.getAll().pipe(take(1))
       .subscribe(
         soignants => this.soignants = soignants,
         err => console.log(`Erreur pendant la récupération des soignants`, err)));
@@ -55,9 +55,9 @@ export class FormPatientComponent implements OnInit, OnDestroy {
     const newPatient = new Patient(this.form.value);
     let save: Promise<Patient>;
     if (this.patient) {
-      save = this.ps.update(this.patient.id, newPatient);
+      save = this.patientRepo.update(this.patient.id, newPatient);
     } else {
-      save = this.ps.create(newPatient);
+      save = this.patientRepo.create(newPatient);
     }
 
     save

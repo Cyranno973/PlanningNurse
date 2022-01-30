@@ -20,7 +20,7 @@ const routes: Routes = [
   // Nouvelles routes
   {path: 'patients', component: PatientsComponent},
   {path: 'patients/:id', component: PatientComponent},
-  {path: 'infirmieres', component: SoignantsComponent},
+  {path: 'soignants', component: SoignantsComponent},
   {path: '**', redirectTo: '/home'}
 ]
 

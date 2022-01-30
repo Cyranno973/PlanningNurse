@@ -55,7 +55,7 @@ export class Utils {
   }
 
   // Retourne mm-yyyy à partir d'une date
-  static moisFromDate(date: Date) {
+  static moisFromDate(date: Date): string {
     return date ? `${date.getFullYear()}-${date.getMonth() + 1}` : '';
   }
 }
