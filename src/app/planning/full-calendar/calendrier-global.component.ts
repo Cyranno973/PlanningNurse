@@ -1,7 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {CalendarOptions, EventClickArg, EventInput} from "@fullcalendar/angular";
 import frLocale from '@fullcalendar/core/locales/fr';
-import {PlanningService} from "../../repository/planning.service";
+import {PlanningRepository} from "../../repository/planning-repository.service";
 import {Rdv} from "../../model/planning-rdv";
 import {AbbreviatePipe} from "../../shared/pipes/abbreviate.pipe";
 
@@ -16,7 +16,7 @@ export class CalendrierGlobalComponent implements OnInit {
   @Output()
   openRdv = new EventEmitter<Rdv>();
 
-  constructor(private ps: PlanningService, private abrPipe: AbbreviatePipe) {
+  constructor(private planningRepo: PlanningRepository, private abrPipe: AbbreviatePipe) {
   }
 
   ngOnInit(): void {
@@ -25,7 +25,7 @@ export class CalendrierGlobalComponent implements OnInit {
 
   private fetchEvents() {
     const events: EventInput[] = []
-    this.ps.getMois()
+    this.planningRepo.getMois()
       .then(m => {
         m.jours.forEach((rdvs) => {
           this.rdvs.push(...rdvs);

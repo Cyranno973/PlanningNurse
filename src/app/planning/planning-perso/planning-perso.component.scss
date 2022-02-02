@@ -28,17 +28,19 @@
       }
 
       .rdvs {
-        background-color: rgba(144, 206, 245, 0.52);
+        background-color: rgb(144, 206, 245);
         border-top: 2.5px solid white;
         position: relative;
 
         .rdv-wrapper {
           .rdv-ghost {
+            margin-right: 16px;
             display: none;
             visibility: hidden;
           }
 
           .rdv {
+            margin-right: 16px;
             z-index: 3;
             font-weight: bold;
             position: relative;

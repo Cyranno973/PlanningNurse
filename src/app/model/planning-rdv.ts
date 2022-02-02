@@ -9,7 +9,7 @@ export class Rdv extends DatabaseModel {
   statut: RdvStatutCode = RdvStatutCode.SOUHAITE;
   soignant: Soignant;
   patient: Patient;
-  // 10h15, 12h00....
+  // en minutes
   heure: number;
   fin?: Date;
   duree?: number;
@@ -43,10 +43,5 @@ export class Mois extends DatabaseModel {
     super();
     this.id = id;
     this.jours = new Map<number, Rdv[]>()
-  }
-
-  static fromDate(date: Date) {
-    if (!date) return '';
-    return `${date.getFullYear()}-${date.getMonth() + 1}`;
   }
 }

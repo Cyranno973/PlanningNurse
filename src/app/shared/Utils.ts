@@ -53,4 +53,9 @@ export class Utils {
     const rdvsFilterd = mois.jours.get(rdv.date.getDate()).filter(r => r.id !== rdv.id);
     mois.jours.set(rdv.date.getDate(), rdvsFilterd);
   }
+
+  // Retourne mm-yyyy à partir d'une date
+  static moisFromDate(date: Date): string {
+    return date ? `${date.getFullYear()}-${date.getMonth() + 1}` : '';
+  }
 }

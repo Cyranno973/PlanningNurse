@@ -1,0 +1,26 @@
+.planification {
+  .input-tableau {
+    cursor: pointer;
+    width: 100%;
+
+    input {
+      border: none;
+      width: 100px;
+      border-bottom: 1px solid maroon;
+
+      &:active, &:focus {
+        outline: none;
+        box-shadow: none;
+      }
+    }
+  }
+
+  .choix-soignant {
+    width: 100%;
+    border: none;
+
+    &:hover {
+      border-bottom: 1px solid maroon;
+    }
+  }
+}

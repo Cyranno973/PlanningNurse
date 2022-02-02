@@ -32,8 +32,8 @@
           </a>
         </td>
         <td style="width: 25%">
-          <a (click)="$event.stopImmediatePropagation()" [href]="'tel:' + patient.tel?.mobile ?? patient.tel?.fixe ?? patient.tel?.autre">
-            {{patient.tel?.mobile ?? patient.tel?.fixe ?? patient.tel?.autre}}
+          <a (click)="$event.stopImmediatePropagation()" [href]="'tel:' + patient.tel?.mobile || patient.tel?.fixe || patient.tel?.autre">
+            {{patient.tel?.mobile || patient.tel?.fixe || patient.tel?.autre}}
           </a>
         </td>
       </tr>

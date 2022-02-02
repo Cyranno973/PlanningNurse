@@ -9,9 +9,9 @@ export class Patient extends DatabaseModel implements Personne {
   address?: string;
   dateNaissance?: Date;
   tel?: {
-    mobile: string;
-    fixe: string;
-    autre: string;
+    mobile?: string;
+    fixe?: string;
+    autre?: string;
   };
   soignant?: Soignant;
 

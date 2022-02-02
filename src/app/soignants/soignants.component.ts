@@ -1,6 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {DialogService} from "primeng/dynamicdialog";
-import {FormSoignantComponent} from "./form-soignant/form-soignant.component";
 
 @Component({
   selector: 'app-soignants',
@@ -9,15 +7,9 @@ import {FormSoignantComponent} from "./form-soignant/form-soignant.component";
 })
 export class SoignantsComponent implements OnInit {
 
-  constructor(private ds: DialogService) {
+  constructor() {
   }
 
   ngOnInit(): void {
-  }
-
-  addInfirmiere() {
-    this.ds.open(FormSoignantComponent, {
-      header: 'Ajouter un soignant'
-    })
   }
 }

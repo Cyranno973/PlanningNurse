@@ -48,7 +48,7 @@ export class AbstractCrudRepository<T extends DatabaseModel> {
     return this.collection.add({...this.toFirestore(object)})
       .then(createdDocRef => {
         object.id = createdDocRef.id
-        return object as T;
+        return this.fromFirestore(object) as T;
       });
   }
 
@@ -66,15 +66,18 @@ export class AbstractCrudRepository<T extends DatabaseModel> {
   }
 
   // Convertit les timestamps des objets en Dates
-  fromFirestore(object: any): any {
+  fromFirestore<T>(object: any): T {
     Object.keys(object)
-      .filter(key => object[key] instanceof firebase.firestore.Timestamp || Array.isArray(object[key]))
+      .filter(key => object[key] instanceof firebase.firestore.Timestamp || Array.isArray(object[key]) || typeof object[key] === 'object')
       .forEach(key => {
-        if (Array.isArray(object[key]))
-          return object[key].map(prop => this.fromFirestore(prop));
-        object[key] = object[key].toDate();
+        if (object[key] instanceof firebase.firestore.Timestamp)
+          object[key] = object[key].toDate();
+        else if (Array.isArray(object[key]))
+          object[key].map(prop => this.fromFirestore(prop));
+        else
+          object[key] = this.fromFirestore(object[key]);
       });
-    return object;
+    return object as T;
   }
 
   // Supprime les champs vides ("") / null ou objets vides ({})

@@ -1,15 +1,15 @@
 import {Component, HostListener, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
-import {PatientService} from "../../repository/patient.service";
+import {PatientRepository} from "../../repository/patient-repository.service";
 import {take} from "rxjs/operators";
 import {Patient} from "../../model/patient";
 import {Soignant} from "../../model/soignant";
-import {SoignantService} from "../../repository/soignant.service";
+import {SoignantRepository} from "../../repository/soignant-repository.service";
 import {FormPatientComponent} from "../../patients/patient/form-patient/form-patient.component";
 import {Dropdown} from "primeng/dropdown";
 import {Mois, Rdv} from "../../model/planning-rdv";
-import {PlanningService} from "../../repository/planning.service";
+import {PlanningRepository} from "../../repository/planning-repository.service";
 import {Horaire} from "../../model/horaire";
 import {RdvStatut} from "../../model/enums/rdv-statut";
 import {Utils} from "../../shared/Utils";
@@ -47,8 +47,8 @@ export class FormRdvComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
 
   constructor(private fb: FormBuilder, private config: DynamicDialogConfig,
-              private ps: PatientService, private is: SoignantService,
-              private rs: PlanningService, private dialogService: DialogService,
+              private patientRepo: PatientRepository, private soignantRepo: SoignantRepository,
+              private planningRepo: PlanningRepository, private dialogService: DialogService,
               public ref: DynamicDialogRef, private pipefullName: FullNamePipe) {
   }
 
@@ -76,7 +76,7 @@ export class FormRdvComponent implements OnInit, OnDestroy {
   private loadData() {
     this.horaires = Utils.getHoraires(this.duree);
     // Récupère le mois en cours
-    this.rs.getMois()
+    this.planningRepo.getMois()
       .then(mois => this.mois = mois)
       .catch((err) => console.log(`Erreur pendant la récupération du planning du mois`, err));
   }
@@ -84,7 +84,7 @@ export class FormRdvComponent implements OnInit, OnDestroy {
   loadSoignants() {
     // Récupère les soignants
     this.subscription.add(
-      this.is.getAll().pipe(take(1))
+      this.soignantRepo.getAll().pipe(take(1))
         .subscribe(
           soignants => this.soignants = soignants,
           err => console.log(`Erreur pendant la récupération des soignants`, err)));
@@ -127,7 +127,7 @@ export class FormRdvComponent implements OnInit, OnDestroy {
 
   loadPatients() {
     if (!this.patients.length && !this.patient) {
-      this.subscription.add(this.ps.getAll()
+      this.subscription.add(this.patientRepo.getAll()
         .pipe(take(1))
         .subscribe(patiens => this.patients = patiens));
     }
@@ -181,7 +181,7 @@ export class FormRdvComponent implements OnInit, OnDestroy {
   }
 
   selectMonth(dateEvent: { month: number, year: number }) {
-    return this.rs.getMois(`${dateEvent.year}-${dateEvent.month}`)
+    return this.planningRepo.getMois(`${dateEvent.year}-${dateEvent.month}`)
       .then(mois => this.mois = mois)
       .catch((err) => console.log(`Oups, erreur pendant la récupération du planning du mois`, err));
   }
@@ -259,13 +259,13 @@ export class FormRdvComponent implements OnInit, OnDestroy {
     }
 
     // Si le rdv existait, on le supprime si nécessaire du jour où il était planifié
-    const isSameMonth = Mois.fromDate(this.rdv?.date) === mois.id;
+    const isSameMonth = Utils.moisFromDate(this.rdv?.date) === mois.id;
     if (this.rdv && isSameMonth && this.rdv.date.getDate() !== rdv.date.getDate()) {
       Utils.removeRdv(mois, this.rdv);
     }
 
     // Update va enregistrer ou créer le document s'il n'existe pas avec l'id passé
-    this.rs.save(mois, rdv)
+    this.planningRepo.save(mois, rdv)
       .then(prdvs => {
           this.removeFromMonth(rdv);
           this.ref.close(prdvs);
@@ -275,12 +275,13 @@ export class FormRdvComponent implements OnInit, OnDestroy {
 
   // Si le mois est différent, on le retire de là où il était avant
   private removeFromMonth(rdv: Rdv) {
-    let moisDifferent = Mois.fromDate(this.rdv?.date) !== Mois.fromDate(rdv.date);
+    const existingRdvMois = Utils.moisFromDate(this.rdv?.date);
+    const moisDifferent = existingRdvMois !== Utils.moisFromDate(rdv.date);
     if (this.rdv && moisDifferent) {
-      this.rs.getMois(Mois.fromDate(this.rdv?.date))
+      this.planningRepo.getMois(existingRdvMois)
         .then(mois => {
           Utils.removeRdv(mois, this.rdv);
-          this.rs.update(mois.id, mois).then(() => this.ref.close(rdv));
+          this.planningRepo.update(mois.id, mois).then(() => this.ref.close(rdv));
         });
     }
   }
@@ -298,7 +299,7 @@ export class FormRdvComponent implements OnInit, OnDestroy {
   }
 
   delete() {
-    this.rs.deleteRdv(this.rdv)
+    this.planningRepo.deleteRdv(this.rdv)
       .then(() => this.ref.close({deleted: true, ...this.rdv}))
       .catch((err) => console.log(err));
   }

@@ -1,4 +1,23 @@
-<div class="row col-12 m-0 p-0 planning mb-4 border">
+<div class="row col-12 m-0 p-0 planning mb-4">
+
+  <div class="row col-12 justify-content-end p-0 mb-2" *ngIf="choixSoignants">
+    <p-dropdown [options]="soignants"
+                dataKey="id"
+                [styleClass]="'choix-soignant'"
+                [(ngModel)]="soignant"
+                (onChange)="changeSoignant($event.value)"
+                (onShow)="loadSoignants()"
+                placeholder="Soignant">
+      <!-- Soignant sélectioné -->
+      <ng-template let-soignant pTemplate="selectedItem">
+        {{soignant | abrege}} ({{soignant.trg}})
+      </ng-template>
+      <!-- Suggestions autocomplete -->
+      <ng-template let-soignant pTemplate="item">
+        {{soignant | abrege}} ({{soignant.trg}})
+      </ng-template>
+    </p-dropdown>
+  </div>
 
   <div class="row col-10 offset-2 p-1 bg-white text-center align-items-center">
     <button class="col-1 btn btn-link border" [disabled]="loading" (click)="changeDate(-1)">
@@ -7,10 +26,10 @@
     <div class="col-10">
       <p-calendar [(ngModel)]="date"
                   [styleClass]="'jour-planning'"
-                  [disabled]="loading"
                   [showButtonBar]="true"
                   [showIcon]="true"
                   [clearButtonStyleClass]="'d-none'"
+                  [hideOnDateTimeSelect]="true"
                   (onSelect)="changeDate()"
                   dateFormat="D dd/mm/yy">
       </p-calendar>
@@ -30,18 +49,19 @@
       <!-- RDVS -->
       <div class="col-10 row p-0 m-0 rdvs">
         <div class="rdv-wrapper" *ngFor="let rdv of horaire.rdvs; trackBy: trackById">
-          <rdv-badge [rdv]="rdv" class="rdv col"
-                     [style.marginTop]="rdv.date.getMinutes() + 'px'"
-                     [style.height]="(rdv.duree ?? 60) + 'px'">
-            <div class="rdv-summary">{{rdv.patient | abrege}} ({{rdv.duree ?? 60}}min)</div>
+          <rdv-badge [rdv]="rdv" class="rdv" [style.marginTop]="rdv.date.getMinutes() + 'px'">
+            <div class="rdv-summary" [style.height]="(rdv.duree) + 'px'">{{rdv.patient | abrege}} ({{rdv.duree}}min)
+            </div>
             <div class="rdv-hover">
               <!-- Nom Prénom -->
               <div>
-                {{rdv.patient | fullName}}
-                <i class="pi pi-external-link p-1 float-right cursor-pointer" [routerLink]="'/patients/' + rdv.patient.id"></i>
+                <a [routerLink]="'/patients/' + rdv.patient.id">{{rdv.patient | fullName}}</a>
+                <i class="pi pi-refresh p-1 float-right cursor-pointer"
+                   title="Mettre à jour les données du patient"
+                   (click)="rafraichirDonneesPatient(rdv)"></i>
               </div>
               <!-- Heure du RDV -->
-              <div>De {{rdv.date | date : 'HH:mm'}} à {{rdv.fin | date: 'HH:mm'}} ({{rdv.duree ?? 60}}min)</div>
+              <div>De {{rdv.date | date : 'HH:mm'}} à {{rdv.fin | date: 'HH:mm'}} ({{rdv.duree}}min)</div>
 
               <address>
                 <!-- Adresse -->
@@ -64,8 +84,8 @@
 
           <!-- Ce rdv-bis n'est là que pour empêcher un déclage des RDVs sur la ligne lors du survol
           parce que le .rdv chane en position absolute -->
-          <div class="rdv-ghost col">
-            <div class="rdv-summary">{{rdv.patient | abrege}} ({{rdv.duree ?? 60}}min)</div>
+          <div class="rdv-ghost">
+            {{rdv.patient | abrege}} ({{rdv.duree}}min)
           </div>
         </div>
       </div>

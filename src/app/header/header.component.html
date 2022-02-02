@@ -6,7 +6,7 @@
           <li class="nav-item active"><a class="nav-link" routerLink="/home">Home</a></li>
           <li class="nav-item active"><a class="nav-link" routerLink="/planning">Rendez-vous</a></li>
           <li *ngIf="!isAuth" class="nav-item"><a class="nav-link" routerLink="/patients">Patients</a></li>
-          <li *ngIf="!isAuth" class="nav-item"><a class="nav-link" routerLink="/infirmieres">Infirmières</a></li>
+          <li *ngIf="!isAuth" class="nav-item"><a class="nav-link" routerLink="/soignants">Soignants</a></li>
           <li *ngIf="isAuth" class="cursor-pointer nav-item"><a class="nav-link" (click)="onSignOut()">Deconnexion</a></li>
         </ul>
       </div>

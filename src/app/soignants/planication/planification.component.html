@@ -1,0 +1,67 @@
+<div class="planification">
+  <h4>Planification</h4>
+  <div class="col-12 d-flex justify-content-end mb-1">
+    <button pButton icon="pi pi-plus" title="Ajouter" (click)="nouvelleLigne()" class="p-button-text"></button>
+    <button pButton icon="pi pi-refresh" [disabled]="!elementsToSave" title="Annuler les modification" (click)="restaureBkp()" class="p-button-text"></button>
+    <button pButton icon="pi pi-save" [disabled]="elementsToSave < 2" title="Enregistrer tout" (click)="enregistrer()" class="p-button-text"></button>
+  </div>
+  <p-table [value]="planifications" responsiveLayout="scroll" dataKey="de" [styleClass]="'border'">
+    <ng-template pTemplate="body" let-planif>
+      <tr>
+        <td style="width: 2%">
+          <i *ngIf="planif.current" class="pi pi-chevron-right text-danger"></i>
+        </td>
+        <td style="width: 45%">
+          <p-calendar [ngModel]="[planif.de, planif.a]"
+                      (ngModelChange)="changeDates(planif, $event)"
+                      [styleClass]="'input-tableau'"
+                      [placeholder]="'Période'"
+                      selectionMode="range"
+                      [readonlyInput]="true"
+                      [rangeSeparator]="'->'"
+                      dateFormat="dd/mm/yy">
+          </p-calendar>
+        </td>
+
+        <td style="width: 35%">
+          <p-dropdown [options]="soignants"
+                      dataKey="id"
+                      [styleClass]="'choix-soignant'"
+                      [ngModel]="planif.soignant"
+                      (onChange)="changeSoignant(planif, $event.value)"
+                      (onShow)="loadSoignants()"
+                      placeholder="Soignant"
+                      [showClear]="true">
+            <!-- Soignant sélectioné -->
+            <ng-template let-soignant pTemplate="selectedItem">
+              {{soignant | abrege}} ({{soignant.trg}})
+            </ng-template>
+            <!-- Suggestions autocomplete -->
+            <ng-template let-soignant pTemplate="item">
+              {{soignant | abrege}} ({{soignant.trg}})
+            </ng-template>
+          </p-dropdown>
+        </td>
+        <td class="text-right">
+          <button *ngIf="planif.touched"
+                  pButton icon="pi pi-refresh"
+                  [disabled]="!elementsToSave"
+                  (click)="restaureBkp(planif)"
+                  class="p-button-text"></button>
+
+          <button *ngIf="planif.temporaire || planif.touched"
+                  pButton
+                  icon="pi pi-save"
+                  (click)="enregistrer(planif)"
+                  class="p-button-text"></button>
+
+          <button *ngIf="!planif.temporaire"
+                  pButton
+                  icon="pi pi-trash"
+                  (click)="supprimer(planif)"
+                  class="p-button-text text-danger"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

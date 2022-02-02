@@ -8,7 +8,7 @@ import {shareReplay} from "rxjs/operators";
 @Injectable({
   providedIn: 'root'
 })
-export class SoignantService extends AbstractCrudRepository<Soignant> {
+export class SoignantRepository extends AbstractCrudRepository<Soignant> {
   private MAX_TIME_CACHE = 300000; // millisecondes (300000 => 5 minutes)
   private cache$: Observable<Soignant[]>;
   private cacheDate: Date;
